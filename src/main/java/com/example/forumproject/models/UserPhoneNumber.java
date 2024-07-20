@@ -1,26 +1,21 @@
 package com.example.forumproject.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "user_phone_numbers")
 public class UserPhoneNumber {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference
     private User user;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
+    public UserPhoneNumber() {
     }
 
     public String getValue() {
