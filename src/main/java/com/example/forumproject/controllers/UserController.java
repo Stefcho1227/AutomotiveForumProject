@@ -1,5 +1,6 @@
 package com.example.forumproject.controllers;
 
+import com.example.forumproject.exceptions.EntityNotFoundException;
 import com.example.forumproject.helpers.AuthenticationHelper;
 import com.example.forumproject.helpers.UserMapper;
 import com.example.forumproject.models.User;
@@ -63,12 +64,11 @@ public class UserController {
     @DeleteMapping("/{id}")
     public void deleteUser(@RequestHeader HttpHeaders headers, @PathVariable int id) {
         try {
-            User user = authenticationHelper.tryGetUser(headers);
-            if (user.getRole().getId() == 3) {
-                throw new AuthenticationException("You are not allowed to delete this object");
-            }
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+            authenticationHelper.authenticate(headers);
+        } catch (AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
 
         userService.deleteUserById(id);

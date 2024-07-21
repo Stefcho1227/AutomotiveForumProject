@@ -6,7 +6,9 @@ import com.example.forumproject.models.User;
 import com.example.forumproject.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.naming.AuthenticationException;
 import java.util.Optional;
@@ -61,5 +63,12 @@ public class AuthenticationHelper {
         }
 
         return userInfo.substring(firstSpace + 1);
+    }
+
+    public void authenticate(HttpHeaders headers) throws AuthenticationException {
+            User user = this.tryGetUser(headers);
+            if (user.getRole().getId() == 3) {
+                throw new AuthenticationException("You are not allowed to delete this object");
+            }
     }
 }
