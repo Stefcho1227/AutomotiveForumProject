@@ -1,5 +1,7 @@
 package com.example.forumproject.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
@@ -12,11 +14,13 @@ public class Comment {
     @Column(name = "id")
     private int id;
     @ManyToOne
-    @JoinColumn(name = "post_id")
-    private Post post;
-    @ManyToOne
     @JoinColumn(name = "user_id")
     private User createdBy;
+    @ManyToOne
+    @JoinColumn(name = "post_id")
+    /*@JsonBackReference*/
+    @JsonIgnore
+    private Post post;
     @Column(name = "content")
     private String content;
     @Column(name = "created_at")

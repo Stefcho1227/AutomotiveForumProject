@@ -1,5 +1,7 @@
 package com.example.forumproject.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
@@ -15,7 +17,7 @@ public class Post {
     @Column(name = "id")
     private int id;
     @ManyToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     private User createdBy;
     @Column(name = "title")
     private String title;
@@ -26,6 +28,7 @@ public class Post {
     @Column(name = "created_at")
     private Timestamp createdAt;
     @ManyToMany(fetch = FetchType.EAGER)
+    @JsonIgnore
     @JoinTable(
             name = "likes",
             joinColumns = @JoinColumn(name = "post_id"),
@@ -34,6 +37,7 @@ public class Post {
     private Set<User> likes;
 
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
+    /*@JsonManagedReference*/
     private Set<Comment> comments;
 
     public Post() {
@@ -92,6 +96,14 @@ public class Post {
 
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Set<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(Set<Comment> comments) {
+        this.comments = comments;
     }
 
     @Override
