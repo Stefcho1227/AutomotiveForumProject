@@ -2,8 +2,7 @@ package com.example.forumproject.controllers;
 
 import com.example.forumproject.helpers.UserMapper;
 import com.example.forumproject.models.User;
-import com.example.forumproject.models.UserCreationDto;
-import com.example.forumproject.repositories.contracts.UserRepository;
+import com.example.forumproject.models.dtos.UserCreationDto;
 import com.example.forumproject.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,12 +15,13 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
-
+    private UserMapper userMapper;
     private UserService userService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserMapper userMapper) {
         this.userService = userService;
+        this.userMapper = userMapper;
     }
 
     @GetMapping
@@ -45,7 +45,7 @@ public class UserController {
 
     @PostMapping
     public User createUser(@RequestBody UserCreationDto userDto) {
-        User user = UserMapper.fromDto(userDto);
+        User user = userMapper.fromDto(userDto);
         return userService.createUser(user);
     }
 

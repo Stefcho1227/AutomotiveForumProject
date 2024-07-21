@@ -12,10 +12,7 @@ public class Role {
     @Column(name = "role_name")
     private String roleName;
 
-
-    public Role(Integer id, String roleName) {
-        this.id = id;
-        this.roleName = roleName;
+    public Role() {
     }
 
     public Integer getId() {

@@ -2,7 +2,7 @@ package com.example.forumproject.helpers;
 
 import com.example.forumproject.exceptions.EntityNotFoundException;
 import com.example.forumproject.models.Post;
-import com.example.forumproject.models.PostDto;
+import com.example.forumproject.models.dtos.PostDto;
 import com.example.forumproject.services.contracts.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

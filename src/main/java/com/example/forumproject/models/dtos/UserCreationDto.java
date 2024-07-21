@@ -1,4 +1,4 @@
-package com.example.forumproject.models;
+package com.example.forumproject.models.dtos;
 
 public class UserCreationDto {
     private String firstName;
