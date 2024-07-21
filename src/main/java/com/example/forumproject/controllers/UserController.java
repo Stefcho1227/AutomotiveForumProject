@@ -1,6 +1,8 @@
 package com.example.forumproject.controllers;
 
+import com.example.forumproject.helpers.UserMapper;
 import com.example.forumproject.models.User;
+import com.example.forumproject.models.UserCreationDto;
 import com.example.forumproject.repositories.contracts.UserRepository;
 import com.example.forumproject.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +38,17 @@ public class UserController {
         } else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
-//    @PostMapping
-//    public User createUser(@RequestBody User user) {
-//        return userService.createUser(user);
-//    }
-//
+    @GetMapping("/username/{username}")
+    public User getByUsername(@PathVariable String username) {
+        return userService.getByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    @PostMapping
+    public User createUser(@RequestBody UserCreationDto userDto) {
+        User user = UserMapper.fromDto(userDto);
+        return userService.createUser(user);
+    }
+
 //    @PutMapping("/{id}")
 //    public User updateUser(@PathVariable int id, @RequestBody User user) {
 //        user.setId(id);

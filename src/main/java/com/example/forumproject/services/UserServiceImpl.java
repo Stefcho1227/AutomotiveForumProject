@@ -1,6 +1,7 @@
 package com.example.forumproject.services;
 
 import com.example.forumproject.models.User;
+import com.example.forumproject.models.UserCreationDto;
 import com.example.forumproject.models.UserPhoneNumber;
 import com.example.forumproject.repositories.contracts.UserPhoneNumberRepository;
 import com.example.forumproject.repositories.contracts.UserRepository;

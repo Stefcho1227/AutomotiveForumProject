@@ -1,11 +1,13 @@
 package com.example.forumproject.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "users")
 public class User {
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
@@ -21,9 +23,11 @@ public class User {
     @Column(name = "username")
     private String username;
 
-    @Column(name = "password")
+    @JsonIgnore
+    @Column(name = "password", nullable = false)
     private String password;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
@@ -34,6 +38,8 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private UserPhoneNumber phoneNumber;
 
+    public User() {
+    }
 
     public int getId() {
         return id;
@@ -105,5 +111,10 @@ public class User {
 
     public void setPhoneNumber(UserPhoneNumber phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    @Override
+    public String toString() {
+        return username + " " + firstName + " " + lastName + " " + email + " " + username + " " + password + " " + role + " " + phoneNumber;
     }
 }

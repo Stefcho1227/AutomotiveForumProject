@@ -1,6 +1,7 @@
 package com.example.forumproject.services.contracts;
 
 import com.example.forumproject.models.User;
+import com.example.forumproject.models.UserCreationDto;
 import com.example.forumproject.models.UserPhoneNumber;
 
 import java.util.List;

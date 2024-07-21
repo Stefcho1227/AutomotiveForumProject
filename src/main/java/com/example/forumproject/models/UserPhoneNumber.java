@@ -18,6 +18,11 @@ public class UserPhoneNumber {
     public UserPhoneNumber() {
     }
 
+    public UserPhoneNumber(String phoneNumber, User user) {
+        this.phoneNumber = phoneNumber;
+        this.user = user;
+    }
+
     public String getValue() {
         return phoneNumber;
     }
