@@ -1,12 +1,14 @@
 package com.example.forumproject.services;
 
 import com.example.forumproject.exceptions.AuthorizationException;
+import com.example.forumproject.exceptions.DuplicateEntityException;
 import com.example.forumproject.models.User;
 import com.example.forumproject.models.UserPhoneNumber;
 import com.example.forumproject.repositories.contracts.UserPhoneNumberRepository;
 import com.example.forumproject.repositories.contracts.UserRepository;
 import com.example.forumproject.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,7 +44,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createUser(User user) {
         checkModifyPermissions(user);
-        return userRepository.save(user);
+        try {
+            return userRepository.save(user);
+        } catch (DataIntegrityViolationException e) {
+            throw new DuplicateEntityException("User with email/username already exists.");
+        }
     }
 
     public User save(User user) {

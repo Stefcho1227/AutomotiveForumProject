@@ -1,7 +1,14 @@
 package com.example.forumproject.models.dtos;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 public class UserCreationDto {
+    @NotNull(message = "Name can't be empty")
+    @Size(min = 4, max = 32, message = "Name should be between 16 and 64 symbols")
     private String firstName;
+    @NotNull(message = "Name can't be empty")
+    @Size(min = 4, max = 32, message = "Name should be between 16 and 64 symbols")
     private String lastName;
     private String email;
     private String username;

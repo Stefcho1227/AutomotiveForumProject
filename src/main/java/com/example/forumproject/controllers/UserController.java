@@ -1,6 +1,7 @@
 package com.example.forumproject.controllers;
 
 import com.example.forumproject.exceptions.AuthorizationException;
+import com.example.forumproject.exceptions.DuplicateEntityException;
 import com.example.forumproject.exceptions.EntityNotFoundException;
 import com.example.forumproject.helpers.AuthenticationHelper;
 import com.example.forumproject.helpers.UserMapper;
@@ -8,6 +9,7 @@ import com.example.forumproject.models.User;
 import com.example.forumproject.models.dtos.UserCreationDto;
 import com.example.forumproject.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -55,8 +57,12 @@ public class UserController {
     // checkModifyPermissions in UserService class
     @PostMapping
     public User createUser(@RequestBody UserCreationDto userDto) {
-        User user = userMapper.fromDto(userDto);
-        return userService.createUser(user);
+        try {
+            User user = userMapper.fromDto(userDto);
+            return userService.createUser(user);
+        } catch (DuplicateEntityException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
     }
 
 //    @PutMapping("/{id}")
