@@ -8,9 +8,11 @@ import com.example.forumproject.services.contracts.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Component
 public class PostMapper {
@@ -32,6 +34,11 @@ public class PostMapper {
         post.setTitle(postDto.getTitle());
         post.setContent(postDto.getContent());
         post.setCreatedBy(user);
+//TODO there is some discrepency with the timezones when you send a get request.
+        LocalDateTime now = LocalDateTime.now();
+        Timestamp timestamp = Timestamp.valueOf(now);
+        post.setCreatedAt(timestamp);
+
         return post;
     }
 }
