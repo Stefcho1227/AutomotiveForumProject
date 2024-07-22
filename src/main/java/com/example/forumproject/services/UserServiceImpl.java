@@ -21,6 +21,7 @@ import static com.example.forumproject.helpers.AuthenticationHelper.MODIFY_ERROR
 @Service
 public class UserServiceImpl implements UserService {
 
+    public static final String MODIFY_ERROR_MESSAGE_ADMIN = "Only admin can delete user";
     private final UserRepository userRepository;
     private final UserPhoneNumberRepository phoneNumberRepository;
 
@@ -84,7 +85,7 @@ public class UserServiceImpl implements UserService {
 
     private void checkModifyPermissions(User user) {
         if (user.getRole().getRoleName().equals("User")) {
-            throw new AuthorizationException(MODIFY_ERROR_MESSAGE);
+            throw new AuthorizationException(MODIFY_ERROR_MESSAGE_ADMIN);
         }
     }
 

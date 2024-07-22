@@ -55,7 +55,33 @@ public class PostController {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
+    @PutMapping("/{id}")
+    public Post update(@RequestHeader HttpHeaders headers, @PathVariable int id, @Valid @RequestBody PostDto postDto){
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+            Post post = postMapper.fromDto(id, postDto);
+            return postService.update(post, user);
+        } catch (AuthorizationException e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+    @DeleteMapping("/{id}")
+    public void delete(@RequestHeader HttpHeaders headers, @PathVariable int id){
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+            postService.delete(id, user);
+        } catch (AuthorizationException e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
     //TODO
     //add functonality to add comments to post
     //with Set<> and relation
+    //TODO to add addLike operation
+    //TODO check if user is blocked before create post update post it and comment post
 }

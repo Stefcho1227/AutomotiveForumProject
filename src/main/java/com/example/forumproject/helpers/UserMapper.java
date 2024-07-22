@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserMapper {
 
+    //TODO fix layers to get from service and then repository you can make RoleService class
     private final RoleRepository roleRepository;
     @Autowired
     public UserMapper(RoleRepository roleRepository) {

@@ -18,12 +18,17 @@ public class PostMapper {
     public PostMapper(PostService postService) {
         this.postService = postService;
     }
-    //TODO add createdAt too
     public Post fromDto(int id, PostDto postDto, User user){
         Post repositoryPost = postService.getPostById(id).orElseThrow(() -> new EntityNotFoundException("Post", id));
         repositoryPost.setTitle(postDto.getTitle());
         repositoryPost.setContent(postDto.getContent());
         repositoryPost.setCreatedBy(user);
+        return repositoryPost;
+    }
+    public Post fromDto(int id, PostDto postDto){
+        Post repositoryPost = postService.getPostById(id).orElseThrow(() -> new EntityNotFoundException("Post", id));
+        repositoryPost.setTitle(postDto.getTitle());
+        repositoryPost.setContent(postDto.getContent());
         return repositoryPost;
     }
     public Post fromDto(PostDto postDto, User user){
