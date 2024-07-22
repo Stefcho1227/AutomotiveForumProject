@@ -17,6 +17,7 @@ import java.util.Optional;
 public class AuthenticationHelper {
     private static final String AUTHORIZATION_HEADER_NAME = "Authorization";
     private static final String INVALID_AUTHENTICATION_ERROR = "Invalid authentication.";
+    public static final String MODIFY_ERROR_MESSAGE = "Only admin or post creator can modify a post.";
 
     private final UserService userService;
 
@@ -65,10 +66,4 @@ public class AuthenticationHelper {
         return userInfo.substring(firstSpace + 1);
     }
 
-    public void authenticate(HttpHeaders headers) throws AuthenticationException {
-            User user = this.tryGetUser(headers);
-            if (user.getRole().getId() == 3) {
-                throw new AuthenticationException("You are not allowed to delete this object");
-            }
-    }
 }

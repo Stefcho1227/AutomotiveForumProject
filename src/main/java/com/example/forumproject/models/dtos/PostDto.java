@@ -11,7 +11,18 @@ public class PostDto {
     @Size(min = 32, max = 8192, message = "Title should be between 16 and 64 symbols")
     private String content;
 
+    @NotNull(message = "User ID can't be empty")
+    private int userId;
+
     public PostDto() {
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public String getTitle() {

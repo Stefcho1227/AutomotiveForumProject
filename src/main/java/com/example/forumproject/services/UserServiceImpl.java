@@ -1,5 +1,6 @@
 package com.example.forumproject.services;
 
+import com.example.forumproject.exceptions.AuthorizationException;
 import com.example.forumproject.models.User;
 import com.example.forumproject.models.UserPhoneNumber;
 import com.example.forumproject.repositories.contracts.UserPhoneNumberRepository;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+
+import static com.example.forumproject.helpers.AuthenticationHelper.MODIFY_ERROR_MESSAGE;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -38,6 +41,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(User user) {
+        checkModifyPermissions(user);
         return userRepository.save(user);
     }
 
@@ -46,7 +50,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUserById(int id) {
+    public void deleteUserById(int id, User user) {
+        checkModifyPermissions(user);
         userRepository.deleteById(id);
     }
 
@@ -64,6 +69,14 @@ public class UserServiceImpl implements UserService {
             return userPhoneNumber;
         }
         return null;
+    }
+    //TODO
+    //WILL IT BE BETTER TO FIND IT BY NAME NOT ID BECAUSE OF THE DATABASE
+    //beer.getCreatedBy().equals(user) maybe if we add this is will be for better bonus authentication
+    private void checkModifyPermissions(User user) {
+        if (user.getRole().getId() != 1) {
+            throw new AuthorizationException(MODIFY_ERROR_MESSAGE);
+        }
     }
 
 }

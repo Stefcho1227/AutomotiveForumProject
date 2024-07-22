@@ -1,5 +1,6 @@
 package com.example.forumproject.controllers;
 
+import com.example.forumproject.exceptions.AuthorizationException;
 import com.example.forumproject.exceptions.EntityNotFoundException;
 import com.example.forumproject.helpers.AuthenticationHelper;
 import com.example.forumproject.helpers.UserMapper;
@@ -49,6 +50,9 @@ public class UserController {
         return userService.getByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
+    //TODO
+    //Functionality to check for the user to be authenticated and authorized check the method tryGetUser and
+    // checkModifyPermissions in UserService class
     @PostMapping
     public User createUser(@RequestBody UserCreationDto userDto) {
         User user = userMapper.fromDto(userDto);
@@ -64,14 +68,14 @@ public class UserController {
     @DeleteMapping("/{id}")
     public void deleteUser(@RequestHeader HttpHeaders headers, @PathVariable int id) {
         try {
-            authenticationHelper.authenticate(headers);
-        } catch (AuthenticationException e) {
+            User user = authenticationHelper.tryGetUser(headers);
+            userService.deleteUserById(id, user);
+        } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
 
-        userService.deleteUserById(id);
     }
 
 }

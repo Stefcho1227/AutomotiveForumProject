@@ -6,8 +6,11 @@ public class UserCreationDto {
     private String email;
     private String username;
     private String password;
+    //TODO To create create user by default with roleId 3
     private int roleId;
+    //TODO To create user with default false
     private boolean isBlocked;
+    //TODO
     private String phoneNumber;
 
     public UserCreationDto() {
