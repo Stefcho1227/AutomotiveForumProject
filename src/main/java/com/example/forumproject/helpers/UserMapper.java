@@ -25,9 +25,8 @@ public class UserMapper {
         user.setUsername(inputData.getUsername());
         user.setPassword(inputData.getPassword());
         user.setBlocked(inputData.isBlocked());
-//        user.setPhoneNumber(new UserPhoneNumber(inputData.getPhoneNumber(), user));
         user.setRole(roleRepository.findById(inputData.getRoleId()).orElseThrow(() -> new EntityNotFoundException("Role", inputData.getRoleId())));
-        //TODO
+
         return user;
     }
 }

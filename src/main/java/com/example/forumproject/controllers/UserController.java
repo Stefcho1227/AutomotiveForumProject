@@ -50,9 +50,6 @@ public class UserController {
         return userService.getByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    //TODO za rolite
-    //Functionality to check for the user to be authenticated and authorized check the method tryGetUser and
-    // checkModifyPermissions in UserService class
     @PostMapping
     public User createUser(@RequestBody UserInDto userDto) {
         try {
@@ -62,13 +59,13 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
-//TODO do thisxd
 
-//    @PutMapping("/{id}")
-//    public User updateUser(@PathVariable int id, @RequestBody User user) {
-//        user.setId(id);
-//        return userService.save(user);
-//    }
+
+    @PutMapping("/{id}")
+    public User updateUser(@PathVariable int id, @RequestBody UserInDto user) {
+        User updateParameters = userMapper.fromDto(user);
+        return userService.save(updateParameters, id);
+    }
 
     @DeleteMapping("/{id}")
     public void deleteUser(@RequestHeader HttpHeaders headers, @PathVariable int id) {

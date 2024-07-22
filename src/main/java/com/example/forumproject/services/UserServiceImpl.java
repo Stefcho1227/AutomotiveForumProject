@@ -2,11 +2,13 @@ package com.example.forumproject.services;
 
 import com.example.forumproject.exceptions.AuthorizationException;
 import com.example.forumproject.exceptions.DuplicateEntityException;
+import com.example.forumproject.exceptions.EntityNotFoundException;
 import com.example.forumproject.models.User;
 import com.example.forumproject.models.UserPhoneNumber;
 import com.example.forumproject.repositories.contracts.UserPhoneNumberRepository;
 import com.example.forumproject.repositories.contracts.UserRepository;
 import com.example.forumproject.services.contracts.UserService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -37,7 +39,8 @@ public class UserServiceImpl implements UserService {
     public Optional<User> getUserById(int id) {
         return userRepository.findById(id);
     }
-    public Optional<User> getByUsername(String username){
+
+    public Optional<User> getByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
@@ -50,8 +53,11 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    public User save(User user) {
-        return userRepository.save(user);
+    @Transactional
+    public User save(User user, int id) {
+        User userToUpdate = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User"));
+        userToUpdate = updateUser(user, userToUpdate);
+        return userRepository.save(userToUpdate);
     }
 
     @Override
@@ -75,13 +81,24 @@ public class UserServiceImpl implements UserService {
         }
         return null;
     }
-    //TODO
-    //WILL IT BE BETTER TO FIND IT BY NAME NOT ID BECAUSE OF THE DATABASE
-    //beer.getCreatedBy().equals(user) maybe if we add this is will be for better bonus authentication
+
     private void checkModifyPermissions(User user) {
-        if (user.getRole().getId() != 1) {
+        if (user.getRole().getRoleName().equals("User")) {
             throw new AuthorizationException(MODIFY_ERROR_MESSAGE);
         }
     }
 
+    private User updateUser(User inputUser, User userToUpdate) {
+        if (inputUser.getPassword() != null) {
+            userToUpdate.setPassword(inputUser.getPassword());
+        }
+        if (inputUser.getFirstName() != null) {
+            userToUpdate.setFirstName(inputUser.getFirstName());
+        }
+        if (inputUser.getLastName() != null) {
+            userToUpdate.setLastName(inputUser.getLastName());
+        }
+
+        return userToUpdate;
+    }
 }
