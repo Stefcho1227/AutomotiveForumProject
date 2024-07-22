@@ -43,7 +43,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(User user) {
-        checkModifyPermissions(user);
         try {
             return userRepository.save(user);
         } catch (DataIntegrityViolationException e) {

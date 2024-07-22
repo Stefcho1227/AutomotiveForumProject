@@ -7,7 +7,7 @@ import com.example.forumproject.helpers.AuthenticationHelper;
 import com.example.forumproject.helpers.PostMapper;
 import com.example.forumproject.models.Post;
 import com.example.forumproject.models.User;
-import com.example.forumproject.models.dtos.PostDto;
+import com.example.forumproject.models.dtos.in.PostDto;
 import com.example.forumproject.services.contracts.PostService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.naming.AuthenticationException;
 import java.util.List;
 
 @RestController

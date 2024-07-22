@@ -1,9 +1,9 @@
-package com.example.forumproject.models.dtos;
+package com.example.forumproject.models.dtos.in;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-public class UserCreationDto {
+public class UserInDto {
     @NotNull(message = "Name can't be empty")
     @Size(min = 4, max = 32, message = "Name should be between 16 and 64 symbols")
     private String firstName;
@@ -13,14 +13,16 @@ public class UserCreationDto {
     private String email;
     private String username;
     private String password;
-    //TODO To create create user by default with roleId 3
+
     private int roleId;
-    //TODO To create user with default false
+
     private boolean isBlocked;
-    //TODO
+
     private String phoneNumber;
 
-    public UserCreationDto() {
+    public UserInDto() {
+        this.isBlocked = false;
+        this.roleId = 3;
     }
 
     public String getFirstName() {

@@ -3,16 +3,13 @@ package com.example.forumproject.helpers;
 import com.example.forumproject.exceptions.EntityNotFoundException;
 import com.example.forumproject.models.Post;
 import com.example.forumproject.models.User;
-import com.example.forumproject.models.dtos.PostDto;
+import com.example.forumproject.models.dtos.in.PostDto;
 import com.example.forumproject.services.contracts.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Component
 public class PostMapper {

@@ -6,16 +6,14 @@ import com.example.forumproject.exceptions.EntityNotFoundException;
 import com.example.forumproject.helpers.AuthenticationHelper;
 import com.example.forumproject.helpers.UserMapper;
 import com.example.forumproject.models.User;
-import com.example.forumproject.models.dtos.UserCreationDto;
+import com.example.forumproject.models.dtos.in.UserInDto;
 import com.example.forumproject.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.naming.AuthenticationException;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,11 +50,11 @@ public class UserController {
         return userService.getByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    //TODO
+    //TODO za rolite
     //Functionality to check for the user to be authenticated and authorized check the method tryGetUser and
     // checkModifyPermissions in UserService class
     @PostMapping
-    public User createUser(@RequestBody UserCreationDto userDto) {
+    public User createUser(@RequestBody UserInDto userDto) {
         try {
             User user = userMapper.fromDto(userDto);
             return userService.createUser(user);
@@ -64,6 +62,7 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
+//TODO do thisxd
 
 //    @PutMapping("/{id}")
 //    public User updateUser(@PathVariable int id, @RequestBody User user) {
