@@ -4,6 +4,7 @@ import com.example.forumproject.exceptions.AuthorizationException;
 import com.example.forumproject.exceptions.BlockedException;
 import com.example.forumproject.exceptions.EntityNotFoundException;
 import com.example.forumproject.exceptions.OperationAlreadyPerformedException;
+import com.example.forumproject.helpers.AuthenticationHelper;
 import com.example.forumproject.models.Post;
 import com.example.forumproject.models.User;
 import com.example.forumproject.repositories.contracts.PostRepository;
@@ -38,21 +39,21 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post create(Post post, User user) {
-        checkUserBlockStatus(user);
+        AuthenticationHelper.checkUserBlockStatus(user);
         return postRepository.save(post);
     }
 
     @Override
     public Post update(Post post, User user) {
 
-        checkUserBlockStatus(user);
+        AuthenticationHelper.checkUserBlockStatus(user);
         checkModifyPermissions(post.getId(), user);
         return postRepository.save(post);
     }
 
     @Override
     public void delete(int id, User user) {
-        checkUserBlockStatus(user);
+        AuthenticationHelper.checkUserBlockStatus(user);
         checkModifyPermissionsToDelete(id, user);
         Post postToDelete = postRepository.findById(id).orElseThrow(()->new EntityNotFoundException("Post", id));
         postRepository.delete(postToDelete);
@@ -60,7 +61,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void likePost(Post post, User user) {
-        checkUserBlockStatus(user);
+        AuthenticationHelper.checkUserBlockStatus(user);
         Set<User> usersLikedPost = post.getLikes();
         if (usersLikedPost.contains(user)){
             throw new OperationAlreadyPerformedException(MORE_THAN_ONCE_LIKED_ERROR);
@@ -88,9 +89,11 @@ public class PostServiceImpl implements PostService {
         }
         throw new AuthorizationException(DELETE_POST_ERROR_MESSAGE);
     }
-    private void checkUserBlockStatus(User user){
-        if (user.getBlocked()){
-            throw new BlockedException("Username", user.getUsername());
-        }
-    }
+
+    //should we leave it here or should we do it like we have by putting it in the authenticationhelper class
+//    private void checkUserBlockStatus(User user){
+//        if (user.getBlocked()){
+//            throw new BlockedException("Username", user.getUsername());
+//        }
+//    }
 }

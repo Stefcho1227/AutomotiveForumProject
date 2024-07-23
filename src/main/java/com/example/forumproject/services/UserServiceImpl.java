@@ -1,6 +1,7 @@
 package com.example.forumproject.services;
 
 import com.example.forumproject.exceptions.AuthorizationException;
+import com.example.forumproject.exceptions.BlockedException;
 import com.example.forumproject.exceptions.DuplicateEntityException;
 import com.example.forumproject.exceptions.EntityNotFoundException;
 import com.example.forumproject.models.User;

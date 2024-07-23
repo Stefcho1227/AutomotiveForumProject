@@ -1,6 +1,7 @@
 package com.example.forumproject.helpers;
 
 import com.example.forumproject.exceptions.AuthorizationException;
+import com.example.forumproject.exceptions.BlockedException;
 import com.example.forumproject.exceptions.EntityNotFoundException;
 import com.example.forumproject.models.User;
 import com.example.forumproject.services.contracts.UserService;
@@ -66,4 +67,9 @@ public class AuthenticationHelper {
         return userInfo.substring(firstSpace + 1);
     }
 
+    public static void checkUserBlockStatus(User user){
+        if (user.getBlocked()){
+            throw new BlockedException("Username", user.getUsername());
+        }
+    }
 }
