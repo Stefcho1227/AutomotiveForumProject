@@ -1,7 +1,6 @@
 package com.example.forumproject.services;
 
 import com.example.forumproject.exceptions.AuthorizationException;
-import com.example.forumproject.exceptions.BlockedException;
 import com.example.forumproject.exceptions.DuplicateEntityException;
 import com.example.forumproject.exceptions.EntityNotFoundException;
 import com.example.forumproject.models.User;
@@ -17,12 +16,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-import static com.example.forumproject.helpers.AuthenticationHelper.MODIFY_ERROR_MESSAGE;
-
 @Service
 public class UserServiceImpl implements UserService {
 
-    public static final String MODIFY_ERROR_MESSAGE_ADMIN = "Only admin can delete user";
+    public static final String ERROR_MESSAGE_NOT_ADMIN = "Only an admin can perform this operation";
     private final UserRepository userRepository;
     private final UserPhoneNumberRepository phoneNumberRepository;
 
@@ -63,7 +60,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUserById(int id, User user) {
-        checkModifyPermissions(user);
+        checkUserPermission(user);
         userRepository.deleteById(id);
     }
 
@@ -83,9 +80,9 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
-    private void checkModifyPermissions(User user) {
+    private void checkUserPermission(User user) {
         if (user.getRole().getRoleName().equals("User")) {
-            throw new AuthorizationException(MODIFY_ERROR_MESSAGE_ADMIN);
+            throw new AuthorizationException(ERROR_MESSAGE_NOT_ADMIN);
         }
     }
 
@@ -102,6 +99,17 @@ public class UserServiceImpl implements UserService {
         if (inputUser.getLastName() != null) {
             userToUpdate.setLastName(inputUser.getLastName());
         }
+
+
+        return userRepository.save(userToUpdate);
+    }
+
+    @Override
+    public User updateUserBlockStatus(User loggedInUser, User inputUser, int id) {
+        checkUserPermission(loggedInUser);
+
+        User userToUpdate = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User"));
+
         if (inputUser.getBlocked() != null) {
             userToUpdate.setBlocked(inputUser.getBlocked());
         }

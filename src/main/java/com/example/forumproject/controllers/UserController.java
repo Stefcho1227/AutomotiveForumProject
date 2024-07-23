@@ -63,16 +63,19 @@ public class UserController {
 
     //TODO fix naming of methods here and in userService for the .save method
     //TODO authentication for password change
-    @PutMapping("/{id}")
-    public User updateUser(@PathVariable int id, @RequestBody UserInDto user) {
+    @PutMapping()
+    public User updateUser(@RequestHeader HttpHeaders headers, @RequestBody UserInDto user) {
+        User loggedInUser = authenticationHelper.tryGetUser(headers);
         User updateParameters = userMapper.fromDto(user);
-        return userService.updateUser(updateParameters, id);
+        return userService.updateUser(updateParameters, loggedInUser.getId());
     }
 
-    @PutMapping("/{id}/block")
-    public User updateUserBlock(@PathVariable int id, @RequestBody UserBlockDto userBlockDto) {
+    @PutMapping("/{id}")
+    public User updateUserBlock(@RequestHeader HttpHeaders headers, @PathVariable int id, @RequestBody UserBlockDto userBlockDto) {
+        User loggedInUser = authenticationHelper.tryGetUser(headers);
         User updateParameters = userMapper.fromBlockedDto(userBlockDto);
-        return userService.updateUser(updateParameters, id);
+
+        return userService.updateUserBlockStatus(loggedInUser, updateParameters, id);
     }
 
     @DeleteMapping("/{id}")

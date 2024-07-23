@@ -22,4 +22,6 @@ public interface UserService {
     User save(User user);
 
     User updateUser(User user, int id);
+
+    User updateUserBlockStatus(User loggedInUser, User inputUser, int id);
 }
