@@ -101,8 +101,8 @@ public class PostController {
         }
     }
 
-
+    //TODO add functionality to remove a like from a post
     //TODO add functonality to add comments to post with Set<> and relation
     //DONE //TODO to add addLike operation
-    //TODO check if user is blocked before create post update post it and comment post
+    //DONE //TODO check if user is blocked before create post update post it and comment post
 }
