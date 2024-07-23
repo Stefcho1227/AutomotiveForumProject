@@ -3,6 +3,7 @@ package com.example.forumproject.controllers;
 import com.example.forumproject.exceptions.AuthorizationException;
 import com.example.forumproject.exceptions.DuplicateEntityException;
 import com.example.forumproject.exceptions.EntityNotFoundException;
+import com.example.forumproject.exceptions.OperationAlreadyPerformedException;
 import com.example.forumproject.helpers.AuthenticationHelper;
 import com.example.forumproject.helpers.PostMapper;
 import com.example.forumproject.models.Post;
@@ -17,6 +18,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Set;
+
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -38,9 +42,16 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public Post get(@PathVariable int id) {
+    public Post getById(@PathVariable int id) {
         return postService.getPostById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
+    @GetMapping("/{id}/likes")
+    public Set<User> getLikes(@RequestHeader HttpHeaders headers, @PathVariable int id) {
+        User user = authenticationHelper.tryGetUser(headers);
+        Post post = postService.getPostById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return post.getLikes();
+    }
+
     @PostMapping
     public Post create(@RequestHeader HttpHeaders headers, @Valid @RequestBody PostDto postDto){
         try {
@@ -67,6 +78,18 @@ public class PostController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
+    @PutMapping("/{id}/likes")
+    public void like(@RequestHeader HttpHeaders headers, @PathVariable int id){
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+            Post post = postService.getPostById(id).orElseThrow(()->new EntityNotFoundException("Post", id));
+            postService.likePost(post, user);
+        } catch (EntityNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (OperationAlreadyPerformedException e){
+            throw new ResponseStatusException(HttpStatus.ALREADY_REPORTED, e.getMessage());
+        }
+    }
     @DeleteMapping("/{id}")
     public void delete(@RequestHeader HttpHeaders headers, @PathVariable int id){
         try {
@@ -79,9 +102,8 @@ public class PostController {
         }
     }
 
-    //TODO
-    //add functonality to add comments to post
-    //with Set<> and relation
-    //TODO to add addLike operation
+
+    //TODO add functonality to add comments to post with Set<> and relation
+    //DONE //TODO to add addLike operation
     //TODO check if user is blocked before create post update post it and comment post
 }
