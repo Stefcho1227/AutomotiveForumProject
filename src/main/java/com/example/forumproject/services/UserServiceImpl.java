@@ -54,11 +54,12 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    //TODO implement check for admin and also check if it is properly structured
     @Transactional
     public User save(User user, int id) {
         User userToUpdate = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User"));
-        userToUpdate = updateUser(user, userToUpdate);
-        return userRepository.save(userToUpdate);
+        User updatedUser = updateUser(user, userToUpdate);
+        return userRepository.save(updatedUser);
     }
 
     @Override

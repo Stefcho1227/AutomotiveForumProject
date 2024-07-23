@@ -61,7 +61,8 @@ public class UserController {
         }
     }
 
-
+    //TODO fix naming of methods here and in userService for the .save method
+    //TODO authentication for password change
     @PutMapping("/{id}")
     public User updateUser(@PathVariable int id, @RequestBody UserInDto user) {
         User updateParameters = userMapper.fromDto(user);
