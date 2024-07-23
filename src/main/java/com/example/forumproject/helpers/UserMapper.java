@@ -33,9 +33,9 @@ public class UserMapper {
 
     public User fromBlockedDto(UserBlockDto inputData) {
         User user = new User();
-        if (inputData.getData() == 1) {
+        if (inputData.getData().equals("block")) {
             user.setBlocked(true);
-        } else {
+        } else if (inputData.getData().equals("unblock")){
             user.setBlocked(false);
         }
         return user;

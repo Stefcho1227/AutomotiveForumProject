@@ -1,16 +1,16 @@
 package com.example.forumproject.models.dtos.in;
 
 public class UserBlockDto {
-    private int data;
+    private String data;
 
     public UserBlockDto() {
     }
 
-    public int getData() {
+    public String getData() {
         return data;
     }
 
-    public void setData(int data) {
+    public void setData(String data) {
         this.data = data;
     }
 }
