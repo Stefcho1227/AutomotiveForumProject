@@ -1,9 +1,6 @@
 package com.example.forumproject.controllers;
 
-import com.example.forumproject.exceptions.AuthorizationException;
-import com.example.forumproject.exceptions.DuplicateEntityException;
-import com.example.forumproject.exceptions.EntityNotFoundException;
-import com.example.forumproject.exceptions.OperationAlreadyPerformedException;
+import com.example.forumproject.exceptions.*;
 import com.example.forumproject.helpers.AuthenticationHelper;
 import com.example.forumproject.helpers.PostMapper;
 import com.example.forumproject.models.Post;
@@ -64,6 +61,8 @@ public class PostController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (DuplicateEntityException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        } catch (BlockedException e){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }
     }
     @PutMapping("/{id}")
