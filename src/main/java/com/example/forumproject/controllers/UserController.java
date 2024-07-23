@@ -66,13 +66,13 @@ public class UserController {
     @PutMapping("/{id}")
     public User updateUser(@PathVariable int id, @RequestBody UserInDto user) {
         User updateParameters = userMapper.fromDto(user);
-        return userService.save(updateParameters, id);
+        return userService.updateUser(updateParameters, id);
     }
 
     @PutMapping("/{id}/block")
     public User updateUserBlock(@PathVariable int id, @RequestBody UserBlockDto userBlockDto) {
         User updateParameters = userMapper.fromBlockedDto(userBlockDto);
-        return userService.save(updateParameters, id);
+        return userService.updateUser(updateParameters, id);
     }
 
     @DeleteMapping("/{id}")

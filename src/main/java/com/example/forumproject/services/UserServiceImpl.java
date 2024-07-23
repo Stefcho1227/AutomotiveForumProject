@@ -57,10 +57,8 @@ public class UserServiceImpl implements UserService {
 
     //TODO implement check for admin and also check if it is properly structured
     @Transactional
-    public User save(User user, int id) {
-        User userToUpdate = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User"));
-        User updatedUser = updateUser(user, userToUpdate);
-        return userRepository.save(updatedUser);
+    public User save(User user) {
+        return userRepository.save(user);
     }
 
     @Override
@@ -91,7 +89,10 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private User updateUser(User inputUser, User userToUpdate) {
+    @Override
+    public User updateUser(User inputUser, int id) {
+        User userToUpdate = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User"));
+
         if (inputUser.getPassword() != null) {
             userToUpdate.setPassword(inputUser.getPassword());
         }
@@ -105,6 +106,6 @@ public class UserServiceImpl implements UserService {
             userToUpdate.setBlocked(inputUser.getBlocked());
         }
 
-        return userToUpdate;
+        return userRepository.save(userToUpdate);
     }
 }

@@ -19,5 +19,7 @@ public interface UserService {
 
     UserPhoneNumber addPhoneNumber(int id, String phoneNumber);
 
-    User save(User user, int id);
+    User save(User user);
+
+    User updateUser(User user, int id);
 }
