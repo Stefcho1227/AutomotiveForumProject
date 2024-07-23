@@ -16,14 +16,12 @@ public class UserInDto {
 
     private int roleId;
 
-    private boolean isBlocked;
-
     private String phoneNumber;
 
     public UserInDto() {
-        this.isBlocked = false;
         this.roleId = 3;
     }
+
 
     public String getFirstName() {
         return firstName;
@@ -71,14 +69,6 @@ public class UserInDto {
 
     public void setRoleId(int roleId) {
         this.roleId = roleId;
-    }
-
-    public boolean isBlocked() {
-        return isBlocked;
-    }
-
-    public void setBlocked(boolean blocked) {
-        isBlocked = blocked;
     }
 
     public String getPhoneNumber() {

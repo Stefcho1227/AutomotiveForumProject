@@ -99,6 +99,9 @@ public class UserServiceImpl implements UserService {
         if (inputUser.getLastName() != null) {
             userToUpdate.setLastName(inputUser.getLastName());
         }
+        if (inputUser.getBlocked() != null) {
+            userToUpdate.setBlocked(inputUser.getBlocked());
+        }
 
         return userToUpdate;
     }

@@ -6,6 +6,7 @@ import com.example.forumproject.exceptions.EntityNotFoundException;
 import com.example.forumproject.helpers.AuthenticationHelper;
 import com.example.forumproject.helpers.UserMapper;
 import com.example.forumproject.models.User;
+import com.example.forumproject.models.dtos.in.UserBlockDto;
 import com.example.forumproject.models.dtos.in.UserInDto;
 import com.example.forumproject.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +65,12 @@ public class UserController {
     @PutMapping("/{id}")
     public User updateUser(@PathVariable int id, @RequestBody UserInDto user) {
         User updateParameters = userMapper.fromDto(user);
+        return userService.save(updateParameters, id);
+    }
+
+    @PutMapping("/{id}/block")
+    public User updateUserBlock(@PathVariable int id, @RequestBody UserBlockDto userBlockDto) {
+        User updateParameters = userMapper.fromBlockedDto(userBlockDto);
         return userService.save(updateParameters, id);
     }
 

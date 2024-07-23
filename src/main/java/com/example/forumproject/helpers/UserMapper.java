@@ -2,6 +2,7 @@ package com.example.forumproject.helpers;
 
 import com.example.forumproject.exceptions.EntityNotFoundException;
 import com.example.forumproject.models.User;
+import com.example.forumproject.models.dtos.in.UserBlockDto;
 import com.example.forumproject.models.dtos.in.UserInDto;
 import com.example.forumproject.models.UserPhoneNumber;
 import com.example.forumproject.repositories.contracts.RoleRepository;
@@ -25,9 +26,18 @@ public class UserMapper {
         user.setEmail(inputData.getEmail());
         user.setUsername(inputData.getUsername());
         user.setPassword(inputData.getPassword());
-        user.setBlocked(inputData.isBlocked());
         user.setRole(roleRepository.findById(inputData.getRoleId()).orElseThrow(() -> new EntityNotFoundException("Role", inputData.getRoleId())));
 
+        return user;
+    }
+
+    public User fromBlockedDto(UserBlockDto inputData) {
+        User user = new User();
+        if (inputData.getData() == 1) {
+            user.setBlocked(true);
+        } else {
+            user.setBlocked(false);
+        }
         return user;
     }
 }
