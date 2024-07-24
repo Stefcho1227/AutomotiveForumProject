@@ -12,4 +12,6 @@ public interface CommentService {
     Comment save(Comment comment);
 
     void deleteCommentById(int id);
+
+    Comment createComment(Comment comment);
 }

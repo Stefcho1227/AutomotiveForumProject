@@ -40,7 +40,10 @@ public class CommentServiceImpl implements CommentService {
         repository.deleteById(id);
     }
 
-
+    @Override
+    public Comment createComment(Comment comment) {
+        return save(comment);
+    }
 
 
 }

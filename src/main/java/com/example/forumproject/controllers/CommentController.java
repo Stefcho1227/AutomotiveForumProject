@@ -5,11 +5,13 @@ import com.example.forumproject.helpers.CommentMapper;
 import com.example.forumproject.models.Comment;
 import com.example.forumproject.models.User;
 import com.example.forumproject.models.dtos.in.CommentInDto;
+import com.example.forumproject.models.dtos.out.CommentOutDto;
 import com.example.forumproject.services.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -28,25 +30,25 @@ public class CommentController {
     }
     //TODO improve the data being sent
     @GetMapping
-    public List<Comment> getComments() {
-        return commentService.getAll();
+    public List<CommentOutDto> getComments() {
+        List<Comment> comments = commentService.getAll();
+        List<CommentOutDto> commentOutDtos = commentMapper.toDtoList(comments);
+        return commentOutDtos;
     }
 
     @GetMapping("/{id}")
-    public Comment getById(@PathVariable int id) {
-        return commentService.getById(id);
+    public CommentOutDto getById(@PathVariable int id) {
+        return commentMapper.toDto(commentService.getById(id));
     }
 
-    //TODO rename method
     @PostMapping
-    public Comment addComment(@RequestHeader HttpHeaders headers, @RequestBody CommentInDto commentInDto) {
+    public CommentOutDto addComment(@RequestHeader HttpHeaders headers, @RequestBody CommentInDto commentInDto) {
         User loggedInUser = authenticationHelper.tryGetUser(headers);
 
         Comment comment = commentMapper.fromDto(commentInDto, loggedInUser);
 
-        return commentService.save(comment);
+        return commentMapper.toDto(commentService.createComment(comment));
     }
-    //TODO add method to edit comment
 
 
 
