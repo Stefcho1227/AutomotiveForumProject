@@ -52,7 +52,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    //TODO implement check for admin and also check if it is properly structured
     @Transactional
     public User save(User user) {
         return userRepository.save(user);

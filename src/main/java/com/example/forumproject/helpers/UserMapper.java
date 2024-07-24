@@ -6,6 +6,7 @@ import com.example.forumproject.models.dtos.in.UserBlockDto;
 import com.example.forumproject.models.dtos.in.UserInDto;
 import com.example.forumproject.models.UserPhoneNumber;
 import com.example.forumproject.repositories.contracts.RoleRepository;
+import com.example.forumproject.services.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,10 +14,10 @@ import org.springframework.stereotype.Component;
 public class UserMapper {
 
     //TODO fix layers to get from service and then repository you can make RoleService class
-    private final RoleRepository roleRepository;
+    private final RoleService roleService;
     @Autowired
-    public UserMapper(RoleRepository roleRepository) {
-        this.roleRepository = roleRepository;
+    public UserMapper(RoleService roleService) {
+        this.roleService = roleService;
     }
     public  User fromDto(UserInDto inputData) {
         User user = new User();
@@ -26,7 +27,8 @@ public class UserMapper {
         user.setEmail(inputData.getEmail());
         user.setUsername(inputData.getUsername());
         user.setPassword(inputData.getPassword());
-        user.setRole(roleRepository.findById(inputData.getRoleId()).orElseThrow(() -> new EntityNotFoundException("Role", inputData.getRoleId())));
+        user.setBlocked(false);
+        user.setRole(roleService.getRoleById(inputData.getRoleId()).orElseThrow(() -> new EntityNotFoundException("Role", inputData.getRoleId())));
 
         return user;
     }
