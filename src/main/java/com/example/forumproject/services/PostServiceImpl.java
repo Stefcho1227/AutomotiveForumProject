@@ -5,11 +5,14 @@ import com.example.forumproject.exceptions.BlockedException;
 import com.example.forumproject.exceptions.EntityNotFoundException;
 import com.example.forumproject.exceptions.OperationAlreadyPerformedException;
 import com.example.forumproject.helpers.AuthenticationHelper;
+import com.example.forumproject.helpers.PostSpecification;
 import com.example.forumproject.models.Post;
 import com.example.forumproject.models.User;
+import com.example.forumproject.models.options.FilterPostOptions;
 import com.example.forumproject.repositories.contracts.PostRepository;
 import com.example.forumproject.services.contracts.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +24,7 @@ public class PostServiceImpl implements PostService {
     private static final String POST_ERROR_MESSAGE = "Only post creator can modify a post.";
     private static final String DELETE_POST_ERROR_MESSAGE = "Only post creator or admin or moderator can delete a post.";
     private static final String MORE_THAN_ONCE_LIKED_ERROR = "The post should be liked only once";
+    private static final String MORE_THAN_ONCE_REMOVE_LIKE_ERROR = "The like from post can be removed only once";
     private final PostRepository postRepository;
     @Autowired
     public PostServiceImpl(PostRepository postRepository){
@@ -33,8 +37,9 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> getAllPosts() {
-        return postRepository.findAll();
+    public List<Post> getAllPosts(FilterPostOptions filterPostOptions) {
+        Specification<Post> specification = PostSpecification.filterByOption(filterPostOptions);
+        return postRepository.findAll(specification);
     }
 
     @Override
@@ -59,15 +64,18 @@ public class PostServiceImpl implements PostService {
         postRepository.delete(postToDelete);
     }
 
+    //TODO put removeLikePost in if() instead of exception
     @Override
     public void likePost(Post post, User user) {
         AuthenticationHelper.checkUserBlockStatus(user);
         Set<User> usersLikedPost = post.getLikes();
         if (usersLikedPost.contains(user)){
-            throw new OperationAlreadyPerformedException(MORE_THAN_ONCE_LIKED_ERROR);
+            usersLikedPost.remove(user);
+            post.setLikesCount(post.getLikesCount() - 1);
+        } else {
+            usersLikedPost.add(user);
+            post.setLikesCount(post.getLikesCount() + 1);
         }
-        usersLikedPost.add(user);
-        post.setLikesCount(post.getLikesCount() + 1);
         postRepository.save(post);
     }
 

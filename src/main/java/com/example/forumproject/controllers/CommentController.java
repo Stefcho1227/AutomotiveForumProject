@@ -27,6 +27,7 @@ public class CommentController {
         this.authenticationHelper = authenticationHelper;
     }
     //TODO improve the data being sent
+    @GetMapping
     public List<Comment> getComments() {
         return commentService.getAll();
     }
@@ -36,6 +37,7 @@ public class CommentController {
         return commentService.getById(id);
     }
 
+    //TODO rename method
     @PostMapping
     public Comment addComment(@RequestHeader HttpHeaders headers, @RequestBody CommentInDto commentInDto) {
         User loggedInUser = authenticationHelper.tryGetUser(headers);
@@ -44,6 +46,7 @@ public class CommentController {
 
         return commentService.save(comment);
     }
+    //TODO add method to edit comment
 
 
 

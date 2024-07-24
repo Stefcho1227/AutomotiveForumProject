@@ -6,6 +6,7 @@ import com.example.forumproject.helpers.PostMapper;
 import com.example.forumproject.models.Post;
 import com.example.forumproject.models.User;
 import com.example.forumproject.models.dtos.in.PostDto;
+import com.example.forumproject.models.options.FilterPostOptions;
 import com.example.forumproject.services.contracts.PostService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +34,35 @@ public class PostController {
         this.authenticationHelper = authenticationHelper;
     }
 
+    //TODO Fix filtering and sorting to work correctly...
     @GetMapping
-    public List<Post> getAllPosts() {
-        return postService.getAllPosts();
+    public List<Post> getAllPosts(@RequestHeader HttpHeaders headers,
+                                  @RequestParam(required = false) Integer minLikes,
+                                  @RequestParam(required = false) Integer maxLikes,
+                                  @RequestParam(required = false) String title,
+                                  @RequestParam(required = false) String content,
+                                  @RequestParam(required = false) String createdBefore,
+                                  @RequestParam(required = false) String createdAfter,
+                                  @RequestParam(required = false) String postedBy,
+                                  @RequestParam(required = false) String sortBy,
+                                  @RequestParam(required = false) String sortOrder) {
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+            FilterPostOptions filterPostOptions =
+                    new FilterPostOptions(
+                            minLikes,
+                            maxLikes,
+                            title,
+                            content,
+                            createdBefore,
+                            createdAfter,
+                            postedBy,
+                            sortBy,
+                            sortOrder);
+            return postService.getAllPosts(filterPostOptions);
+        } catch (AuthorizationException e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
     }
 
     @GetMapping("/{id}")
@@ -78,7 +105,7 @@ public class PostController {
         }
     }
     @PutMapping("/{id}/likes")
-    public void like(@RequestHeader HttpHeaders headers, @PathVariable int id){
+    public void likeAction(@RequestHeader HttpHeaders headers, @PathVariable int id){
         try {
             User user = authenticationHelper.tryGetUser(headers);
             Post post = postService.getPostById(id).orElseThrow(()->new EntityNotFoundException("Post", id));
