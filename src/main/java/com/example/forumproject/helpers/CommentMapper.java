@@ -7,7 +7,7 @@ import com.example.forumproject.models.dtos.in.CommentInDto;
 import com.example.forumproject.models.dtos.out.CommentOutDto;
 import com.example.forumproject.repositories.contracts.PostRepository;
 import com.example.forumproject.repositories.contracts.UserRepository;
-import com.example.forumproject.services.CommentService;
+import com.example.forumproject.services.contracts.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
