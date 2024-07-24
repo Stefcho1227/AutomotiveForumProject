@@ -4,16 +4,13 @@ import com.example.forumproject.exceptions.EntityNotFoundException;
 import com.example.forumproject.models.User;
 import com.example.forumproject.models.dtos.in.UserBlockDto;
 import com.example.forumproject.models.dtos.in.UserInDto;
-import com.example.forumproject.models.UserPhoneNumber;
-import com.example.forumproject.repositories.contracts.RoleRepository;
-import com.example.forumproject.services.RoleService;
+import com.example.forumproject.services.contracts.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserMapper {
 
-    //TODO fix layers to get from service and then repository you can make RoleService class
     private final RoleService roleService;
     @Autowired
     public UserMapper(RoleService roleService) {

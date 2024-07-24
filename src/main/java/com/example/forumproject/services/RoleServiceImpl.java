@@ -2,6 +2,7 @@ package com.example.forumproject.services;
 
 import com.example.forumproject.models.Role;
 import com.example.forumproject.repositories.contracts.RoleRepository;
+import com.example.forumproject.services.contracts.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

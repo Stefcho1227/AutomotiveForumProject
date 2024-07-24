@@ -61,8 +61,7 @@ public class UserController {
         }
     }
 
-    //TODO fix naming of methods here and in userService for the .save method
-    //TODO authentication for password change
+
     @PutMapping()
     public User updateUser(@RequestHeader HttpHeaders headers, @RequestBody UserInDto user) {
         User loggedInUser = authenticationHelper.tryGetUser(headers);
