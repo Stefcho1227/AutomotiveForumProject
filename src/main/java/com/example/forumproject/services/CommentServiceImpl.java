@@ -2,14 +2,16 @@ package com.example.forumproject.services;
 
 import com.example.forumproject.exceptions.AuthorizationException;
 import com.example.forumproject.exceptions.EntityNotFoundException;
+import com.example.forumproject.helpers.CommentSpecification;
 import com.example.forumproject.models.Comment;
 import com.example.forumproject.models.User;
+import com.example.forumproject.models.options.FilterOptions;
 import com.example.forumproject.repositories.contracts.CommentRepository;
 import com.example.forumproject.services.contracts.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.Path;
 import java.util.List;
 
 @Service
@@ -26,8 +28,9 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comment> getAll() {
-        return repository.findAll();
+    public List<Comment> getAll(FilterOptions filterOptions) {
+        Specification<Comment> specification = CommentSpecification.filterByOption(filterOptions);
+        return repository.findAll(specification);
     }
 
     @Override

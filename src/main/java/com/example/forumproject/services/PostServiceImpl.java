@@ -1,14 +1,12 @@
 package com.example.forumproject.services;
 
 import com.example.forumproject.exceptions.AuthorizationException;
-import com.example.forumproject.exceptions.BlockedException;
 import com.example.forumproject.exceptions.EntityNotFoundException;
-import com.example.forumproject.exceptions.OperationAlreadyPerformedException;
 import com.example.forumproject.helpers.AuthenticationHelper;
 import com.example.forumproject.helpers.PostSpecification;
 import com.example.forumproject.models.Post;
 import com.example.forumproject.models.User;
-import com.example.forumproject.models.options.FilterPostOptions;
+import com.example.forumproject.models.options.FilterOptions;
 import com.example.forumproject.repositories.contracts.PostRepository;
 import com.example.forumproject.services.contracts.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,8 +35,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> getAllPosts(FilterPostOptions filterPostOptions) {
-        Specification<Post> specification = PostSpecification.filterByOption(filterPostOptions);
+    public List<Post> getAllPosts(FilterOptions filterOptions) {
+        Specification<Post> specification = PostSpecification.filterByOption(filterOptions);
         return postRepository.findAll(specification);
     }
 

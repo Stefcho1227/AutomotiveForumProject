@@ -1,5 +1,6 @@
 package com.example.forumproject.controllers;
 
+import com.example.forumproject.exceptions.AuthorizationException;
 import com.example.forumproject.exceptions.EntityNotFoundException;
 import com.example.forumproject.helpers.AuthenticationHelper;
 import com.example.forumproject.helpers.CommentMapper;
@@ -7,6 +8,7 @@ import com.example.forumproject.models.Comment;
 import com.example.forumproject.models.User;
 import com.example.forumproject.models.dtos.in.CommentInDto;
 import com.example.forumproject.models.dtos.out.CommentOutDto;
+import com.example.forumproject.models.options.FilterOptions;
 import com.example.forumproject.services.contracts.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -30,12 +32,29 @@ public class CommentController {
         this.commentMapper = commentMapper;
         this.authenticationHelper = authenticationHelper;
     }
-    //TODO improve the data being sent
+
     @GetMapping
-    public List<CommentOutDto> getComments() {
-        List<Comment> comments = commentService.getAll();
-        List<CommentOutDto> commentOutDtos = commentMapper.toDtoList(comments);
-        return commentOutDtos;
+    public List<CommentOutDto> getComments(@RequestHeader HttpHeaders headers,
+                                           @RequestParam(required = false) String content,
+                                           @RequestParam(required = false) String createdBefore,
+                                           @RequestParam(required = false) String createdAfter,
+                                           @RequestParam(required = false) String createdBy,
+                                           @RequestParam(required = false) String sortBy,
+                                           @RequestParam(required = false) String sortOrder) {
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+            FilterOptions filterOptions =
+                    new FilterOptions(
+                            content,
+                            createdBefore,
+                            createdAfter,
+                            createdBy,
+                            sortBy,
+                            sortOrder);
+            return commentMapper.toDtoList(commentService.getAll(filterOptions));
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
     }
 
     @GetMapping("/{id}")
