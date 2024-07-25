@@ -9,6 +9,7 @@ import com.example.forumproject.models.User;
 import com.example.forumproject.models.options.FilterOptions;
 import com.example.forumproject.repositories.contracts.PostRepository;
 import com.example.forumproject.services.contracts.PostService;
+import com.example.forumproject.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -24,9 +25,11 @@ public class PostServiceImpl implements PostService {
     private static final String MORE_THAN_ONCE_LIKED_ERROR = "The post should be liked only once";
     private static final String MORE_THAN_ONCE_REMOVE_LIKE_ERROR = "The like from post can be removed only once";
     private final PostRepository postRepository;
+    private final UserService userService;
     @Autowired
-    public PostServiceImpl(PostRepository postRepository){
+    public PostServiceImpl(PostRepository postRepository, UserService userService){
         this.postRepository = postRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -75,6 +78,12 @@ public class PostServiceImpl implements PostService {
             post.setLikesCount(post.getLikesCount() + 1);
         }
         postRepository.save(post);
+    }
+
+    @Override
+    public Set<Post> getUserPosts(int id) {
+        User user = userService.getUserById(id).orElseThrow(()->new EntityNotFoundException("User", id));
+        return postRepository.findByCreatedBy(user);
     }
 
     //DONE //TODO method to check if the user is user or admin/moderator for user to edit which HE CREATED and post which HE CREATED  and for admin/moderator to delete posts ANY POST

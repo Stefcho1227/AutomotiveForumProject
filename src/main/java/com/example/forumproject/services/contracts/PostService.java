@@ -6,6 +6,7 @@ import com.example.forumproject.models.options.FilterOptions;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface PostService {
     Optional<Post> getPostById(int id);
@@ -17,4 +18,6 @@ public interface PostService {
     void delete(int id, User user);
 
     void likePost(Post post, User user);
+
+    Set<Post> getUserPosts(int id);
 }
