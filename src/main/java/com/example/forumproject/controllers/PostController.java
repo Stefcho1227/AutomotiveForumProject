@@ -2,7 +2,7 @@ package com.example.forumproject.controllers;
 
 import com.example.forumproject.exceptions.*;
 import com.example.forumproject.helpers.AuthenticationHelper;
-import com.example.forumproject.helpers.PostMapper;
+import com.example.forumproject.helpers.mapper.PostMapper;
 import com.example.forumproject.models.Post;
 import com.example.forumproject.models.Tag;
 import com.example.forumproject.models.User;

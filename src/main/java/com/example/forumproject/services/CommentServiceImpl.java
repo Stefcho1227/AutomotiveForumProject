@@ -2,7 +2,7 @@ package com.example.forumproject.services;
 
 import com.example.forumproject.exceptions.AuthorizationException;
 import com.example.forumproject.exceptions.EntityNotFoundException;
-import com.example.forumproject.helpers.CommentSpecification;
+import com.example.forumproject.helpers.specifications.CommentSpecification;
 import com.example.forumproject.models.Comment;
 import com.example.forumproject.models.User;
 import com.example.forumproject.models.options.FilterOptions;

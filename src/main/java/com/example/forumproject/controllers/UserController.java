@@ -4,7 +4,7 @@ import com.example.forumproject.exceptions.AuthorizationException;
 import com.example.forumproject.exceptions.DuplicateEntityException;
 import com.example.forumproject.exceptions.EntityNotFoundException;
 import com.example.forumproject.helpers.AuthenticationHelper;
-import com.example.forumproject.helpers.UserMapper;
+import com.example.forumproject.helpers.mapper.UserMapper;
 import com.example.forumproject.models.User;
 import com.example.forumproject.models.dtos.in.UserBlockDto;
 import com.example.forumproject.models.dtos.in.UserInDto;

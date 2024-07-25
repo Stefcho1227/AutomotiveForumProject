@@ -3,7 +3,7 @@ package com.example.forumproject.services;
 import com.example.forumproject.exceptions.AuthorizationException;
 import com.example.forumproject.exceptions.EntityNotFoundException;
 import com.example.forumproject.helpers.AuthenticationHelper;
-import com.example.forumproject.helpers.PostSpecification;
+import com.example.forumproject.helpers.specifications.PostSpecification;
 import com.example.forumproject.models.Post;
 import com.example.forumproject.models.User;
 import com.example.forumproject.models.options.FilterOptions;

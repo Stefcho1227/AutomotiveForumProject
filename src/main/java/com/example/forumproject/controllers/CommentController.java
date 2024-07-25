@@ -3,7 +3,7 @@ package com.example.forumproject.controllers;
 import com.example.forumproject.exceptions.AuthorizationException;
 import com.example.forumproject.exceptions.EntityNotFoundException;
 import com.example.forumproject.helpers.AuthenticationHelper;
-import com.example.forumproject.helpers.CommentMapper;
+import com.example.forumproject.helpers.mapper.CommentMapper;
 import com.example.forumproject.models.Comment;
 import com.example.forumproject.models.User;
 import com.example.forumproject.models.dtos.in.CommentInDto;

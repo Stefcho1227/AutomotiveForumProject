@@ -1,4 +1,4 @@
-package com.example.forumproject.helpers;
+package com.example.forumproject.helpers.mapper;
 
 import com.example.forumproject.exceptions.EntityNotFoundException;
 import com.example.forumproject.models.User;

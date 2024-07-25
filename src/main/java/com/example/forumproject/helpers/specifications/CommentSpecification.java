@@ -1,6 +1,6 @@
-package com.example.forumproject.helpers;
+package com.example.forumproject.helpers.specifications;
 
-import com.example.forumproject.models.Post;
+import com.example.forumproject.models.Comment;
 import com.example.forumproject.models.options.FilterOptions;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
@@ -10,27 +10,17 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PostSpecification {
-    public static Specification<Post> filterByOption(FilterOptions filterOptions) {
+public class CommentSpecification {
+    public static Specification<Comment> filterByOption(FilterOptions filterOptions) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
-            filterOptions.getMinLikes().ifPresent(minLikes ->
-                    predicates.add(
-                            criteriaBuilder.greaterThanOrEqualTo(root.get("likesCount"), minLikes))
-            );
-            filterOptions.getMaxLikes().ifPresent(maxLikes ->
-                predicates.add(
-                        criteriaBuilder.lessThanOrEqualTo(root.get("likesCount"), maxLikes))
-            );
-            filterOptions.getTitle().ifPresent(title ->
-                predicates.add(
-                        criteriaBuilder.like(root.get("title"), "%" + title + "%"))
-            );
+
+
 
             filterOptions.getContent().ifPresent(content ->
-                predicates.add(
-                        criteriaBuilder.like(root.get("content"), "%" + content + "%"))
+                    predicates.add(
+                            criteriaBuilder.like(root.get("content"), "%" + content + "%"))
             );
 
             filterOptions.getCreatedBefore().ifPresent(createdBefore -> {
@@ -46,8 +36,8 @@ public class PostSpecification {
             });
 
             filterOptions.getPostedBy().ifPresent(postedBy ->
-                predicates.add(
-                        criteriaBuilder.equal(root.get("createdBy").get("username"), postedBy))
+                    predicates.add(
+                            criteriaBuilder.equal(root.get("createdBy").get("username"), postedBy))
             );
             query.where(predicates.toArray(new Predicate[0]));
 
