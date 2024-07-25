@@ -39,6 +39,14 @@ public class Post {
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
     /*@JsonManagedReference*/
     private Set<Comment> comments;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JsonIgnore
+    @JoinTable(
+            name = "post_tags",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private Set<Tag> tags;
 
     public Post() {
     }
@@ -104,6 +112,14 @@ public class Post {
 
     public void setComments(Set<Comment> comments) {
         this.comments = comments;
+    }
+
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
     }
 
     @Override

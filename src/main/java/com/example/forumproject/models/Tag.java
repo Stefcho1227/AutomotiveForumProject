@@ -2,6 +2,8 @@ package com.example.forumproject.models;
 
 import jakarta.persistence.*;
 
+import java.util.Set;
+
 @Entity
 @Table(name = "tags")
 public class Tag {
@@ -11,8 +13,18 @@ public class Tag {
     private int id;
     @Column(name = "tag_name")
     private String tagName;
+    @ManyToMany(mappedBy = "tags")
+    private Set<Post> posts;
 
     public Tag() {
+    }
+
+    public Set<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(Set<Post> posts) {
+        this.posts = posts;
     }
 
     public int getId() {

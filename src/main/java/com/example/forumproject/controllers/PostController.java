@@ -4,6 +4,7 @@ import com.example.forumproject.exceptions.*;
 import com.example.forumproject.helpers.AuthenticationHelper;
 import com.example.forumproject.helpers.PostMapper;
 import com.example.forumproject.models.Post;
+import com.example.forumproject.models.Tag;
 import com.example.forumproject.models.User;
 import com.example.forumproject.models.dtos.in.PostDto;
 import com.example.forumproject.models.options.FilterPostOptions;
@@ -34,7 +35,6 @@ public class PostController {
         this.authenticationHelper = authenticationHelper;
     }
 
-    //TODO Fix filtering and sorting to work correctly...
     @GetMapping
     public List<Post> getAllPosts(@RequestHeader HttpHeaders headers,
                                   @RequestParam(required = false) Integer minLikes,
@@ -66,14 +66,25 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public Post getById(@PathVariable int id) {
-        return postService.getPostById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    public Post getById(@RequestHeader HttpHeaders headers, @PathVariable int id) {
+        try {
+            authenticationHelper.tryGetUser(headers);
+            return postService.getPostById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        } catch (AuthorizationException e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
     }
     @GetMapping("/{id}/likes")
     public Set<User> getLikes(@RequestHeader HttpHeaders headers, @PathVariable int id) {
-        User user = authenticationHelper.tryGetUser(headers);
+        authenticationHelper.tryGetUser(headers);
         Post post = postService.getPostById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         return post.getLikes();
+    }
+    @GetMapping("/{id}/tags")
+    public Set<Tag> getTags(@RequestHeader HttpHeaders headers, @PathVariable int id) {
+        authenticationHelper.tryGetUser(headers);
+        Post post = postService.getPostById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return post.getTags();
     }
 
     @PostMapping
@@ -127,9 +138,4 @@ public class PostController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
-
-    //TODO add functionality to remove a like from a post
-    //TODO add functonality to add comments to post with Set<> and relation
-    //DONE //TODO to add addLike operation
-    //DONE //TODO check if user is blocked before create post update post it and comment post
 }
