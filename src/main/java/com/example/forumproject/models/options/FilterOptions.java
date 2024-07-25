@@ -1,10 +1,8 @@
 package com.example.forumproject.models.options;
 
-import org.springframework.web.bind.annotation.RequestParam;
-
 import java.util.Optional;
 
-public class FilterPostOptions {
+public class FilterOptions {
 
     private Optional<Integer> minLikes;
     private Optional<Integer> maxLikes;
@@ -16,18 +14,32 @@ public class FilterPostOptions {
     private Optional<String> sortBy;
     private Optional<String> sortOrder;
 
-    public FilterPostOptions(Integer minLikes,
-                             Integer maxLikes,
-                             String title,
-                             String content,
-                             String createdBefore,
-                             String createdAfter,
-                             String postedBy,
-                             String sortBy,
-                             String sortOrder) {
+    public FilterOptions(Integer minLikes,
+                         Integer maxLikes,
+                         String title,
+                         String content,
+                         String createdBefore,
+                         String createdAfter,
+                         String postedBy,
+                         String sortBy,
+                         String sortOrder) {
         this.minLikes = Optional.ofNullable(minLikes);
         this.maxLikes = Optional.ofNullable(maxLikes);
         this.title = Optional.ofNullable(title);
+        this.content = Optional.ofNullable(content);
+        this.createdBefore = Optional.ofNullable(createdBefore);
+        this.createdAfter = Optional.ofNullable(createdAfter);
+        this.postedBy = Optional.ofNullable(postedBy);
+        this.sortBy = Optional.ofNullable(sortBy);
+        this.sortOrder = Optional.ofNullable(sortOrder);
+    }
+
+    public FilterOptions(String content,
+                         String createdBefore,
+                         String createdAfter,
+                         String postedBy,
+                         String sortBy,
+                         String sortOrder) {
         this.content = Optional.ofNullable(content);
         this.createdBefore = Optional.ofNullable(createdBefore);
         this.createdAfter = Optional.ofNullable(createdAfter);

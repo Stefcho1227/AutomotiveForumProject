@@ -7,7 +7,7 @@ import com.example.forumproject.models.Post;
 import com.example.forumproject.models.Tag;
 import com.example.forumproject.models.User;
 import com.example.forumproject.models.dtos.in.PostDto;
-import com.example.forumproject.models.options.FilterPostOptions;
+import com.example.forumproject.models.options.FilterOptions;
 import com.example.forumproject.services.contracts.PostService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +18,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Set;
-
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -48,8 +46,8 @@ public class PostController {
                                   @RequestParam(required = false) String sortOrder) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
-            FilterPostOptions filterPostOptions =
-                    new FilterPostOptions(
+            FilterOptions filterOptions =
+                    new FilterOptions(
                             minLikes,
                             maxLikes,
                             title,
@@ -59,7 +57,7 @@ public class PostController {
                             postedBy,
                             sortBy,
                             sortOrder);
-            return postService.getAllPosts(filterPostOptions);
+            return postService.getAllPosts(filterOptions);
         } catch (AuthorizationException e){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
