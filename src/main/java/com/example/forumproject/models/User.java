@@ -3,6 +3,8 @@ package com.example.forumproject.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -116,5 +118,18 @@ public class User {
     @Override
     public String toString() {
         return username + " " + firstName + " " + lastName + " " + email + " " + username + " " + password + " " + role + " " + phoneNumber;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        User user = (User) object;
+        return id == user.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

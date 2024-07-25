@@ -104,11 +104,4 @@ public class PostServiceImpl implements PostService {
         }
         throw new AuthorizationException(DELETE_POST_ERROR_MESSAGE);
     }
-
-    //should we leave it here or should we do it like we have by putting it in the authenticationhelper class
-//    private void checkUserBlockStatus(User user){
-//        if (user.getBlocked()){
-//            throw new BlockedException("Username", user.getUsername());
-//        }
-//    }
 }

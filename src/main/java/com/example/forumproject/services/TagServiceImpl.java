@@ -102,12 +102,12 @@ public class TagServiceImpl implements TagService {
         }
         throw new AuthorizationException(TAG_ERROR_MESSAGE);
     }
-    private static void checkAccessPermissions(Post post, User executingUser) {
+    public static void checkAccessPermissions(Post post, User executingUser) {
         if (!post.getCreatedBy().equals(executingUser)) {
             throw new AuthorizationException(ERROR_MESSAGE);
         }
     }
-    private static void checkForAlreadyDoneOperation(Post post, Tag tag, boolean isAddOperation) {
+    public static void checkForAlreadyDoneOperation(Post post, Tag tag, boolean isAddOperation) {
         boolean alreadyDone = isAddOperation ? post.getTags().contains(tag) : !post.getTags().contains(tag);
         if (alreadyDone) {
             String operation = isAddOperation ? "add" : "remove";

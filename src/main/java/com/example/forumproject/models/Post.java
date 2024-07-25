@@ -127,11 +127,11 @@ public class Post {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         Post post = (Post) object;
-        return id == post.id && likes == post.likes && Objects.equals(createdBy, post.createdBy) && Objects.equals(title, post.title) && Objects.equals(content, post.content) && Objects.equals(createdAt, post.createdAt);
+        return id == post.id && likesCount == post.likesCount && Objects.equals(createdBy, post.createdBy) && Objects.equals(title, post.title) && Objects.equals(content, post.content) && Objects.equals(createdAt, post.createdAt) && Objects.equals(likes, post.likes) && Objects.equals(comments, post.comments) && Objects.equals(tags, post.tags);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, createdBy, title, content, likes, createdAt);
+        return Objects.hash(id, createdBy, title, content, likesCount, createdAt, likes, comments, tags);
     }
 }
