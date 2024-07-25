@@ -12,7 +12,7 @@ import com.example.forumproject.models.Tag;
 import com.example.forumproject.models.User;
 import com.example.forumproject.models.dtos.in.PostDto;
 import com.example.forumproject.models.dtos.in.TagDto;
-import com.example.forumproject.models.options.FilterPostOptions;
+import com.example.forumproject.models.options.FilterOptions;
 import com.example.forumproject.services.contracts.PostService;
 import com.example.forumproject.services.contracts.TagService;
 import jakarta.validation.Valid;
