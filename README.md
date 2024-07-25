@@ -87,6 +87,7 @@ Design and implement a Forum System, where users can create posts, add comments,
  
 2. Set up the database:
     - Update `application.properties`
+    - There are sql scripts in the resources package for creation of a database and sample data insertion.
  
 #### Example `application.properties`
 ```
