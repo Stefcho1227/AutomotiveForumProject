@@ -1,8 +1,5 @@
 package com.example.forumproject;
-import com.example.forumproject.models.Post;
-import com.example.forumproject.models.Role;
-import com.example.forumproject.models.Tag;
-import com.example.forumproject.models.User;
+import com.example.forumproject.models.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.sql.Timestamp;
@@ -60,6 +57,14 @@ public class Helpers {
         tag2.setId(2);
         tag2.setTagName("MockTag2");
         return List.of(tag1, tag2);
+    }
+
+    public static Comment createMockComment() {
+        Comment comment = new Comment();
+        comment.setId(1);
+        comment.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        comment.setContent("MockContent");
+        return comment;
     }
 
     public static String asJsonString(final Object object) {
