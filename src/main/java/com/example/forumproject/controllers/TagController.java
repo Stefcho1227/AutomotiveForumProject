@@ -82,36 +82,6 @@ public class TagController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
-    @PutMapping("/{id}/posts/{postId}/adding")
-    public void addTagToPost(
-            @RequestHeader HttpHeaders headers,
-            @PathVariable int id,
-            @PathVariable int postId){
-        try {
-            User user = authenticationHelper.tryGetUser(headers);
-            tagService.addTagToPost(id, postId, user);
-        } catch (AuthorizationException e){
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        } catch (EntityNotFoundException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (OperationAlreadyPerformedException e){
-            throw new ResponseStatusException(HttpStatus.ALREADY_REPORTED, e.getMessage());
-        }
-    }
-    @PutMapping("/{id}/posts/{postId}/removing")
-    public void removeTagToPost(
-            @RequestHeader HttpHeaders headers,
-            @PathVariable int id,
-            @PathVariable int postId){
-        try {
-            User user = authenticationHelper.tryGetUser(headers);
-            tagService.removeTagToPost(id, postId, user);
-        } catch (AuthorizationException e){
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        } catch (EntityNotFoundException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
-    }
     @DeleteMapping("/{id}")
     public void delete(@RequestHeader HttpHeaders headers, @PathVariable int id){
         try {

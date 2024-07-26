@@ -4,6 +4,7 @@ import com.example.forumproject.exceptions.EntityNotFoundException;
 import com.example.forumproject.models.User;
 import com.example.forumproject.models.dtos.in.UserBlockDto;
 import com.example.forumproject.models.dtos.in.UserInDto;
+import com.example.forumproject.models.dtos.out.UserOutDto;
 import com.example.forumproject.services.contracts.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -38,5 +39,8 @@ public class UserMapper {
             user.setBlocked(false);
         }
         return user;
+    }
+    public static UserOutDto toUserDto(User user) {
+        return new UserOutDto(user.getFirstName(), user.getLastName(), user.getUsername());
     }
 }

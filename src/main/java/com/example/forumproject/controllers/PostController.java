@@ -2,7 +2,10 @@ package com.example.forumproject.controllers;
 
 import com.example.forumproject.exceptions.*;
 import com.example.forumproject.helpers.AuthenticationHelper;
+import com.example.forumproject.helpers.mapper.CommentMapper;
 import com.example.forumproject.helpers.mapper.PostMapper;
+import com.example.forumproject.helpers.mapper.TagMapper;
+import com.example.forumproject.helpers.mapper.UserMapper;
 import com.example.forumproject.models.Comment;
 import com.example.forumproject.models.Post;
 import com.example.forumproject.models.Tag;
@@ -10,6 +13,7 @@ import com.example.forumproject.models.User;
 import com.example.forumproject.models.dtos.in.PostDto;
 import com.example.forumproject.models.options.FilterOptions;
 import com.example.forumproject.services.contracts.PostService;
+import com.example.forumproject.services.contracts.TagService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -19,23 +23,28 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/posts")
 public class PostController {
     private final PostService postService;
+    private final TagService tagService;
     private final PostMapper postMapper;
+    private final CommentMapper commentMapper;
     private final AuthenticationHelper authenticationHelper;
 
     @Autowired
-    public PostController(PostService postService, PostMapper postMapper, AuthenticationHelper authenticationHelper) {
+    public PostController(PostService postService, TagService tagService, PostMapper postMapper, CommentMapper commentMapper, AuthenticationHelper authenticationHelper) {
         this.postService = postService;
+        this.tagService = tagService;
         this.postMapper = postMapper;
+        this.commentMapper = commentMapper;
         this.authenticationHelper = authenticationHelper;
     }
 
     @GetMapping
-    public List<Post> getAllPosts(@RequestHeader HttpHeaders headers,
+    public List<?> getAllPosts(@RequestHeader HttpHeaders headers,
                                   @RequestParam(required = false) Integer minLikes,
                                   @RequestParam(required = false) Integer maxLikes,
                                   @RequestParam(required = false) String title,
@@ -58,48 +67,80 @@ public class PostController {
                             postedBy,
                             sortBy,
                             sortOrder);
-            return postService.getAllPosts(filterOptions);
+            List<Post> posts = postService.getAllPosts(filterOptions);
+            if (user.getRole().getRoleName().equals("Admin")) {
+                return posts;
+            } else {
+                return posts.stream()
+                        .map(PostMapper::toUserDTO)
+                        .collect(Collectors.toList());
+            }
         } catch (AuthorizationException e){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
     }
 
     @GetMapping("/{id}")
-    public Post getById(@RequestHeader HttpHeaders headers, @PathVariable int id) {
+    public Object getById(@RequestHeader HttpHeaders headers, @PathVariable int id) {
         try {
-            authenticationHelper.tryGetUser(headers);
-            return postService.getPostById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+            User user = authenticationHelper.tryGetUser(headers);
+            Post post = postService.getPostById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+            if (user.getRole().getRoleName().equals("Admin")){
+                return post;
+            } else{
+                return PostMapper.toUserDTO(post);
+            }
         } catch (AuthorizationException e){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
-    //TODO add getComments of a post method
     @GetMapping("/{id}/likes")
-    public Set<User> getLikes(@RequestHeader HttpHeaders headers, @PathVariable int id) {
-        authenticationHelper.tryGetUser(headers);
+    public Set<?> getLikes(@RequestHeader HttpHeaders headers, @PathVariable int id) {
+        User user = authenticationHelper.tryGetUser(headers);
         Post post = postService.getPostById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         if (post.getLikes().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT);
         }
-        return post.getLikes();
+        if (user.getRole().getRoleName().equals("Admin")) {
+            return post.getLikes();
+        } else {
+            return post.getLikes()
+                    .stream()
+                    .map(UserMapper::toUserDto)
+                    .collect(Collectors.toSet());
+        }
     }
     @GetMapping("/{id}/tags")
-    public Set<Tag> getTags(@RequestHeader HttpHeaders headers, @PathVariable int id) {
-        authenticationHelper.tryGetUser(headers);
+    public Set<?> getTags(@RequestHeader HttpHeaders headers, @PathVariable int id) {
+        User user = authenticationHelper.tryGetUser(headers);
         Post post = postService.getPostById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         if (post.getTags().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT);
         }
-        return post.getTags();
+        if (user.getRole().getRoleName().equals("Admin")) {
+            return post.getTags();
+        } else {
+            return post.getTags()
+                    .stream()
+                    .map(TagMapper::toUserDto)
+                    .collect(Collectors.toSet());
+        }
     }
     @GetMapping("/{id}/comments")
-    public Set<Comment> getComments(@RequestHeader HttpHeaders headers, @PathVariable int id){
-        authenticationHelper.tryGetUser(headers);
+    public Set<?> getComments(@RequestHeader HttpHeaders headers, @PathVariable int id){
+        User user = authenticationHelper.tryGetUser(headers);
         Post post = postService.getPostById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         if (post.getComments().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT);
         }
-        return post.getComments();
+        if (user.getRole().getRoleName().equals("Admin")) {
+            return post.getComments();
+        } else {
+            return post.getComments()
+                    .stream()
+                    .map(commentMapper::toDto)
+                    .collect(Collectors.toSet());
+        }
     }
     //TODO move to User controller
     @GetMapping("users/{id}")
@@ -150,6 +191,36 @@ public class PostController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (OperationAlreadyPerformedException e){
             throw new ResponseStatusException(HttpStatus.ALREADY_REPORTED, e.getMessage());
+        }
+    }
+    @PutMapping("/{postId}/tags/{tagId}/addition")
+    public void addTagToPost(
+            @RequestHeader HttpHeaders headers,
+            @PathVariable int postId,
+            @PathVariable int tagId){
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+            tagService.addTagToPost(tagId, postId, user);
+        } catch (AuthorizationException e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (OperationAlreadyPerformedException e){
+            throw new ResponseStatusException(HttpStatus.ALREADY_REPORTED, e.getMessage());
+        }
+    }
+    @PutMapping("/{postId}/tags/{tagId}/removal")
+    public void removeTagToPost(
+            @RequestHeader HttpHeaders headers,
+            @PathVariable int postId,
+            @PathVariable int tagId){
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+            tagService.removeTagToPost(tagId, postId, user);
+        } catch (AuthorizationException e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
     @DeleteMapping("/{id}")

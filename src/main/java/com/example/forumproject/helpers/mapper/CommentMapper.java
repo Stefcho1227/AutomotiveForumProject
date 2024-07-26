@@ -45,15 +45,13 @@ public class CommentMapper {
         String authorName = comment.getCreatedBy().getFirstName() + " " + comment.getCreatedBy().getLastName();
         commentOutDto.setAuthorName(authorName);
         commentOutDto.setContent(comment.getContent());
-        commentOutDto.setId(comment.getId());
+        //commentOutDto.setId(comment.getId());
         commentOutDto.setCreatedAt(comment.getCreatedAt());
-
         return commentOutDto;
     }
 
     public List<CommentOutDto> toDtoList(List<Comment> comments) {
         List<CommentOutDto> commentOutDtos = new ArrayList<>();
-
         for (Comment comment : comments) {
             commentOutDtos.add(toDto(comment));
         }

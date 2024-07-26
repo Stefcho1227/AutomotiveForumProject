@@ -65,7 +65,6 @@ public class PostServiceImpl implements PostService {
         postRepository.delete(postToDelete);
     }
 
-    //TODO put removeLikePost in if() instead of exception
     @Override
     public void likePost(Post post, User user) {
         AuthenticationHelper.checkUserBlockStatus(user);
@@ -85,8 +84,6 @@ public class PostServiceImpl implements PostService {
         User user = userService.getUserById(id).orElseThrow(()->new EntityNotFoundException("User", id));
         return postRepository.findByCreatedBy(user);
     }
-
-    //DONE //TODO method to check if the user is user or admin/moderator for user to edit which HE CREATED and post which HE CREATED  and for admin/moderator to delete posts ANY POST
     private void checkModifyPermissions(int postId, User user) {
         Post repositoryPost = postRepository.findById(postId).orElseThrow(()->new EntityNotFoundException("Post", postId));
         if (!repositoryPost.getCreatedBy().equals(user)) {

@@ -6,6 +6,7 @@ import com.example.forumproject.models.Tag;
 import com.example.forumproject.models.User;
 import com.example.forumproject.models.dtos.in.PostDto;
 import com.example.forumproject.models.dtos.in.TagDto;
+import com.example.forumproject.models.dtos.out.TagUserDto;
 import com.example.forumproject.services.contracts.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,5 +30,8 @@ public class TagMapper {
         Tag repositoryTag = tagService.getById(user, id).orElseThrow(()->new EntityNotFoundException("Tag", id));
         repositoryTag.setTagName(tagDto.getTagName());
         return repositoryTag;
+    }
+    public static TagUserDto toUserDto(Tag tag) {
+        return new TagUserDto(tag.getTagName());
     }
 }

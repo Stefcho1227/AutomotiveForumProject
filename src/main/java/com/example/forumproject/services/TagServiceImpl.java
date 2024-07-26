@@ -13,6 +13,7 @@ import com.example.forumproject.models.dtos.out.TagUserDto;
 import com.example.forumproject.repositories.contracts.PostRepository;
 import com.example.forumproject.repositories.contracts.TagRepository;
 import com.example.forumproject.services.contracts.TagService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -42,13 +43,14 @@ public class TagServiceImpl implements TagService {
         }
     }
 
+    //TODO check this method to  use dto
     @Override
     public Optional<Tag> getById(User user, int tagId) {
         checkPermissions(user);
         return tagRepository.findById(tagId);
     }
-    //TODO make method transactional... move to Post controller
     @Override
+    @Transactional
     public void addTagToPost(int id, int postId, User user) {
         Post post = postRepository.findById(postId).orElseThrow(()->new EntityNotFoundException("Post", postId));
         checkAccessPermissions(post, user);
@@ -59,8 +61,8 @@ public class TagServiceImpl implements TagService {
         tagRepository.save(tag);
         postRepository.save(post);
     }
-    //TODO make method transactional... move to Post controller
     @Override
+    @Transactional
     public void removeTagToPost(int id, int postId, User user) {
         Post post = postRepository.findById(postId).orElseThrow(()->new EntityNotFoundException("Post", postId));
         checkAccessPermissions(post, user);

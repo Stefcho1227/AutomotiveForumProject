@@ -4,12 +4,14 @@ import com.example.forumproject.exceptions.EntityNotFoundException;
 import com.example.forumproject.models.Post;
 import com.example.forumproject.models.User;
 import com.example.forumproject.models.dtos.in.PostDto;
+import com.example.forumproject.models.dtos.out.*;
 import com.example.forumproject.services.contracts.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 @Component
 public class PostMapper {
@@ -29,11 +31,31 @@ public class PostMapper {
         post.setTitle(postDto.getTitle());
         post.setContent(postDto.getContent());
         post.setCreatedBy(user);
-//TODO there is some discrepency with the timezones when you send a get request.
         LocalDateTime now = LocalDateTime.now();
         Timestamp timestamp = Timestamp.valueOf(now);
         post.setCreatedAt(timestamp);
 
         return post;
+    }
+    public static PostUserDto toUserDTO(Post post) {
+        PostUserDto dto = new PostUserDto();
+        dto.setCreatedBy(new UserOutDto(
+                post.getCreatedBy().getFirstName(),
+                post.getCreatedBy().getLastName(),
+                post.getCreatedBy().getUsername()));
+        dto.setTitle(post.getTitle());
+        dto.setContent(post.getContent());
+        dto.setLikesCount(post.getLikesCount());
+        dto.setCreatedAt(post.getCreatedAt());
+        dto.setComments(post.getComments()
+                .stream()
+                .map(comment -> new CommentOutDto(
+                        comment.getCreatedBy().getUsername(),
+                        comment.getContent(),
+                        comment.getCreatedAt()))
+                .collect(Collectors.toSet()));
+        dto.setTags(post.getTags()
+                .stream().map(tag -> new TagUserDto(tag.getTagName())).collect(Collectors.toSet()));
+        return dto;
     }
 }

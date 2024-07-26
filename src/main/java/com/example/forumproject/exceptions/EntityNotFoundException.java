@@ -13,6 +13,4 @@ public class EntityNotFoundException extends RuntimeException {
     public EntityNotFoundException(String type) {
         super(String.format("%s with not found.", type));
     }
-
-    //TODO check if user Blocked exception class
 }
