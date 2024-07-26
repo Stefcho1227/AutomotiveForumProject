@@ -47,7 +47,7 @@ public class TagServiceImpl implements TagService {
         checkPermissions(user);
         return tagRepository.findById(tagId);
     }
-
+    //TODO make method transactional... move to Post controller
     @Override
     public void addTagToPost(int id, int postId, User user) {
         Post post = postRepository.findById(postId).orElseThrow(()->new EntityNotFoundException("Post", postId));
@@ -59,7 +59,7 @@ public class TagServiceImpl implements TagService {
         tagRepository.save(tag);
         postRepository.save(post);
     }
-
+    //TODO make method transactional... move to Post controller
     @Override
     public void removeTagToPost(int id, int postId, User user) {
         Post post = postRepository.findById(postId).orElseThrow(()->new EntityNotFoundException("Post", postId));

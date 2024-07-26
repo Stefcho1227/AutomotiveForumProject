@@ -3,6 +3,7 @@ package com.example.forumproject.controllers;
 import com.example.forumproject.exceptions.*;
 import com.example.forumproject.helpers.AuthenticationHelper;
 import com.example.forumproject.helpers.mapper.PostMapper;
+import com.example.forumproject.models.Comment;
 import com.example.forumproject.models.Post;
 import com.example.forumproject.models.Tag;
 import com.example.forumproject.models.User;
@@ -72,18 +73,35 @@ public class PostController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
+    //TODO add getComments of a post method
     @GetMapping("/{id}/likes")
     public Set<User> getLikes(@RequestHeader HttpHeaders headers, @PathVariable int id) {
         authenticationHelper.tryGetUser(headers);
         Post post = postService.getPostById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if (post.getLikes().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT);
+        }
         return post.getLikes();
     }
     @GetMapping("/{id}/tags")
     public Set<Tag> getTags(@RequestHeader HttpHeaders headers, @PathVariable int id) {
         authenticationHelper.tryGetUser(headers);
         Post post = postService.getPostById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if (post.getTags().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT);
+        }
         return post.getTags();
     }
+    @GetMapping("/{id}/comments")
+    public Set<Comment> getComments(@RequestHeader HttpHeaders headers, @PathVariable int id){
+        authenticationHelper.tryGetUser(headers);
+        Post post = postService.getPostById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if (post.getComments().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT);
+        }
+        return post.getComments();
+    }
+    //TODO move to User controller
     @GetMapping("users/{id}")
     public Set<Post> getUserPosts(@RequestHeader HttpHeaders headers, @PathVariable int id) {
         try {

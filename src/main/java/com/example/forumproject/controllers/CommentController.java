@@ -61,7 +61,6 @@ public class CommentController {
     public CommentOutDto getById(@PathVariable int id) {
         return commentMapper.toDto(commentService.getById(id));
     }
-
     @PostMapping
     public CommentOutDto addComment(@RequestHeader HttpHeaders headers, @RequestBody CommentInDto commentInDto) {
         User loggedInUser = authenticationHelper.tryGetUser(headers);
