@@ -5,9 +5,11 @@ import com.example.forumproject.exceptions.DuplicateEntityException;
 import com.example.forumproject.exceptions.EntityNotFoundException;
 import com.example.forumproject.helpers.AuthenticationHelper;
 import com.example.forumproject.helpers.mapper.UserMapper;
+import com.example.forumproject.models.Post;
 import com.example.forumproject.models.User;
 import com.example.forumproject.models.dtos.in.UserBlockDto;
 import com.example.forumproject.models.dtos.in.UserInDto;
+import com.example.forumproject.services.contracts.PostService;
 import com.example.forumproject.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -17,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/users")
@@ -24,9 +27,11 @@ public class UserController {
     private UserMapper userMapper;
     private UserService userService;
     private AuthenticationHelper authenticationHelper;
+    private PostService postService;
 
     @Autowired
-    public UserController(UserService userService, UserMapper userMapper, AuthenticationHelper authenticationHelper) {
+    public UserController(UserService userService, UserMapper userMapper, AuthenticationHelper authenticationHelper, PostService postService) {
+        this.postService = postService;
         this.userService = userService;
         this.userMapper = userMapper;
         this.authenticationHelper = authenticationHelper;
@@ -49,6 +54,19 @@ public class UserController {
     @GetMapping("/username/{username}")
     public User getByUsername(@PathVariable String username) {
         return userService.getByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping("/{id}/posts")
+    public Set<Post> getUserPosts(@RequestHeader HttpHeaders headers, @PathVariable int id) {
+        try {
+            User loggedInUser = authenticationHelper.tryGetUser(headers);
+            return postService.getUserPosts(id);
+
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
     @PostMapping

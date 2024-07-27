@@ -101,6 +101,8 @@ public class CommentController {
             commentService.deleteCommentById(id, loggedInUser);
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
 

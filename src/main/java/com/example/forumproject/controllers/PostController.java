@@ -142,16 +142,6 @@ public class PostController {
                     .collect(Collectors.toSet());
         }
     }
-    //TODO move to User controller
-    @GetMapping("users/{id}")
-    public Set<Post> getUserPosts(@RequestHeader HttpHeaders headers, @PathVariable int id) {
-        try {
-            authenticationHelper.tryGetUser(headers);
-            return postService.getUserPosts(id);
-        } catch (AuthorizationException e){
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        }
-    }
 
     @PostMapping
     public Post create(@RequestHeader HttpHeaders headers, @Valid @RequestBody PostDto postDto){
