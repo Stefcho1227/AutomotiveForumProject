@@ -69,7 +69,12 @@ public class CommentController {
     }
     @PostMapping
     public CommentOutDto addComment(@RequestHeader HttpHeaders headers, @RequestBody CommentInDto commentInDto) {
-        User loggedInUser = authenticationHelper.tryGetUser(headers);
+        User loggedInUser = null;
+        try {
+            loggedInUser = authenticationHelper.tryGetUser(headers);
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
 
         Comment comment = commentMapper.fromDto(commentInDto, loggedInUser);
 
@@ -78,13 +83,14 @@ public class CommentController {
 
     @PutMapping("/{id}")
     public CommentOutDto updateComment(@RequestHeader HttpHeaders headers, @RequestBody CommentInDto commentInDto, @PathVariable int id) {
-        User loggedInUser = authenticationHelper.tryGetUser(headers);
-        Comment inputData = commentMapper.fromDto(commentInDto, loggedInUser);
-
         try {
+            User loggedInUser = authenticationHelper.tryGetUser(headers);
+            Comment inputData = commentMapper.fromDto(commentInDto, loggedInUser);
             return commentMapper.toDto(commentService.updateComment(inputData, loggedInUser, id));
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,e.getMessage());
         }
     }
 
