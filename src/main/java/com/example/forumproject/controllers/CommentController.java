@@ -54,12 +54,18 @@ public class CommentController {
             return commentMapper.toDtoList(commentService.getAll(filterOptions));
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 
     @GetMapping("/{id}")
     public CommentOutDto getById(@PathVariable int id) {
-        return commentMapper.toDto(commentService.getById(id));
+        try {
+            return commentMapper.toDto(commentService.getById(id));
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
     @PostMapping
     public CommentOutDto addComment(@RequestHeader HttpHeaders headers, @RequestBody CommentInDto commentInDto) {

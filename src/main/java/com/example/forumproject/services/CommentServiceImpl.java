@@ -24,13 +24,18 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment getById(int id) {
-       return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Comment not found"));
+       return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Comment"));
     }
 
     @Override
     public List<Comment> getAll(FilterOptions filterOptions) {
         Specification<Comment> specification = CommentSpecification.filterByOption(filterOptions);
-        return repository.findAll(specification);
+        List<Comment> comments = repository.findAll(specification);
+        if (comments.isEmpty()) {
+            throw new EntityNotFoundException("Comments", "such", "criteria");
+        } else {
+            return comments;
+        }
     }
 
     @Override
