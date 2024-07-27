@@ -88,4 +88,14 @@ public class CommentController {
         }
     }
 
+    @DeleteMapping("/{id}")
+    public void deleteComment(@RequestHeader HttpHeaders headers, @PathVariable int id) {
+        User loggedInUser = authenticationHelper.tryGetUser(headers);
+        try {
+            commentService.deleteCommentById(id, loggedInUser);
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
+    }
+
 }

@@ -13,7 +13,7 @@ public interface CommentService {
 
     Comment save(Comment comment);
 
-    void deleteCommentById(int id);
+    void deleteCommentById(int id, User loggedInUser);
 
     Comment createComment(Comment comment);
 

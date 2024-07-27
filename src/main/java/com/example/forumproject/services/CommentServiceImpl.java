@@ -16,6 +16,7 @@ import java.util.List;
 
 @Service
 public class CommentServiceImpl implements CommentService {
+    public static final String ADMIN_ROLE_NAME = "Admin";
     private CommentRepository repository;
     @Autowired
     public CommentServiceImpl(CommentRepository commentRepository) {
@@ -44,7 +45,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void deleteCommentById(int id) {
+    public void deleteCommentById(int id, User loggedInUser) {
+        checkCommentDeletePermission(id, loggedInUser);
         repository.deleteById(id);
     }
 
@@ -63,12 +65,21 @@ public class CommentServiceImpl implements CommentService {
         return save(commentToUpdate);
     }
 
-    public void checkCommentUpdatePermission(int commentId, User loggedInUser) {
+    private void checkCommentUpdatePermission(int commentId, User loggedInUser) {
         Comment commentToCheck = getById(commentId);
         if (commentToCheck.getCreatedBy().equals(loggedInUser)) {
             return;
         } else {
             throw new AuthorizationException("You do not have permission to update this comment");
+        }
+    }
+
+    private void checkCommentDeletePermission(int commentId, User loggedInUser) {
+        Comment commentToCheck = getById(commentId);
+        if (commentToCheck.getCreatedBy().equals(loggedInUser) || loggedInUser.getRole().getRoleName().equals(ADMIN_ROLE_NAME)) {
+            return;
+        } else {
+            throw new AuthorizationException("You do not have permission to delete this comment");
         }
     }
 }
