@@ -13,11 +13,13 @@ import org.springframework.stereotype.Component;
 public class UserMapper {
 
     private final RoleService roleService;
+
     @Autowired
     public UserMapper(RoleService roleService) {
         this.roleService = roleService;
     }
-    public  User fromDto(UserInDto inputData) {
+
+    public User fromDto(UserInDto inputData) {
         User user = new User();
 
         user.setFirstName(inputData.getFirstName());
@@ -35,11 +37,12 @@ public class UserMapper {
         User user = new User();
         if (inputData.getData().equals("block")) {
             user.setBlocked(true);
-        } else if (inputData.getData().equals("unblock")){
+        } else if (inputData.getData().equals("unblock")) {
             user.setBlocked(false);
         }
         return user;
     }
+
     public static UserOutDto toUserDto(User user) {
         return new UserOutDto(user.getFirstName(), user.getLastName(), user.getUsername());
     }

@@ -17,7 +17,9 @@ public interface UserService {
 
     void deleteUserById(int id, User user);
 
-    UserPhoneNumber addPhoneNumber(int id, String phoneNumber);
+    UserPhoneNumber addPhoneNumber(int id, UserPhoneNumber userphoneNumber, User loggedInUser);
+
+    void deletePhoneNumber(int id, User loggedInUser);
 
     User save(User user);
 

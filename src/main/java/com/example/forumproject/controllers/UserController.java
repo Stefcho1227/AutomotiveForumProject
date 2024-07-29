@@ -4,9 +4,12 @@ import com.example.forumproject.exceptions.AuthorizationException;
 import com.example.forumproject.exceptions.DuplicateEntityException;
 import com.example.forumproject.exceptions.EntityNotFoundException;
 import com.example.forumproject.helpers.AuthenticationHelper;
+import com.example.forumproject.helpers.mapper.PhoneNumberMapper;
 import com.example.forumproject.helpers.mapper.UserMapper;
 import com.example.forumproject.models.Post;
 import com.example.forumproject.models.User;
+import com.example.forumproject.models.UserPhoneNumber;
+import com.example.forumproject.models.dtos.in.PhoneNumberDto;
 import com.example.forumproject.models.dtos.in.UserBlockDto;
 import com.example.forumproject.models.dtos.in.UserInDto;
 import com.example.forumproject.services.contracts.PostService;
@@ -25,13 +28,16 @@ import java.util.Set;
 @RequestMapping("/api/users")
 public class UserController {
     private UserMapper userMapper;
+    private PhoneNumberMapper phoneNumberMapper;
     private UserService userService;
     private AuthenticationHelper authenticationHelper;
     private PostService postService;
 
     @Autowired
-    public UserController(UserService userService, UserMapper userMapper, AuthenticationHelper authenticationHelper, PostService postService) {
+    public UserController(UserService userService, UserMapper userMapper,
+                          AuthenticationHelper authenticationHelper, PostService postService, PhoneNumberMapper phoneNumberMapper) {
         this.postService = postService;
+        this.phoneNumberMapper = phoneNumberMapper;
         this.userService = userService;
         this.userMapper = userMapper;
         this.authenticationHelper = authenticationHelper;
@@ -108,4 +114,25 @@ public class UserController {
 
     }
 
+
+    @PutMapping("/{id}/phonenumber")
+    public UserPhoneNumber addPhoneNumber(@RequestHeader HttpHeaders headers, @RequestBody PhoneNumberDto phoneNumberDto, @PathVariable int id) {
+        try {
+            User loggedInUser = authenticationHelper.tryGetUser(headers);
+            return userService.addPhoneNumber(id, phoneNumberMapper.fromDto(phoneNumberDto), loggedInUser);
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{id}/phonenumber")
+    public void deletePhoneNumber(@RequestHeader HttpHeaders headers, @PathVariable int id) {
+        try {
+            User loggedInUser = authenticationHelper.tryGetUser(headers);
+            userService.deletePhoneNumber(id, loggedInUser);
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
+
+    }
 }
