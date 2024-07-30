@@ -28,7 +28,8 @@ public class Post {
     @Column(name = "created_at")
     private Timestamp createdAt;
     @ManyToMany(fetch = FetchType.EAGER)
-    @JsonIgnore
+    //@JsonIgnore
+    @JsonManagedReference
     @JoinTable(
             name = "likes",
             joinColumns = @JoinColumn(name = "post_id"),
@@ -40,7 +41,7 @@ public class Post {
     /*@JsonManagedReference*/
     private Set<Comment> comments;
     @ManyToMany(fetch = FetchType.EAGER)
-    @JsonIgnore
+    @JsonManagedReference
     @JoinTable(
             name = "post_tags",
             joinColumns = @JoinColumn(name = "post_id"),

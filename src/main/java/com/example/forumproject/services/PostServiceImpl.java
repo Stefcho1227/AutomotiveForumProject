@@ -3,11 +3,13 @@ package com.example.forumproject.services;
 import com.example.forumproject.exceptions.AuthorizationException;
 import com.example.forumproject.exceptions.EntityNotFoundException;
 import com.example.forumproject.helpers.AuthenticationHelper;
+import com.example.forumproject.helpers.mapper.PostMapper;
 import com.example.forumproject.helpers.specifications.PostSpecification;
 import com.example.forumproject.models.Post;
 import com.example.forumproject.models.User;
 import com.example.forumproject.models.options.FilterOptions;
 import com.example.forumproject.repositories.contracts.PostRepository;
+import com.example.forumproject.repositories.contracts.UserRepository;
 import com.example.forumproject.services.contracts.PostService;
 import com.example.forumproject.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -24,11 +27,14 @@ public class PostServiceImpl implements PostService {
     private static final String DELETE_POST_ERROR_MESSAGE = "Only post creator or admin or moderator can delete a post.";
     private static final String MORE_THAN_ONCE_LIKED_ERROR = "The post should be liked only once";
     private static final String MORE_THAN_ONCE_REMOVE_LIKE_ERROR = "The like from post can be removed only once";
+    public static final String ADMIN_OR_LOGGER_ERROR = "Should be admin or logged in user to view other's posts likes";
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
     private final UserService userService;
     @Autowired
-    public PostServiceImpl(PostRepository postRepository, UserService userService){
+    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository, UserService userService){
         this.postRepository = postRepository;
+        this.userRepository = userRepository;
         this.userService = userService;
     }
 
@@ -69,20 +75,36 @@ public class PostServiceImpl implements PostService {
     public void likePost(Post post, User user) {
         AuthenticationHelper.checkUserBlockStatus(user);
         Set<User> usersLikedPost = post.getLikes();
+        Set<Post> postLikedByUser = user.getPostsLiked();
         if (usersLikedPost.contains(user)){
             usersLikedPost.remove(user);
+            postLikedByUser.remove(post);
             post.setLikesCount(post.getLikesCount() - 1);
         } else {
             usersLikedPost.add(user);
+            postLikedByUser.add(post);
             post.setLikesCount(post.getLikesCount() + 1);
         }
         postRepository.save(post);
+        userRepository.save(user);
     }
 
     @Override
     public Set<Post> getUserPosts(int id) {
         User user = userService.getUserById(id).orElseThrow(()->new EntityNotFoundException("User", id));
         return postRepository.findByCreatedBy(user);
+    }
+    @Override
+    public Set<?> getUserLikedPosts(User loggedInUser, int id) {
+        validateAccess(loggedInUser, id);
+        User user = userRepository.findById(id).orElseThrow(()->new EntityNotFoundException("User", id));
+        Set<Post> likedPosts = user.getPostsLiked();
+        if (loggedInUser.getRole().getRoleName().equals("Admin")){
+            return likedPosts;
+        }else {
+            return likedPosts.stream()
+                    .map(PostMapper::toUserDTO).collect(Collectors.toSet());
+        }
     }
     private void checkModifyPermissions(int postId, User user) {
         Post repositoryPost = postRepository.findById(postId).orElseThrow(()->new EntityNotFoundException("Post", postId));
@@ -100,5 +122,10 @@ public class PostServiceImpl implements PostService {
             return;
         }
         throw new AuthorizationException(DELETE_POST_ERROR_MESSAGE);
+    }
+    private void validateAccess(User loggedUser, int id){
+        if (!loggedUser.getRole().getRoleName().equals("Admin") && loggedUser.getId() != id) {
+            throw new AuthorizationException(ADMIN_OR_LOGGER_ERROR);
+        }
     }
 }

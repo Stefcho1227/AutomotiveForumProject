@@ -11,6 +11,7 @@ public class FilterOptions {
     private Optional<String> createdBefore;
     private Optional<String> createdAfter;
     private Optional<String> postedBy;
+    private Optional<String> tagName;
     private Optional<String> sortBy;
     private Optional<String> sortOrder;
 
@@ -21,6 +22,7 @@ public class FilterOptions {
                          String createdBefore,
                          String createdAfter,
                          String postedBy,
+                         String tagName,
                          String sortBy,
                          String sortOrder) {
         this.minLikes = Optional.ofNullable(minLikes);
@@ -30,6 +32,7 @@ public class FilterOptions {
         this.createdBefore = Optional.ofNullable(createdBefore);
         this.createdAfter = Optional.ofNullable(createdAfter);
         this.postedBy = Optional.ofNullable(postedBy);
+        this.tagName = Optional.ofNullable(tagName);
         this.sortBy = Optional.ofNullable(sortBy);
         this.sortOrder = Optional.ofNullable(sortOrder);
     }
@@ -118,5 +121,13 @@ public class FilterOptions {
 
     public void setSortOrder(Optional<String> sortOrder) {
         this.sortOrder = sortOrder;
+    }
+
+    public Optional<String> getTagName() {
+        return tagName;
+    }
+
+    public void setTagName(Optional<String> tagName) {
+        this.tagName = tagName;
     }
 }

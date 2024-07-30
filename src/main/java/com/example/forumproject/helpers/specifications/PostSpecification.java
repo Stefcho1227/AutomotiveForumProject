@@ -2,6 +2,7 @@ package com.example.forumproject.helpers.specifications;
 
 import com.example.forumproject.models.Post;
 import com.example.forumproject.models.options.FilterOptions;
+import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class PostSpecification {
     public static Specification<Post> filterByOption(FilterOptions filterOptions) {
@@ -44,6 +46,11 @@ public class PostSpecification {
                 predicates.add(
                         criteriaBuilder.greaterThanOrEqualTo(root.get("createdAt"), dateAfter));
             });
+            filterOptions.getTagName().ifPresent(tagName->{
+                Join< Object, Object> tags = root.join("tags");
+                predicates.add(
+                        criteriaBuilder.equal(tags.get("tagName"), tagName));
+                    });
 
             filterOptions.getPostedBy().ifPresent(postedBy ->
                 predicates.add(

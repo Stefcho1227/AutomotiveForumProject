@@ -20,4 +20,5 @@ public interface PostService {
     void likePost(Post post, User user);
 
     Set<Post> getUserPosts(int id);
+    Set<?> getUserLikedPosts(User loggedInUser, int id);
 }

@@ -1,5 +1,6 @@
 package com.example.forumproject.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -14,6 +15,7 @@ public class Tag {
     @Column(name = "tag_name")
     private String tagName;
     @ManyToMany(mappedBy = "tags")
+    @JsonBackReference
     private Set<Post> posts;
 
     public Tag() {

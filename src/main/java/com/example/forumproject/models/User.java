@@ -1,9 +1,11 @@
 package com.example.forumproject.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -39,6 +41,9 @@ public class User {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private UserPhoneNumber phoneNumber;
+    @ManyToMany(mappedBy = "likes")
+    @JsonBackReference
+    private Set<Post> postsLiked;
 
     public User() {
     }
@@ -118,6 +123,13 @@ public class User {
     @Override
     public String toString() {
         return username + " " + firstName + " " + lastName + " " + email + " " + username + " " + password + " " + role + " " + phoneNumber;
+    }
+    public Set<Post> getPostsLiked() {
+        return postsLiked;
+    }
+
+    public void setPostsLiked(Set<Post> postsLiked) {
+        this.postsLiked = postsLiked;
     }
 
     @Override

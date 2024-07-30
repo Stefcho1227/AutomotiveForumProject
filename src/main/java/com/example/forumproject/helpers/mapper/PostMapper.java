@@ -54,6 +54,13 @@ public class PostMapper {
                         comment.getContent(),
                         comment.getCreatedAt()))
                 .collect(Collectors.toSet()));
+        dto.setLikes(post.getLikes()
+                .stream()
+                .map(user -> new UserOutDto(
+                        user.getFirstName(),
+                        user.getLastName(),
+                        user.getUsername()
+                )).collect(Collectors.toSet()));
         dto.setTags(post.getTags()
                 .stream().map(tag -> new TagUserDto(tag.getTagName())).collect(Collectors.toSet()));
         return dto;

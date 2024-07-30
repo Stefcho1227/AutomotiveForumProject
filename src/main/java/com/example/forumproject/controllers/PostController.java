@@ -52,6 +52,7 @@ public class PostController {
                                   @RequestParam(required = false) String createdBefore,
                                   @RequestParam(required = false) String createdAfter,
                                   @RequestParam(required = false) String postedBy,
+                                  @RequestParam(required = false) String tagName,
                                   @RequestParam(required = false) String sortBy,
                                   @RequestParam(required = false) String sortOrder) {
         try {
@@ -65,6 +66,7 @@ public class PostController {
                             createdBefore,
                             createdAfter,
                             postedBy,
+                            tagName,
                             sortBy,
                             sortOrder);
             List<Post> posts = postService.getAllPosts(filterOptions);

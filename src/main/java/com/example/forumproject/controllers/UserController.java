@@ -74,6 +74,17 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
+    @GetMapping("/{id}/likedPosts")
+    public Set<?> getLikedPosts(@RequestHeader HttpHeaders headers, @PathVariable int id) {
+        try {
+            User loggedInUser = authenticationHelper.tryGetUser(headers);
+            return postService.getUserLikedPosts(loggedInUser, id);
+        } catch (AuthorizationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
 
     @PostMapping
     public User createUser(@RequestBody UserInDto userDto) {

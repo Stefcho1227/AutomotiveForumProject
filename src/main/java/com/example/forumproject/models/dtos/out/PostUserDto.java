@@ -15,8 +15,17 @@ public class PostUserDto {
     private Timestamp createdAt;
     private Set<CommentOutDto> comments;
     private Set<TagUserDto> tags;
+    private Set<UserOutDto> likes;
 
     public PostUserDto() {
+    }
+
+    public Set<UserOutDto> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(Set<UserOutDto> likes) {
+        this.likes = likes;
     }
 
     public UserOutDto getCreatedBy() {
