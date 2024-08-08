@@ -5,6 +5,7 @@ import com.example.forumproject.exceptions.BlockedException;
 import com.example.forumproject.exceptions.EntityNotFoundException;
 import com.example.forumproject.models.User;
 import com.example.forumproject.services.contracts.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.naming.AuthenticationException;
+import java.util.Base64;
 import java.util.Optional;
 
 @Component
@@ -28,43 +30,32 @@ public class AuthenticationHelper {
     }
 
     public User tryGetUser(HttpHeaders headers) {
-        if (!headers.containsKey(AUTHORIZATION_HEADER_NAME)) {
+        String userInfo = headers.getFirst(AUTHORIZATION_HEADER_NAME);
+        if (userInfo == null || !userInfo.startsWith("Basic ")) {
             throw new AuthorizationException(INVALID_AUTHENTICATION_ERROR);
         }
 
         try {
-            String userInfo = headers.getFirst(AUTHORIZATION_HEADER_NAME);
-            String username = getUsername(userInfo);
-            String password = getPassword(userInfo);
-            Optional<User> userOptional = userService.getByUsername(username);
-            User user = userOptional.orElseThrow(() -> new AuthorizationException(INVALID_AUTHENTICATION_ERROR));
+            String base64Credentials = userInfo.substring("Basic ".length());
+            String credentials = new String(Base64.getDecoder().decode(base64Credentials));
+            String[] values = credentials.split(":", 2);
 
-            if (!user.getPassword().equals(password)) {
+            if (values.length != 2) {
                 throw new AuthorizationException(INVALID_AUTHENTICATION_ERROR);
             }
 
+            String username = values[0];
+            String password = values[1];
+            Optional<User> userOptional = userService.getByUsername(username);
+            User user = userOptional.orElseThrow(() -> new AuthorizationException(INVALID_AUTHENTICATION_ERROR));
+            if (!user.getPassword().equals(password)){
+                throw new AuthorizationException(INVALID_AUTHENTICATION_ERROR);
+            }
+            checkUserBlockStatus(user);
             return user;
         } catch (EntityNotFoundException e) {
             throw new AuthorizationException(INVALID_AUTHENTICATION_ERROR);
         }
-    }
-
-    private String getUsername(String userInfo) {
-        int firstSpace = userInfo.indexOf(" ");
-        if (firstSpace == -1) {
-            throw new AuthorizationException(INVALID_AUTHENTICATION_ERROR);
-        }
-
-        return userInfo.substring(0, firstSpace);
-    }
-
-    private String getPassword(String userInfo) {
-        int firstSpace = userInfo.indexOf(" ");
-        if (firstSpace == -1) {
-            throw new AuthorizationException(INVALID_AUTHENTICATION_ERROR);
-        }
-
-        return userInfo.substring(firstSpace + 1);
     }
 
     public static void checkUserBlockStatus(User user){

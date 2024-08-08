@@ -33,7 +33,6 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/posts")
-@SecurityRequirement(name = "basicAuth")
 public class PostController {
     private final PostService postService;
     private final TagService tagService;
