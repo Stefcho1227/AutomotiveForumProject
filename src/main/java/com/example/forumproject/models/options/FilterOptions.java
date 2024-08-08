@@ -14,6 +14,8 @@ public class FilterOptions {
     private Optional<String> tagName;
     private Optional<String> sortBy;
     private Optional<String> sortOrder;
+    private Optional<Integer> page;
+    private Optional<Integer> size;
 
     public FilterOptions(Integer minLikes,
                          Integer maxLikes,
@@ -24,7 +26,9 @@ public class FilterOptions {
                          String postedBy,
                          String tagName,
                          String sortBy,
-                         String sortOrder) {
+                         String sortOrder,
+                         Integer page,
+                         Integer size) {
         this.minLikes = Optional.ofNullable(minLikes);
         this.maxLikes = Optional.ofNullable(maxLikes);
         this.title = Optional.ofNullable(title);
@@ -35,6 +39,8 @@ public class FilterOptions {
         this.tagName = Optional.ofNullable(tagName);
         this.sortBy = Optional.ofNullable(sortBy);
         this.sortOrder = Optional.ofNullable(sortOrder);
+        this.page = Optional.ofNullable(page);
+        this.size = Optional.ofNullable(size);
     }
 
     public FilterOptions(String content,
@@ -49,6 +55,22 @@ public class FilterOptions {
         this.postedBy = Optional.ofNullable(postedBy);
         this.sortBy = Optional.ofNullable(sortBy);
         this.sortOrder = Optional.ofNullable(sortOrder);
+    }
+
+    public Optional<Integer> getPage() {
+        return page;
+    }
+
+    public void setPage(Optional<Integer> page) {
+        this.page = page;
+    }
+
+    public Optional<Integer> getSize() {
+        return size;
+    }
+
+    public void setSize(Optional<Integer> size) {
+        this.size = size;
     }
 
     public Optional<Integer> getMinLikes() {

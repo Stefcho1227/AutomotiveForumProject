@@ -16,12 +16,17 @@ import com.example.forumproject.services.contracts.PostService;
 import com.example.forumproject.services.contracts.TagService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -44,17 +49,19 @@ public class PostController {
     }
 
     @GetMapping
-    public List<?> getAllPosts(@RequestHeader HttpHeaders headers,
-                                  @RequestParam(required = false) Integer minLikes,
-                                  @RequestParam(required = false) Integer maxLikes,
-                                  @RequestParam(required = false) String title,
-                                  @RequestParam(required = false) String content,
-                                  @RequestParam(required = false) String createdBefore,
-                                  @RequestParam(required = false) String createdAfter,
-                                  @RequestParam(required = false) String postedBy,
-                                  @RequestParam(required = false) String tagName,
-                                  @RequestParam(required = false) String sortBy,
-                                  @RequestParam(required = false) String sortOrder) {
+    public ResponseEntity<?> getAllPosts(@RequestHeader HttpHeaders headers,
+                                         @RequestParam(required = false) Integer minLikes,
+                                         @RequestParam(required = false) Integer maxLikes,
+                                         @RequestParam(required = false) String title,
+                                         @RequestParam(required = false) String content,
+                                         @RequestParam(required = false) String createdBefore,
+                                         @RequestParam(required = false) String createdAfter,
+                                         @RequestParam(required = false) String postedBy,
+                                         @RequestParam(required = false) String tagName,
+                                         @RequestParam(required = false) String sortBy,
+                                         @RequestParam(required = false) String sortOrder,
+                                         @RequestParam(defaultValue = "0") int page,
+                                         @RequestParam(defaultValue = "10") int size) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             FilterOptions filterOptions =
@@ -68,15 +75,12 @@ public class PostController {
                             postedBy,
                             tagName,
                             sortBy,
-                            sortOrder);
-            List<Post> posts = postService.getAllPosts(filterOptions);
-            if (user.getRole().getRoleName().equals("Admin")) {
-                return posts;
-            } else {
-                return posts.stream()
-                        .map(PostMapper::toUserDTO)
-                        .collect(Collectors.toList());
-            }
+                            sortOrder,
+                            page,
+                            size);
+            Pageable pageable = PageRequest.of(page, size);
+            Page<?> posts = postService.getAllPosts(user, filterOptions, pageable);
+            return ResponseEntity.of(Optional.ofNullable(posts));
         } catch (AuthorizationException e){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }

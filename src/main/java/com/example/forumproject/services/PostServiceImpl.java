@@ -13,6 +13,8 @@ import com.example.forumproject.repositories.contracts.UserRepository;
 import com.example.forumproject.services.contracts.PostService;
 import com.example.forumproject.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -44,9 +46,14 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> getAllPosts(FilterOptions filterOptions) {
+    public Page<?> getAllPosts(User user, FilterOptions filterOptions, Pageable pageable) {
         Specification<Post> specification = PostSpecification.filterByOption(filterOptions);
-        return postRepository.findAll(specification);
+        Page<Post> posts = postRepository.findAll(specification, pageable);
+        if ("Admin".equals(user.getRole().getRoleName())) {
+            return posts;
+        } else {
+            return posts.map(PostMapper::toUserDTO);
+        }
     }
 
     @Override
