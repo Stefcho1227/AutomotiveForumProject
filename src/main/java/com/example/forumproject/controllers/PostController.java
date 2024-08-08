@@ -14,6 +14,7 @@ import com.example.forumproject.models.dtos.in.PostDto;
 import com.example.forumproject.models.options.FilterOptions;
 import com.example.forumproject.services.contracts.PostService;
 import com.example.forumproject.services.contracts.TagService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,6 +33,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/posts")
+@SecurityRequirement(name = "basicAuth")
 public class PostController {
     private final PostService postService;
     private final TagService tagService;
