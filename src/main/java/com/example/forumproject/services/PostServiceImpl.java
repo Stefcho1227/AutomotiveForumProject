@@ -27,8 +27,6 @@ import java.util.stream.Collectors;
 public class PostServiceImpl implements PostService {
     private static final String POST_ERROR_MESSAGE = "Only post creator can modify a post.";
     private static final String DELETE_POST_ERROR_MESSAGE = "Only post creator or admin or moderator can delete a post.";
-    private static final String MORE_THAN_ONCE_LIKED_ERROR = "The post should be liked only once";
-    private static final String MORE_THAN_ONCE_REMOVE_LIKE_ERROR = "The like from post can be removed only once";
     public static final String ADMIN_OR_LOGGER_ERROR = "Should be admin or logged in user to view other's posts likes";
     private final PostRepository postRepository;
     private final UserRepository userRepository;
@@ -83,7 +81,7 @@ public class PostServiceImpl implements PostService {
         AuthenticationHelper.checkUserBlockStatus(user);
         Set<User> usersLikedPost = post.getLikes();
         Set<Post> postLikedByUser = user.getPostsLiked();
-        if (usersLikedPost.contains(user)){
+        if (usersLikedPost.contains(user)) {
             usersLikedPost.remove(user);
             postLikedByUser.remove(post);
             post.setLikesCount(post.getLikesCount() - 1);

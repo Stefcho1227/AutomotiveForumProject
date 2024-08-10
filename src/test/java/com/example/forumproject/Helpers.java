@@ -1,5 +1,6 @@
 package com.example.forumproject;
 import com.example.forumproject.models.*;
+import com.example.forumproject.models.dtos.in.PostDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.sql.Timestamp;
@@ -19,6 +20,8 @@ public class Helpers {
         mockUser.setEmail("mock@mockemail.com");
         mockUser.setBlocked(false);
         mockUser.setRole(mockRole);
+        mockUser.setPostsLiked(new HashSet<>());
+        mockUser.setPhoneNumber(new UserPhoneNumber("0885029802", mockUser));
         return mockUser;
     }
 
@@ -33,6 +36,12 @@ public class Helpers {
         mockPost.setLikes(new HashSet<>());
         mockPost.setComments(new HashSet<>());
         mockPost.setTags(new HashSet<>());
+        return mockPost;
+    }
+    public static PostDto createMockPostDto() {
+        PostDto mockPost = new PostDto();
+        mockPost.setTitle("MockTitle");
+        mockPost.setContent("MockContent");
         return mockPost;
     }
 
