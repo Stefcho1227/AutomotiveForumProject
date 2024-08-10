@@ -1,9 +1,8 @@
-package com.example.forumproject.controllers;
+package com.example.forumproject.controllers.rest;
 
 import com.example.forumproject.exceptions.AuthorizationException;
 import com.example.forumproject.exceptions.DuplicateEntityException;
 import com.example.forumproject.exceptions.EntityNotFoundException;
-import com.example.forumproject.exceptions.OperationAlreadyPerformedException;
 import com.example.forumproject.helpers.AuthenticationHelper;
 import com.example.forumproject.helpers.mapper.TagMapper;
 import com.example.forumproject.models.Post;

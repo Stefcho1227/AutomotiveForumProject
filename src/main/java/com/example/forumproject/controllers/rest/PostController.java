@@ -1,4 +1,4 @@
-package com.example.forumproject.controllers;
+package com.example.forumproject.controllers.rest;
 
 import com.example.forumproject.exceptions.*;
 import com.example.forumproject.helpers.AuthenticationHelper;
@@ -6,15 +6,12 @@ import com.example.forumproject.helpers.mapper.CommentMapper;
 import com.example.forumproject.helpers.mapper.PostMapper;
 import com.example.forumproject.helpers.mapper.TagMapper;
 import com.example.forumproject.helpers.mapper.UserMapper;
-import com.example.forumproject.models.Comment;
 import com.example.forumproject.models.Post;
-import com.example.forumproject.models.Tag;
 import com.example.forumproject.models.User;
 import com.example.forumproject.models.dtos.in.PostDto;
 import com.example.forumproject.models.options.FilterOptions;
 import com.example.forumproject.services.contracts.PostService;
 import com.example.forumproject.services.contracts.TagService;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,7 +23,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
