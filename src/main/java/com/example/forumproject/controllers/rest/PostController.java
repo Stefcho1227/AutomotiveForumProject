@@ -61,20 +61,8 @@ public class PostController {
                                          @RequestParam(defaultValue = "10") int size) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
-            FilterOptions filterOptions =
-                    new FilterOptions(
-                            minLikes,
-                            maxLikes,
-                            title,
-                            content,
-                            createdBefore,
-                            createdAfter,
-                            postedBy,
-                            tagName,
-                            sortBy,
-                            sortOrder,
-                            page,
-                            size);
+            FilterOptions filterOptions = new FilterOptions(minLikes, maxLikes, title, content, createdBefore,
+                    createdAfter, postedBy, tagName, sortBy, sortOrder, page, size);
             Pageable pageable = PageRequest.of(page, size);
             Page<?> posts = postService.getAllPosts(user, filterOptions, pageable);
             return ResponseEntity.of(Optional.ofNullable(posts));
