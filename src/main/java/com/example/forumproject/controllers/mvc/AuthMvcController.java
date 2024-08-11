@@ -11,4 +11,9 @@ public class AuthMvcController {
     public String showLoginPage() {
         return "LoginView";
     }
+    
+    @GetMapping("/register")
+    public String showRegisterPage() {
+        return "SignUpView";
+    }
 }

@@ -275,7 +275,12 @@ hr {
     font-size: 25px;
     font-weight: bold;
     color: #fff;
-    font-family: "FontAwesome";
+}
+
+.welcome-demop102 h1 {
+    font-size: 45px;
+    font-weight: bold;
+    color: #fff;
 }
 
 .welcome-demop102 p {
