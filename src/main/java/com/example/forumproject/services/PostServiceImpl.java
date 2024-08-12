@@ -14,10 +14,13 @@ import com.example.forumproject.services.contracts.PostService;
 import com.example.forumproject.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -111,6 +114,15 @@ public class PostServiceImpl implements PostService {
                     .map(PostMapper::toUserDTO).collect(Collectors.toSet());
         }
     }
+
+    @Override
+    public Post getMostLikedPost() {
+        return postRepository.findAll().stream()
+                .max(Comparator.comparingInt(post -> post.getLikes().size()))
+                .orElse(null);
+    }
+
+
     private void checkModifyPermissions(int postId, User user) {
         Post repositoryPost = postRepository.findById(postId).orElseThrow(()->new EntityNotFoundException("Post", postId));
         if (!repositoryPost.getCreatedBy().equals(user)) {

@@ -4,8 +4,6 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- Stylesheets -->
     <link th:href="@{/css/bootstrap.css}" rel="stylesheet" type="text/css">
     <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
     <link th:href="@{/css/font-awesome.min.css}" rel="stylesheet" type="text/css">
@@ -14,10 +12,8 @@
 
 <body>
 
-<!-- Navbar -->
 <div th:replace="~{forumforms.html :: navbar}"></div>
 
-<!-- Users Who Commented -->
 <section class="header-descriptin329">
     <div class="container">
         <h3>Users Who Commented</h3>
@@ -33,20 +29,16 @@
                         <!-- Iterate over users -->
                         <li th:each="user : ${users}">
                             <div class="user-details">
-                                <img th:src="@{/image/user-profile.png}" alt="User Image">
+                                <img th:src="@{${user.profilePictureUrl}}" alt="User Image">
                                 <div class="user-info">
-                                    <h4 th:text="${user.firstName} + ' ' + ${user.lastName}">User Name</h4>
+                                    <h4 th:text="${user.firstName + ' ' + user.lastName}">User Name</h4>
                                 </div>
                             </div>
-                            <!-- Display comments for the user -->
                             <div class="user-comments">
                                 <ul>
                                     <li th:each="comment : ${comments}" th:if="${comment.createdBy.id == user.id}">
                                         <p th:text="${comment.content}">Comment content here</p>
                                         <p th:text="${#dates.format(comment.createdAt, 'dd MMM yyyy HH:mm')}">Comment Date</p>
-                                    </li>
-                                    <li th:if="${users.size() == 0}">
-                                        <p>No comments from this user.</p>
                                     </li>
                                 </ul>
                             </div>
@@ -61,7 +53,6 @@
     </div>
 </section>
 
-<!-- Footer -->
 <div th:replace="~{forumforms.html :: footer1}"></div>
 <div th:replace="~{forumforms.html :: footer2}"></div>
 

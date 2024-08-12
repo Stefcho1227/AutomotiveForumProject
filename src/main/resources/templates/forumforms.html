@@ -2,92 +2,72 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-
-    <title>fragments</title>
+    <title>Fragments</title>
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/font-awesome.min.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/responsive.css}" rel="stylesheet" type="text/css">
 </head>
 <body>
 
+<!-- Navbar Fragment -->
 <div class="top-menu-bottom932" th:fragment="navbar">
     <nav class="navbar navbar-default">
         <div class="container">
-            <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-                <a class="navbar-brand" href="#">
-                    <img src="../static/image/logo.png" th:src="@{/image/logo.png}" alt="Logo">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" th:href="@{/}">
+                    <img th:src="@{/image/logo.png}" alt="Logo">
                 </a>
             </div>
-            <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav"> </ul>
                 <ul class="nav navbar-nav navbar-right">
-
-                    <li><a href="HomeView.html" th:href="@{http://localhost:8080}" th:text="#{navbar.label.home}">Home</a></li>
-                    <li><a href="CreatePostView.html"  th:text="#{navbar.label.create.post}">Create Post</a></li>
-                    <li><a href="SinglePostView.html"  th:text="#{navbar.label.create.post}">View Posts</a></li>
-                    <li><a href=""  th:text="#{navbar.label.about.us}">About us</a></li>
-                    <li><a href="LoginView.html" th:href="@{http://localhost:8080/auth/login}" th:text="#{navbar.label.sign.in}">Sign In</a></li>
-
+                    <li><a th:href="@{/}" th:text="#{navbar.label.home}">Home</a></li>
+                    <li><a th:href="@{/posts/new}" th:text="#{navbar.label.create.post}">Create Post</a></li>
+                    <li><a th:href="@{/about}" th:text="#{navbar.label.about.us}">About us</a></li>
+                    <li><a th:href="@{/auth/login}" th:text="#{navbar.label.sign.in}">Sign In</a></li>
                 </ul>
             </div>
-            <!-- /.navbar-collapse -->
         </div>
-        <!-- /.container-fluid -->
     </nav>
 </div>
 
-
-
-
+<!-- Footer Fragment -->
 <section class="footer-part" th:fragment="footer1">
     <div class="container">
         <div class="row">
-
             <div class="col-md-3">
                 <div class="info-part-two320">
                     <h4>Quick Links</h4>
-                    <a href="#">
+                    <a th:href="@{/}">
                         <p>-Home</p>
                     </a>
-                    <a href="#">
+                    <a th:href="@{/posts/new}">
                         <p>-Create Post</p>
                     </a>
-                    <a href="#">
-                        <p>-View Posts</p>
-                    </a>
-                    <a href="#">
+                    <a th:href="@{/about}">
                         <p>-About Us</p>
                     </a>
-
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="info-part-three320">
-                    <h4>Popular Posts</h4>
-                    <div class="news-info209">
-                        <h5>Why are the British confused</h5>
-                        <p>(Why I darest say, they darest not get offended when they so ...</p> <small>July 16, 2017</small> </div>
-                </div>
-            </div>
-
         </div>
     </div>
 </section>
+
 <section class="footer-social" th:fragment="footer2">
     <div class="container">
         <div class="row">
             <div class="col-md-6">
-                <p>Copyright 2017 Ask me | <strong>Sudo  Coder</strong></p>
-            </div>
-            <div class="col-md-6">
-                <div class="social-right2389"> <a href="#"><i class="fa fa-twitter-square" aria-hidden="true"></i></a> <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a> <a href="#"><i class="fa fa-google-plus" aria-hidden="true"></i></a> <a href="#"><i class="fa fa-youtube" aria-hidden="true"></i></a> <a href="#"><i class="fa fa-skype" aria-hidden="true"></i></a> <a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a> <a href="#"><i class="fa fa-rss" aria-hidden="true"></i></a> </div>
+                <p>Copyright 2017 Ask me | <strong>Sudo Coder</strong></p>
             </div>
         </div>
     </div>
 </section>
-
-
-
 
 </body>
 </html>

@@ -1,6 +1,5 @@
 package com.example.forumproject.controllers.mvc;
 
-import com.example.forumproject.exceptions.AuthorizationException;
 import com.example.forumproject.exceptions.EntityNotFoundException;
 import com.example.forumproject.helpers.AuthenticationHelper;
 import com.example.forumproject.helpers.mapper.PostMapper;
@@ -16,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -38,6 +38,12 @@ public class PostMvcController {
         this.postMapper = postMapper;
         this.commentService = commentService;
     }
+
+    @ModelAttribute("mostLikedPost")
+    public Post populateLikedPost() {
+        return postService.getMostLikedPost();
+    }
+
     @GetMapping("/{id}")
     public String showSinglePost(@PathVariable int id, Model model, HttpSession session) {
         /*User user;
@@ -59,7 +65,7 @@ public class PostMvcController {
             model.addAttribute("createdAt", post.getCreatedAt());
             model.addAttribute("likesCount", post.getLikesCount());
             model.addAttribute("author", author);
-
+            //model.addAttribute("mostLikedPost", postService.getMostLikedPost());
             return "SinglePostView";
         } catch (EntityNotFoundException e) {
             model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
@@ -76,6 +82,7 @@ public class PostMvcController {
         model.addAttribute("post", post);
         model.addAttribute("comments", comments);
         model.addAttribute("users", users);
-        return "UserView";
+        //model.addAttribute("mostLikedPost", postService.getMostLikedPost());
+        return "UserCommentView";
     }
 }

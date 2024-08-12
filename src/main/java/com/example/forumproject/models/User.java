@@ -38,6 +38,9 @@ public class User {
 
     @Column(name = "is_blocked", nullable = false)
     private Boolean isBlocked;
+    @Column(name = "profile_url")
+    private String profilePictureUrl;
+
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private UserPhoneNumber phoneNumber;
@@ -46,6 +49,14 @@ public class User {
     private Set<Post> postsLiked;
 
     public User() {
+    }
+
+    public String getProfilePictureUrl() {
+        return profilePictureUrl;
+    }
+
+    public void setProfilePictureUrl(String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl;
     }
 
     public int getId() {

@@ -23,4 +23,5 @@ public interface PostService {
 
     Set<Post> getUserPosts(int id);
     Set<?> getUserLikedPosts(User loggedInUser, int id);
+    Post getMostLikedPost();
 }

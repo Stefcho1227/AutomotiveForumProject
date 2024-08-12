@@ -133,6 +133,15 @@ public class PostController {
                     .collect(Collectors.toSet());
         }
     }
+    @GetMapping("/mostLikedPost")
+    public Post getMostLikedPost(@RequestHeader HttpHeaders headers){
+        try {
+            authenticationHelper.tryGetUser(headers);
+            return postService.getMostLikedPost();
+        } catch (AuthorizationException e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+    }
 
     @PostMapping
     public Post create(@RequestHeader HttpHeaders headers, @Valid @RequestBody PostDto postDto){
