@@ -12,7 +12,9 @@ import java.util.Set;
 
 public interface PostService {
     Optional<Post> getPostById(int id);
+
     Page<?> getAllPosts(User user, FilterOptions filterOptions, Pageable pageable);
+
     Post create(Post post, User user);
 
     Post update(Post post, User user);
@@ -21,7 +23,11 @@ public interface PostService {
 
     void likePost(Post post, User user);
 
+    int getPostCount();
+
     Set<Post> getUserPosts(int id);
+
     Set<?> getUserLikedPosts(User loggedInUser, int id);
+
     Post getMostLikedPost();
 }

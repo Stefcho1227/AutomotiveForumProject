@@ -17,6 +17,10 @@ html {
   letter-spacing: 1px;
 }
 
+.error {
+  color: red;
+}
+
 .description {
   text-align: center;
   color: #666;

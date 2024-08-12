@@ -23,17 +23,27 @@
 <body>
 
 
-
 <div class="modal-wrap">
     <div class="modal-bodies">
         <div class="modal-body modal-body-step-1 is-showing">
             <div class="title">Log In</div>
             <div class="description">Hello there, Log In</div>
-            <form>
-                <input type="text" placeholder="Name"/>
-                <input type="email" placeholder="Email"/>
+            <form action="#" th:action="@{/auth/login}" th:object="${login}" th:method="post">
+
+                <input type="text" placeholder="Name" th:placeholder="#{sign.up.label.placeholder.username}"
+                       th:field="*{username}"/>
+
+                <input type="password" placeholder="Password" th:placeholder="#{sign.up.label.placeholder.password}"
+                       th:field="*{password}"/>
+                <label class="error" th:if="${#fields.hasErrors('password') or #fields.hasErrors('username')}">Username and/or password are invalid.</label>
+                <br/>
+
                 <div class="text-center">
-                    <div class="button">LOG IN</div>
+
+                    <div class="button" onclick="document.querySelector('form').submit();">
+                        Login
+                    </div>
+
                     <a href="SignUpView.html" th:href="@{http://localhost:8080/auth/register}">
                         <div class="button">Create an account</div>
                     </a>

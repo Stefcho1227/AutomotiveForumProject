@@ -145,4 +145,9 @@ public class PostServiceImpl implements PostService {
             throw new AuthorizationException(ADMIN_OR_LOGGER_ERROR);
         }
     }
+
+    @Override
+    public int getPostCount() {
+        return postRepository.findAll().size();
+    }
 }

@@ -30,9 +30,12 @@
                     <li><a th:href="@{/}" th:text="#{navbar.label.home}">Home</a></li>
                     <li><a th:href="@{/posts/new}" th:text="#{navbar.label.create.post}">Create Post</a></li>
                     <li><a th:href="@{/about}" th:text="#{navbar.label.about.us}">About us</a></li>
-                    <li><a th:href="@{/auth/login}" th:text="#{navbar.label.sign.in}">Sign In</a></li>
+                    <li th:unless="${isAuthenticated}"><a th:href="@{/auth/login}" th:text="#{navbar.label.sign.in}">Sign In</a></li>
+                    <li th:if="${isAuthenticated}"><a th:href="@{/auth/logout}" th:text="#{navbar.label.sign.out}">Sign Out</a></li>
                 </ul>
+
             </div>
+
         </div>
     </nav>
 </div>

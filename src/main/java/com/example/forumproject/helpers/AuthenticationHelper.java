@@ -1,5 +1,6 @@
 package com.example.forumproject.helpers;
 
+import com.example.forumproject.exceptions.AuthenticationFailureException;
 import com.example.forumproject.exceptions.AuthorizationException;
 import com.example.forumproject.exceptions.BlockedException;
 import com.example.forumproject.exceptions.EntityNotFoundException;
@@ -22,6 +23,7 @@ public class AuthenticationHelper {
     private static final String AUTHORIZATION_HEADER_NAME = "Authorization";
     private static final String INVALID_AUTHENTICATION_ERROR = "Invalid authentication.";
     public static final String MODIFY_ERROR_MESSAGE = "Only admin or post creator can modify a post.";
+    public static final String WRONG_USERNAME_OR_PASSWORD = "Wrong username or password";
 
     private final UserService userService;
 
@@ -49,7 +51,7 @@ public class AuthenticationHelper {
             String password = values[1];
             Optional<User> userOptional = userService.getByUsername(username);
             User user = userOptional.orElseThrow(() -> new AuthorizationException(INVALID_AUTHENTICATION_ERROR));
-            if (!user.getPassword().equals(password)){
+            if (!user.getPassword().equals(password)) {
                 throw new AuthorizationException(INVALID_AUTHENTICATION_ERROR);
             }
             checkUserBlockStatus(user);
@@ -58,6 +60,7 @@ public class AuthenticationHelper {
             throw new AuthorizationException(INVALID_AUTHENTICATION_ERROR);
         }
     }
+
     public User tryGetCurrentUser(HttpSession session) {
         User currentUsername = (User) session.getAttribute("currentUser");
 
@@ -68,9 +71,21 @@ public class AuthenticationHelper {
         return currentUsername;
     }
 
-    public static void checkUserBlockStatus(User user){
-        if (user.getBlocked()){
+    public static void checkUserBlockStatus(User user) {
+        if (user.getBlocked()) {
             throw new BlockedException("Username", user.getUsername());
         }
+    }
+
+    public User verifyAuthentication(String username, String password) {
+        Optional<User> user = userService.getByUsername(username);
+        if (user.isEmpty()) {
+            throw new AuthenticationFailureException(WRONG_USERNAME_OR_PASSWORD);
+        }
+
+        if (!user.get().getPassword().equals(password)) {
+            throw new AuthenticationFailureException(WRONG_USERNAME_OR_PASSWORD);
+        }
+        return user.get();
     }
 }

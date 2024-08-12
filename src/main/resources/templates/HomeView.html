@@ -676,7 +676,10 @@
                 <!--strart col-md-3 (side bar)-->
                 <aside class="col-md-3 sidebar97239">
                     <div class="status-part3821">
-                        <h4>stats</h4> <a href="#"><i class="fa fa-question-circle" aria-hidden="true"> Posts(20)</i></a> <i class="fa fa-comment" aria-hidden="true"> Users(50)</i> </div>
+                        <h4>stats</h4>
+                        <a href="#"><i class="fa fa-question-circle" > Posts(<span th:text="${postCount}">0</span>)</i></a>
+                        <i class="fa fa-comment" > Users(<span th:text="${userCount}">0</span>)</i>
+                    </div>
                     <!--          start tags part-->
                     <div class="tags-part2398">
                         <h4>Tags</h4>
