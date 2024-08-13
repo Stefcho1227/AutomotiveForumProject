@@ -123,6 +123,10 @@ public class Post {
         this.tags = tags;
     }
 
+    public int getCommentsCount() {
+        return comments.size();
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;

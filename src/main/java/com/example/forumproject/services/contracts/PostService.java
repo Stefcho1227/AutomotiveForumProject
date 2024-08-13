@@ -30,4 +30,10 @@ public interface PostService {
     Set<?> getUserLikedPosts(User loggedInUser, int id);
 
     Post getMostLikedPost();
+
+    List<Post> getTenMostLikedPosts();
+
+    List<Post> getTenMostCommentedPosts();
+
+    List<Post> getTenMostRecentPosts();
 }

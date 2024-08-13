@@ -15,7 +15,8 @@
     <nav class="navbar navbar-default">
         <div class="container">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
@@ -30,8 +31,10 @@
                     <li><a th:href="@{/}" th:text="#{navbar.label.home}">Home</a></li>
                     <li><a th:href="@{/posts/new}" th:text="#{navbar.label.create.post}">Create Post</a></li>
                     <li><a th:href="@{/about}" th:text="#{navbar.label.about.us}">About us</a></li>
-                    <li th:unless="${isAuthenticated}"><a th:href="@{/auth/login}" th:text="#{navbar.label.sign.in}">Sign In</a></li>
-                    <li th:if="${isAuthenticated}"><a th:href="@{/auth/logout}" th:text="#{navbar.label.sign.out}">Sign Out</a></li>
+                    <li th:unless="${isAuthenticated}"><a th:href="@{/auth/login}" th:text="#{navbar.label.sign.in}">Sign
+                        In</a></li>
+                    <li th:if="${isAuthenticated}"><a th:href="@{/auth/logout}" th:text="#{navbar.label.sign.out}">Sign
+                        Out</a></li>
                 </ul>
 
             </div>
@@ -72,5 +75,41 @@
     </div>
 </section>
 
+<div class="post-details-home-view" th:fragment="post-view">
+    <!-- Add dynamic title and content using Thymeleaf -->
+    <div class="details-header923">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="post-title-left129">
+                    <br/>
+                    <a class="h3" th:text="${post.title}">This Is My first Question</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Display the post content -->
+    <div class="post-details-info1982">
+        <p th:text="${post.content}">Lorem ipsum dolor sit amet...</p>
+        <hr>
+        <div class="post-footer29032">
+            <div class="l-side2023">
+                <a href="#"><i class="fa fa-star star2" aria-hidden="true"
+                               th:text="' ' + ${post.likesCount} + ' likes'">5</i></a>
+                <i class="fa fa-tags" aria-hidden="true">
+                                    <span th:each="tag : ${post.tags}">
+                                        <span th:text="${tag.tagName}"></span>
+                                    </span>
+                </i>
+                <i class="fa fa-clock-o clock2" aria-hidden="true"
+                   th:text="${#dates.format(post.createdAt, 'dd MMM yyyy')}"></i>
+                <a th:href="@{/posts/{postId}/comments(postId=${postId})}">
+                    <i class="fa fa-commenting commenting2" aria-hidden="true"
+                       th:text="' ' + ${post.comments.size()} + ' comments'"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

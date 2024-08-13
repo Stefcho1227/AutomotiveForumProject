@@ -31,6 +31,7 @@ public class PostServiceImpl implements PostService {
     private static final String POST_ERROR_MESSAGE = "Only post creator can modify a post.";
     private static final String DELETE_POST_ERROR_MESSAGE = "Only post creator or admin or moderator can delete a post.";
     public static final String ADMIN_OR_LOGGER_ERROR = "Should be admin or logged in user to view other's posts likes";
+    public static final int POST_LIST_SIZE = 10;
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final UserService userService;
@@ -149,5 +150,28 @@ public class PostServiceImpl implements PostService {
     @Override
     public int getPostCount() {
         return postRepository.findAll().size();
+    }
+
+    @Override
+    public List<Post> getTenMostLikedPosts() {
+        return postRepository.findAll().stream().sorted(Comparator.comparing(Post::getLikesCount).reversed())
+                .limit(POST_LIST_SIZE)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Post> getTenMostCommentedPosts() {
+        return postRepository.findAll().stream()
+                .sorted(Comparator.comparing(Post::getCommentsCount).reversed())
+                .limit(POST_LIST_SIZE)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Post> getTenMostRecentPosts() {
+        return postRepository.findAll().stream()
+                .sorted(Comparator.comparing(Post::getCreatedAt))
+                .limit(POST_LIST_SIZE)
+                .collect(Collectors.toList());
     }
 }
