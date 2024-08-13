@@ -79,11 +79,7 @@ public class AuthenticationHelper {
 
     public User verifyAuthentication(String username, String password) {
         Optional<User> user = userService.getByUsername(username);
-        if (user.isEmpty()) {
-            throw new AuthenticationFailureException("Wrong username or password.");
-        }
-
-        if (!user.get().getPassword().equals(password)) {
+        if (user.isEmpty() || !user.get().getPassword().equals(password)) {
             throw new AuthenticationFailureException("Wrong username or password.");
         }
         return user.get();

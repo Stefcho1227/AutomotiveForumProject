@@ -430,7 +430,7 @@ hr {
 
 #main>label {
     display: inline-block;
-    margin: 0 121px -1px;
+    margin: 0 52px -1px;
     padding: 13px 15px;
     font-weight: 600;
     text-align: center;
@@ -1641,6 +1641,14 @@ h5:hover {
             box-shadow: 0px 0px 13px -3px;
 }
 
+.post-details-home-view {
+    margin-top: 28px;
+    background-color: #fff;
+    padding: 15px;
+    -webkit-box-shadow: 0px 0px 13px -3px;
+    box-shadow: 0px 0px 13px -3px;
+}
+
 .post-que-rep-rihght320 {
     float: right;
     margin-top: 25px;
@@ -1802,7 +1810,8 @@ h5:hover {
 .author-details8392 {
     background-color: #fff;
     padding: 40px;
-    margin-top: 20px;
+    margin-top: 30px;
+    margin-bottom: 200px;
     font-family: fontawesome;
     -webkit-box-shadow: 0px 0px 13px -3px;
             box-shadow: 0px 0px 13px -3px;

@@ -4,15 +4,22 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class UserInDto {
-    @NotNull(message = "Name can't be empty")
-    @Size(min = 4, max = 32, message = "Name should be between 16 and 64 symbols")
+    public static final int USER_ROLE_ID = 3;
+
+    @NotNull(message = "First name can't be empty")
+    @Size(min = 4, max = 32, message = "First name should be between 4 and 32 symbols")
     private String firstName;
-    @NotNull(message = "Name can't be empty")
-    @Size(min = 4, max = 32, message = "Name should be between 16 and 64 symbols")
+
+    @NotNull(message = "Last name can't be empty")
+    @Size(min = 4, max = 32, message = "Last name should be between 4 and 32 symbols")
     private String lastName;
+
     private String email;
+
     private String username;
+
     private String password;
+
     private String confirmPassword;
 
     private int roleId;
@@ -20,9 +27,8 @@ public class UserInDto {
     private String phoneNumber;
 
     public UserInDto() {
-        this.roleId = 3;
+        this.roleId = USER_ROLE_ID;
     }
-
 
     public String getFirstName() {
         return firstName;

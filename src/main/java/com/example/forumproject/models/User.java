@@ -38,12 +38,13 @@ public class User {
 
     @Column(name = "is_blocked", nullable = false)
     private Boolean isBlocked;
+
     @Column(name = "profile_url")
     private String profilePictureUrl;
 
-
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private UserPhoneNumber phoneNumber;
+
     @ManyToMany(mappedBy = "likes")
     @JsonBackReference
     private Set<Post> postsLiked;

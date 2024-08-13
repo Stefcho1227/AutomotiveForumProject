@@ -1,26 +1,29 @@
 package com.example.forumproject.controllers.mvc;
 
-import jakarta.servlet.http.HttpSession;
+import com.example.forumproject.services.contracts.PostService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/")
 public class HomeMvcController {
 
-    private final HttpSession httpSession;
+    private final PostService postService;
 
-    public HomeMvcController(HttpSession httpSession) {
-        this.httpSession = httpSession;
+    public HomeMvcController(PostService postService) {
+        this.postService = postService;
     }
-
 
     @GetMapping
-    public String ShowHomeView() {
+    public String ShowHomeView(Model model) {
+        model.addAttribute("mostLikedPosts", postService.getTenMostLikedPosts());
+        model.addAttribute("mostCommentedPosts", postService.getTenMostCommentedPosts());
+        model.addAttribute("mostRecentPosts", postService.getTenMostRecentPosts());
         return "HomeView";
     }
+
     @GetMapping("/about")
     public String showAboutPage() {
         return "AboutUs";

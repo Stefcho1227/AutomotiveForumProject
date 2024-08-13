@@ -19,9 +19,9 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
-    public static final String ERROR_MESSAGE_NO_PERMISSION = "You do not have permission to perform this operation";
-    public static final String PHONE_NUMBER_ERROR_MESSAGE_NO_PERMISSION = "Only Admins have access to this functionality";
-    public static final String ONLY_MODIFY_YOUR_PHONE_NUMBER = "You can only modify your own phone number";
+    public static final String ERROR_NO_PERMISSION_MESSAGE = "You do not have permission to perform this operation";
+    public static final String PHONE_NUMBER_ERROR_NO_PERMISSION_MESSAGE = "Only Admins have access to this functionality";
+    public static final String NO_PHONE_NUMBER_MODIFICATION_PERMISSION_MESSAGE = "You can only modify your own phone number";
     private final UserRepository userRepository;
     private final UserPhoneNumberRepository phoneNumberRepository;
 
@@ -52,6 +52,7 @@ public class UserServiceImpl implements UserService {
         } catch (DataIntegrityViolationException e) {
             throw new DuplicateEntityException("User with email/username already exists.");
         }
+        //TODO da ima istinksi check za username-a
     }
 
     @Transactional
@@ -61,19 +62,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUserById(int id, User user) {
-        checkUserIsAdminOrModerator(user);
+        throwIfUserIsNotAdminOrModerator(user);
         userRepository.deleteById(id);
     }
 
     @Override
     public UserPhoneNumber addPhoneNumber(int id, UserPhoneNumber userPhoneNumber, User loggedInUser) {
+        throwIfUserIsNotAdmin(loggedInUser);
+        throwIfUserIsNotHimself(loggedInUser, id, NO_PHONE_NUMBER_MODIFICATION_PERMISSION_MESSAGE);
         Optional<User> userOptional = userRepository.findById(id);
-        checkUserIsAdmin(loggedInUser);
-        checkIfUserIsHimself(loggedInUser, id, ONLY_MODIFY_YOUR_PHONE_NUMBER);
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            checkUserIsAdmin(user);
+            throwIfUserIsNotAdmin(user);
             if (user.getPhoneNumber() != null) {
                 user.setPhoneNumber(null);
             }
@@ -82,31 +83,32 @@ public class UserServiceImpl implements UserService {
             return userPhoneNumber;
         }
         return null;
+        //TODO make it not return null but throw an exception        findById or throw
     }
 
     @Override
     public void deletePhoneNumber(int id, User loggedInUser) {
         Optional<User> userOptional = userRepository.findById(id);
-        checkUserIsAdmin(loggedInUser);
-        checkIfUserIsHimself(loggedInUser, id, ONLY_MODIFY_YOUR_PHONE_NUMBER);
+        throwIfUserIsNotAdmin(loggedInUser);
+        throwIfUserIsNotHimself(loggedInUser, id, NO_PHONE_NUMBER_MODIFICATION_PERMISSION_MESSAGE);
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             user.setPhoneNumber(null);
             userRepository.save(user);
         }
-
+        //TODO kato gornoto
     }
 
-    private void checkUserIsAdminOrModerator(User user) {
+    private void throwIfUserIsNotAdminOrModerator(User user) {
         if (user.getRole().getRoleName().equals("User")) {
-            throw new AuthorizationException(ERROR_MESSAGE_NO_PERMISSION);
+            throw new AuthorizationException(ERROR_NO_PERMISSION_MESSAGE);
         }
     }
 
-    private void checkUserIsAdmin(User user) {
+    private void throwIfUserIsNotAdmin(User user) {
         if (!user.getRole().getRoleName().equals("Admin")) {
-            throw new AuthorizationException(PHONE_NUMBER_ERROR_MESSAGE_NO_PERMISSION);
+            throw new AuthorizationException(PHONE_NUMBER_ERROR_NO_PERMISSION_MESSAGE);
         }
     }
 
@@ -130,7 +132,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUserBlockStatus(User loggedInUser, User inputUser, int id) {
-        checkUserIsAdminOrModerator(loggedInUser);
+        throwIfUserIsNotAdminOrModerator(loggedInUser);
 
         User userToUpdate = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User"));
 
@@ -141,7 +143,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(userToUpdate);
     }
 
-    private void checkIfUserIsHimself(User loggedInUser, int id, String message) {
+    private void throwIfUserIsNotHimself(User loggedInUser, int id, String message) {
         if (loggedInUser.getId() != id) {
             throw new AuthorizationException(message);
         }

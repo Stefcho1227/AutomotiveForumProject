@@ -12,8 +12,10 @@ public class Tag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
+
     @Column(name = "tag_name")
     private String tagName;
+
     @ManyToMany(mappedBy = "tags")
     @JsonBackReference
     private Set<Post> posts;

@@ -14,6 +14,7 @@ import com.example.forumproject.models.dtos.in.UserBlockDto;
 import com.example.forumproject.models.dtos.in.UserInDto;
 import com.example.forumproject.services.contracts.PostService;
 import com.example.forumproject.services.contracts.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -87,7 +88,7 @@ public class UserController {
     }
 
     @PostMapping
-    public User createUser(@RequestBody UserInDto userDto) {
+    public User createUser(@RequestBody @Valid UserInDto userDto) {
         try {
             User user = userMapper.fromDto(userDto);
             return userService.createUser(user);

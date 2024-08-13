@@ -4,7 +4,6 @@ import com.example.forumproject.services.contracts.PostService;
 import com.example.forumproject.services.contracts.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
@@ -25,12 +24,12 @@ public class GlobalModelAttributes {
     }
 
     @ModelAttribute("userCount")
-    public int populateUserCount(HttpSession session) {
-        return (int) userService.getAllUsers().stream().count();
+    public long populateUserCount() {
+        return userService.getAllUsers().size();
     }
 
     @ModelAttribute("postCount")
-    public int populatePostCount(HttpSession session) {
+    public int populatePostCount() {
         return postService.getPostCount();
     }
 }
