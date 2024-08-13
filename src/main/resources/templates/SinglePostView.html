@@ -61,14 +61,16 @@
                 <!-- Author details section -->
                 <div class="author-details8392">
                     <div class="author-img202l">
-                        <img th:src="@{/image/images.png}" alt="Author Image">
-                        <div class="au-image-overlay text-center">
+                        <img th:src="@{${author.profilePictureUrl}}" alt="Author Image">                        <div class="au-image-overlay text-center">
                             <a href="#"><i class="fa fa-plus-square-o" aria-hidden="true"></i></a>
                         </div>
                     </div>
                     <span class="author-deatila04re">
                         <h5>About the Author</h5>
-                        <p th:text="${author.firstName} + ' ' + ${author.lastName}">Author Name</p>
+                        <!-- Make the author's name a clickable link to the user's view page -->
+                        <p>
+                            <a th:href="@{/users/{id}(id=${author.id})}" th:text="${author.firstName} + ' ' + ${author.lastName}">Author Name</a>
+                        </p>
                         <p th:text="${author.email}">author@example.com</p>
                     </span>
                 </div>
