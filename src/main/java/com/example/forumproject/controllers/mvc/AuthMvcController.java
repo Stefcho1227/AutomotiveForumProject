@@ -1,12 +1,17 @@
 package com.example.forumproject.controllers.mvc;
 
 import com.example.forumproject.exceptions.AuthenticationFailureException;
+import com.example.forumproject.exceptions.DuplicateEntityException;
 import com.example.forumproject.helpers.AuthenticationHelper;
+import com.example.forumproject.helpers.mapper.UserMapper;
 import com.example.forumproject.models.User;
 import com.example.forumproject.models.dtos.LoginDto;
+import com.example.forumproject.models.dtos.in.UserInDto;
+import com.example.forumproject.services.contracts.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,15 +19,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.server.ResponseStatusException;
 
 @Controller
 @RequestMapping("/auth")
 public class AuthMvcController {
 
+    private final UserService userService;
+    private final UserMapper userMapper;
     private final AuthenticationHelper authenticationHelper;
 
     @Autowired
-    public AuthMvcController(AuthenticationHelper authenticationHelper) {
+    public AuthMvcController(UserService userService, UserMapper userMapper, AuthenticationHelper authenticationHelper) {
+        this.userService = userService;
+        this.userMapper = userMapper;
         this.authenticationHelper = authenticationHelper;
     }
 
@@ -55,7 +65,27 @@ public class AuthMvcController {
     }
 
     @GetMapping("/register")
-    public String showRegisterPage() {
+    public String showRegisterPage(Model model) {
+        model.addAttribute("register", new UserInDto());
         return "SignUpView";
+    }
+
+    @PostMapping("/register")
+    public String handleRegister(@Valid @ModelAttribute("register") UserInDto registerDto, BindingResult bindingResult, HttpSession session) {
+        if (bindingResult.hasErrors()) {
+            return "SignUpView";
+        }
+        if (!registerDto.getConfirmPassword().equals(registerDto.getPassword())) {
+            bindingResult.rejectValue("password", "confirm_password_error", "Passwords should match.");
+            return "SignUpView";
+        }
+        try {
+            User user = userMapper.fromDto(registerDto);
+            userService.createUser(user);
+        } catch (DuplicateEntityException e) {
+            bindingResult.rejectValue("username", "duplicate_user", e.getMessage());
+            return "SignUpView";
+        }
+        return "redirect:/";
     }
 }

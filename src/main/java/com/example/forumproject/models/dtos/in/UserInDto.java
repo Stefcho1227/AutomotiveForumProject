@@ -13,6 +13,7 @@ public class UserInDto {
     private String email;
     private String username;
     private String password;
+    private String confirmPassword;
 
     private int roleId;
 
@@ -77,5 +78,13 @@ public class UserInDto {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
     }
 }
