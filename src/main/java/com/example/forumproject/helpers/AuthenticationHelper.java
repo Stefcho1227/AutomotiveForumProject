@@ -62,13 +62,13 @@ public class AuthenticationHelper {
     }
 
     public User tryGetCurrentUser(HttpSession session) {
-        User currentUsername = (User) session.getAttribute("currentUser");
+        User currentUser = (User) session.getAttribute("currentUser");
 
-        if (currentUsername == null) {
-            throw new AuthorizationException(INVALID_AUTHENTICATION_ERROR);
+        if (currentUser == null) {
+            throw new AuthorizationException("Invalid authentication. Please log in.");
         }
 
-        return currentUsername;
+        return currentUser;
     }
 
     public static void checkUserBlockStatus(User user) {
@@ -80,11 +80,11 @@ public class AuthenticationHelper {
     public User verifyAuthentication(String username, String password) {
         Optional<User> user = userService.getByUsername(username);
         if (user.isEmpty()) {
-            throw new AuthenticationFailureException(WRONG_USERNAME_OR_PASSWORD);
+            throw new AuthenticationFailureException("Wrong username or password.");
         }
 
         if (!user.get().getPassword().equals(password)) {
-            throw new AuthenticationFailureException(WRONG_USERNAME_OR_PASSWORD);
+            throw new AuthenticationFailureException("Wrong username or password.");
         }
         return user.get();
     }

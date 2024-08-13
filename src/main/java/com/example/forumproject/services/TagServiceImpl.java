@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -95,6 +96,10 @@ public class TagServiceImpl implements TagService {
         checkPermissions(user);
         Tag tagToDelete = tagRepository.findById(id).orElseThrow(()->new EntityNotFoundException("Tag", id));
         tagRepository.delete(tagToDelete);
+    }
+    @Override
+    public Set<Tag> getTagsByIds(Set<Integer> tagIds) {
+        return tagRepository.findByIdIn(tagIds).stream().collect(Collectors.toSet());
     }
 
     private void checkPermissions(User user) {

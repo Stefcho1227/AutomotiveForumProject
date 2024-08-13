@@ -2,6 +2,7 @@ package com.example.forumproject.controllers.mvc;
 
 import com.example.forumproject.exceptions.AuthenticationFailureException;
 import com.example.forumproject.helpers.AuthenticationHelper;
+import com.example.forumproject.models.User;
 import com.example.forumproject.models.dtos.LoginDto;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -38,14 +39,13 @@ public class AuthMvcController {
         }
 
         try {
-            authenticationHelper.verifyAuthentication(loginDto.getUsername(), loginDto.getPassword());
-            session.setAttribute("currentUser", loginDto.getUsername());
+            User user = authenticationHelper.verifyAuthentication(loginDto.getUsername(), loginDto.getPassword());
+            session.setAttribute("currentUser", user);
             return "redirect:/";
         } catch (AuthenticationFailureException e) {
             bindingResult.rejectValue("username", "auth_error", e.getMessage());
             return "LoginView";
         }
-
     }
 
     @GetMapping("/logout")

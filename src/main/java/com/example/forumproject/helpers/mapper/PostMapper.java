@@ -2,6 +2,7 @@ package com.example.forumproject.helpers.mapper;
 
 import com.example.forumproject.exceptions.EntityNotFoundException;
 import com.example.forumproject.models.Post;
+import com.example.forumproject.models.Tag;
 import com.example.forumproject.models.User;
 import com.example.forumproject.models.dtos.in.PostDto;
 import com.example.forumproject.models.dtos.out.*;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -35,6 +38,17 @@ public class PostMapper {
         Timestamp timestamp = Timestamp.valueOf(now);
         post.setCreatedAt(timestamp);
 
+        return post;
+    }
+    public Post fromDto(PostDto postDto, User user, Set<Tag> tags) {
+        Post post = new Post();
+        post.setTitle(postDto.getTitle());
+        post.setContent(postDto.getContent());
+        post.setCreatedBy(user);
+        post.setTags(tags);  // Ensure tags are set
+        LocalDateTime now = LocalDateTime.now();
+        Timestamp timestamp = Timestamp.valueOf(now);
+        post.setCreatedAt(timestamp);
         return post;
     }
     public static PostUserDto toUserDTO(Post post) {

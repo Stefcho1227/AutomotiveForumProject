@@ -34,7 +34,7 @@ public class CommentMapper {
         comment.setCreatedAt(Timestamp.from(Instant.now()));
         comment.setContent(inputData.getContent());
         comment.setPost(postRepository.findById(inputData.getPostId()).orElseThrow(
-                () -> new EntityNotFoundException("Post not found")));
+                () -> new EntityNotFoundException("Post", inputData.getPostId())));
         comment.setCreatedBy(user);
 
         return comment;

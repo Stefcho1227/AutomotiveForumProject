@@ -1,27 +1,27 @@
 package com.example.forumproject.models.dtos.out;
 
 public class TagAdminDto {
-    private int tagId;
-    private String tagName;
+    private int id;
+    private String name;
 
-    public TagAdminDto(int tagId, String tagName) {
-        this.tagId = tagId;
-        this.tagName = tagName;
+    public TagAdminDto(int id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
-    public int getTagId() {
-        return tagId;
+    public int getId() {
+        return id;
     }
 
-    public void setTagId(int tagId) {
-        this.tagId = tagId;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getTagName() {
-        return tagName;
+    public String getName() {
+        return name;
     }
 
-    public void setTagName(String tagName) {
-        this.tagName = tagName;
+    public void setName(String name) {
+        this.name = name;
     }
 }

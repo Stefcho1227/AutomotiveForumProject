@@ -5,6 +5,7 @@ import com.example.forumproject.models.User;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface TagService {
     List<?> getAllTags(User user);
@@ -20,4 +21,5 @@ public interface TagService {
     Tag update(Tag tag, User user);
 
     void delete(int id, User user);
+    Set<Tag> getTagsByIds(Set<Integer> tagIds);
 }
