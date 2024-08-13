@@ -31,7 +31,7 @@
                             <div class="user-details">
                                 <img th:src="@{${user.profilePictureUrl}}" alt="User Image">
                                 <div class="user-info">
-                                    <h4 th:text="${user.firstName + ' ' + user.lastName}">User Name</h4>
+                                    <a th:href="@{/users/{id}(id=${user.id})}" th:text="${user.firstName} + ' ' + ${user.lastName}">Author Name</a>
                                 </div>
                             </div>
                             <div class="user-comments">
