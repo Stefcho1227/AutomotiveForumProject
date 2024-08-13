@@ -38,7 +38,7 @@
                         <div class="categori49">
                             <span class="form-description43305">Tags*</span>
                             <select th:field="*{tagIds}" multiple class="list-category53">
-                                <option th:each="tag : ${tags}" th:value="${tag.id}" th:text="${tag.name}"></option>
+                                <option th:each="tag : ${tags}" th:value="${tag.id}" th:text="${tag.tagName}"></option>
                             </select>
                             <div th:if="${#fields.hasErrors('tagIds')}" th:errors="*{tagIds}" class="error-message"></div>
                         </div>

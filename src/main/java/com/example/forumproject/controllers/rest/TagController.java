@@ -34,7 +34,7 @@ public class TagController {
         this.authenticationHelper = authenticationHelper;
     }
     @GetMapping
-    public List<?> getAllTags(@RequestHeader HttpHeaders headers) {
+    public List<Tag> getAllTags(@RequestHeader HttpHeaders headers) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             return tagService.getAllTags(user);

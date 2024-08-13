@@ -35,13 +35,9 @@ public class TagServiceImpl implements TagService {
         this.postRepository = postRepository;
     }
     @Override
-    public List<?> getAllTags(User user) {
+    public List<Tag> getAllTags(User user) {
         List<Tag> tags = tagRepository.findAll();
-        if (user.getRole().getRoleName().equals("Admin")){
-            return tags.stream().map(tag -> new TagAdminDto(tag.getId(), tag.getTagName())).collect(Collectors.toList());
-        } else {
-            return tags.stream().map(tag -> new TagUserDto(tag.getTagName())).collect(Collectors.toList());
-        }
+        return tags;
     }
 
     //TODO check this method to  use dto

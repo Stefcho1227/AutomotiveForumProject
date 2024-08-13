@@ -1,17 +1,17 @@
 package com.example.forumproject.models.dtos.out;
 
 public class TagUserDto {
-    private String tagName;
+    private String name;
 
-    public TagUserDto(String tagName) {
-        this.tagName = tagName;
+    public TagUserDto(String name) {
+        this.name = name;
     }
 
-    public String getTagName() {
-        return tagName;
+    public String getName() {
+        return name;
     }
 
-    public void setTagName(String tagName) {
-        this.tagName = tagName;
+    public void setName(String name) {
+        this.name = name;
     }
 }

@@ -120,7 +120,7 @@ public class PostMvcController {
         } catch (AuthorizationException e) {
             return "redirect:/auth/login";
         }
-        List<?> tags = tagService.getAllTags(user);
+        List<Tag> tags = tagService.getAllTags(user);
         model.addAttribute("postDto", new PostDto());
         model.addAttribute("tags", tags);
         return "CreatePostView";

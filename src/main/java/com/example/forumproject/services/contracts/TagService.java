@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.Set;
 
 public interface TagService {
-    List<?> getAllTags(User user);
+    List<Tag> getAllTags(User user);
 
     Tag create(Tag tag, User user);
 
