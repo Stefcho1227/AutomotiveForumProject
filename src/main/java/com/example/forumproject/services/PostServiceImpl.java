@@ -171,7 +171,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<Post> getTenMostRecentPosts() {
         return postRepository.findAll().stream()
-                .sorted(Comparator.comparing(Post::getCreatedAt))
+                .sorted(Comparator.comparing(Post::getCreatedAt).reversed())
                 .limit(POST_LIST_SIZE)
                 .collect(Collectors.toList());
     }
