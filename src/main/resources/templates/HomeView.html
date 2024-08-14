@@ -63,7 +63,8 @@
                     <section id="content1">
                         <!--Recent Question Content Section -->
                         <div th:each="post : ${mostCommentedPosts}">
-                            <div th:replace="~{forumforms :: post-view}"></div>
+                            <div th:replace="~{forumforms :: post-view}">
+                            </div>
                         </div>
                     </section>
                     <!--  End of content-1------>
