@@ -1,6 +1,7 @@
 package com.example.forumproject.services.contracts;
 
 import com.example.forumproject.models.Post;
+import com.example.forumproject.models.Tag;
 import com.example.forumproject.models.User;
 import com.example.forumproject.models.options.FilterOptions;
 import org.springframework.data.domain.Page;
@@ -36,4 +37,6 @@ public interface PostService {
     List<Post> getTenMostCommentedPosts();
 
     List<Post> getTenMostRecentPosts();
+
+    List<Post> getPostsByTag(Tag tag);
 }

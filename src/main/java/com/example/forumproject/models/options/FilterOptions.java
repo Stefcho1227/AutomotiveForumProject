@@ -57,6 +57,10 @@ public class FilterOptions {
         this.sortOrder = Optional.ofNullable(sortOrder);
     }
 
+    public FilterOptions(String tagName) {
+        this.tagName = Optional.ofNullable(tagName);
+    }
+
     public Optional<Integer> getPage() {
         return page;
     }

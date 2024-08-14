@@ -14,6 +14,8 @@ public interface TagService {
 
     Optional<Tag> getById(User user, int tagId);
 
+    Optional<Tag> getById(int tagId);
+
     void addTagToPost(int id, int postId, User user);
 
     void removeTagToPost(int id, int postId, User user);

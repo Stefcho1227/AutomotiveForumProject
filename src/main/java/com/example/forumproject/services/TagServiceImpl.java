@@ -46,6 +46,12 @@ public class TagServiceImpl implements TagService {
         checkPermissions(user);
         return tagRepository.findById(tagId);
     }
+
+    @Override
+    public Optional<Tag> getById(int tagId) {
+        return tagRepository.findById(tagId);
+    }
+
     @Override
     @Transactional
     public void addTagToPost(int id, int postId, User user) {

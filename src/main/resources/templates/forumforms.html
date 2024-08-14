@@ -82,11 +82,13 @@
             <div class="col-md-8">
                 <div class="post-title-left129">
                     <br/>
-                    <a class="h3" style="margin-bottom: 10px" th:text="${post.title}" th:href="@{|/posts/| + ${post.id}}">This Is My first Question</a>
+                    <a class="h3" style="margin-bottom: 10px" th:text="${post.title}"
+                       th:href="@{|/posts/| + ${post.id}}">This Is My first Question</a>
                     <br/>
                     <div style="height: 5px"></div>
                     <a class="h4" style="cursor: default; text-decoration: none; color: inherit;">Author: </a>
-                    <a class="h4" th:text="${post.createdBy.firstName + ' ' + post.createdBy.lastName}" th:href="@{|/users/| + ${post.createdBy.id}}"></a>
+                    <a class="h4" th:text="${post.createdBy.firstName + ' ' + post.createdBy.lastName}"
+                       th:href="@{|/users/| + ${post.createdBy.id}}"></a>
                 </div>
             </div>
         </div>
@@ -98,12 +100,13 @@
         <hr>
         <div class="post-footer29032">
             <div class="l-side2023">
-                <a href="#" ><i class="fa star2" style="cursor: default;" aria-hidden="true"
+                <a href="#"><i class="fa star2" style="cursor: default;" aria-hidden="true"
                                th:text="' ' + ${post.likesCount} + ' likes'">5</i></a>
-                <i class="fa" aria-hidden="true" style="cursor: default;">
-                                    <span th:each="tag : ${post.tags}">
-                                        <span th:text="${tag.tagName}"></span>
-                                    </span>
+                <i class="fa" aria-hidden="true">
+                    <span style="margin-right: 1px">Tags: </span>
+                    <span th:each="tag : ${post.tags}">
+                                        <a  style="margin-right: 3px; text-decoration: none; color: inherit;" th:text="${tag.tagName}" th:href="|/tag/| + ${tag.id}"></a>
+                    </span>
                 </i>
                 <i class="fa clock2" aria-hidden="true" style="cursor: default;"
                    th:text="${#dates.format(post.createdAt, 'dd MMM yyyy')}"></i>
@@ -114,6 +117,22 @@
             </div>
         </div>
     </div>
+</div>
+
+
+<div class="tags-part2398" th:fragment="tag-section">
+    <h4>Tags</h4>
+    <ul>
+        <li th:each="tag : ${tags}"><a href="#" th:text="${tag.tagName}" th:href="@{|/tag/| + ${tag.id}}">tag name
+            placeholder</a></li>
+
+    </ul>
+</div>
+<!--          End tags part-->
+<div class="status-part3821" th:fragment="stat-section">
+    <h4>stats</h4>
+    <a href="#"><i class="fa fa-question-circle"> Posts(<span th:text="${postCount}">0</span>)</i></a>
+    <i class="fa fa-comment"> Users(<span th:text="${userCount}">0</span>)</i>
 </div>
 </body>
 </html>

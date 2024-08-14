@@ -93,25 +93,9 @@
             <!--end of col-md-9 -->
             <!--strart col-md-3 (side bar)-->
             <aside class="col-md-3 sidebar97239">
-                <div class="status-part3821">
-                    <h4>stats</h4>
-                    <a href="#"><i class="fa fa-question-circle"> Posts(<span th:text="${postCount}">0</span>)</i></a>
-                    <i class="fa fa-comment"> Users(<span th:text="${userCount}">0</span>)</i>
-                </div>
+                <div th:replace="~{forumforms :: stat-section}"></div>
                 <!--          start tags part-->
-                <div class="tags-part2398">
-                    <h4>Tags</h4>
-                    <ul>
-                        <li><a href="#">analytics</a></li>
-                        <li><a href="#">Computer</a></li>
-                        <li><a href="#">Developer</a></li>
-                        <li><a href="#">Google</a></li>
-                        <li><a href="#">Interview</a></li>
-                        <li><a href="#">Programmer</a></li>
-                        <li><a href="#">Salary</a></li>
-                        <li><a href="#">University</a></li>
-                        <li><a href="#">Employee</a></li>
-                    </ul>
+                <div th:replace="~{forumforms :: tag-section}">
                 </div>
                 <!--          End tags part-->
 

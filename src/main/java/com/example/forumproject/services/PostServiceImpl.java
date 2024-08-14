@@ -6,6 +6,7 @@ import com.example.forumproject.helpers.AuthenticationHelper;
 import com.example.forumproject.helpers.mapper.PostMapper;
 import com.example.forumproject.helpers.specifications.PostSpecification;
 import com.example.forumproject.models.Post;
+import com.example.forumproject.models.Tag;
 import com.example.forumproject.models.User;
 import com.example.forumproject.models.options.FilterOptions;
 import com.example.forumproject.repositories.contracts.PostRepository;
@@ -173,5 +174,10 @@ public class PostServiceImpl implements PostService {
                 .sorted(Comparator.comparing(Post::getCreatedAt))
                 .limit(POST_LIST_SIZE)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Post> getPostsByTag(Tag tag) {
+        return postRepository.findByTagsContains(tag);
     }
 }

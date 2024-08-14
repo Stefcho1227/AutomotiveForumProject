@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AutoHQ</title>
+    <link href="/image/icon.png" th:href="@{/image/icon.png}" rel="icon">
+    <link href="../static/css/bootstrap.css" rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.css}">
+    <link href="../static/css/style.css" rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+    <link href="../static/css/font-awesome.min.css" rel="stylesheet" type="text/css"
+          th:href="@{/css/font-awesome.min.css}">
+    <title>Title</title>
+</head>
+<body>
+<form th:replace="~{forumforms.html :: navbar}"></form>
+
+<section class="main-content920">
+    <div class="container">
+        <h2 th:text="|All post with tag: | + ${tag.tagName}"></h2>
+        <div class="row">
+            <div class="col-md-9">
+                <div id="main">
+
+
+
+                    <section>
+                        <!--Recent Question Content Section -->
+                        <div th:each="post : ${postsWithTag}">
+                            <div th:replace="~{forumforms :: post-view}">
+                            </div>
+                        </div>
+                    </section>
+                    <!--  End of content-1------>
+
+
+                </div>
+            </div>
+            <!--end of col-md-9 -->
+            <!--strart col-md-3 (side bar)-->
+            <aside class="col-md-3 sidebar97239">
+                <div th:replace="~{forumforms :: stat-section}"></div>
+                <!--          start tags part-->
+                <div th:replace="~{forumforms :: tag-section}">
+                </div>
+                <!--          End tags part-->
+
+            </aside>
+        </div>
+    </div>
+</section>
+
+
+<section th:replace="~{forumforms :: footer1}"></section>
+<section th:replace="~{forumforms :: footer2}"></section>
+</body>
+</html>
