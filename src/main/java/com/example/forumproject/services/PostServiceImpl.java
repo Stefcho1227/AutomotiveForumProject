@@ -14,6 +14,7 @@ import com.example.forumproject.repositories.contracts.UserRepository;
 import com.example.forumproject.services.contracts.PostService;
 import com.example.forumproject.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -82,6 +83,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional
     public void likePost(Post post, User user) {
         AuthenticationHelper.checkUserBlockStatus(user);
         Set<User> usersLikedPost = post.getLikes();

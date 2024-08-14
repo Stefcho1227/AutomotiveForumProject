@@ -35,6 +35,7 @@
                         In</a></li>
                     <li th:if="${isAuthenticated}"><a th:href="@{/auth/logout}" th:text="#{navbar.label.sign.out}">Sign
                         Out</a></li>
+                    <li th:if="${isAuthenticated}"><a th:href="@{/profile}" th:text="#{navbar.label.view.profile}">Profile View</a></li>
                 </ul>
 
             </div>
@@ -69,7 +70,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-6">
-                <p>Copyright 2017 Ask me | <strong>Sudo Coder</strong></p>
+                <p>Copyright 2017 Ask me | <strong>Stefcho&Toshko</strong></p>
             </div>
         </div>
     </div>
@@ -100,8 +101,25 @@
         <hr>
         <div class="post-footer29032">
             <div class="l-side2023">
-                <a href="#"><i class="fa star2" style="cursor: default;" aria-hidden="true"
-                               th:text="' ' + ${post.likesCount} + ' likes'">5</i></a>
+                <!-- Like button and likes count -->
+                <form th:action="@{/posts/{postId}/like(postId=${post.id})}" method="get" style="display:inline;">
+                    <button type="submit" style="border:none;background:none;padding:0;">
+                        <img th:src="@{/image/like.png}" alt="Like" style="width: 16px; height: 16px;">
+                    </button>
+                </form>
+
+                <a href="#" class="dropdown-toggle" id="likesDropdown" aria-expanded="false">
+                    <i class="fa star2" aria-hidden="true" th:text="' ' + ${post.likesCount} + ' likes'">5</i>
+                </a>
+
+                <div id="likesDropdownMenu" class="dropdown-menu-custom">
+                    <ul>
+                        <li th:each="user : ${post.likes}">
+                            <a th:href="@{/users/{id}(id=${user.id})}" th:text="${user.firstName} + ' ' + ${user.lastName}">User Name</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
                 <i class="fa" aria-hidden="true">
                     <span style="margin-right: 1px">Tags: </span>
                     <span th:each="tag : ${post.tags}">
@@ -111,7 +129,8 @@
                 <i class="fa clock2" aria-hidden="true" style="cursor: default;"
                    th:text="${#dates.format(post.createdAt, 'dd MMM yyyy')}"></i>
                 <a th:href="@{|/posts/| + ${post.id}} + |/comments|">
-                    <i class="fa fa-commenting commenting2" aria-hidden="true"
+                    <img th:src="@{/image/comment.png}" alt="Comment" style="width: 10px; height: 10px;">
+                    <i class="fa commenting2" aria-hidden="true"
                        th:text="' ' + ${post.comments.size()} + ' comments'"></i>
                 </a>
             </div>

@@ -24,6 +24,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -47,12 +49,6 @@ public class PostMvcController {
         this.commentMapper = commentMapper;
         this.tagService = tagService;
     }
-
-    @ModelAttribute("mostLikedPost")
-    public Post populateLikedPost() {
-        return postService.getMostLikedPost();
-    }
-
     @GetMapping("/{id}")
     public String showSinglePost(@PathVariable int id, Model model, HttpSession session) {
         /*User user;
@@ -84,13 +80,30 @@ public class PostMvcController {
     @GetMapping("/{postId}/comments")
     public String showPostComments(@PathVariable int postId, Model model) {
         Post post = postService.getPostById(postId).orElseThrow(() -> new EntityNotFoundException("post", postId));
-        Set<Comment> comments = post.getComments();
+        Set<Comment> comments = post.getComments().stream().sorted(Comparator.comparing(Comment::getCreatedAt)).collect(Collectors.toCollection(LinkedHashSet::new));
         Set<User> users = comments.stream().map(Comment::getCreatedBy).collect(Collectors.toSet());
 
         model.addAttribute("post", post);
         model.addAttribute("comments", comments);
         model.addAttribute("users", users);
         return "UserCommentView";
+    }
+    @GetMapping("/{postId}/like")
+    public String addLikeToPost(@PathVariable int postId, HttpSession session) {
+        try {
+            User user = authenticationHelper.tryGetCurrentUser(session);
+
+            Post post = postService.getPostById(postId)
+                    .orElseThrow(() -> new EntityNotFoundException("Post", postId));
+
+            postService.likePost(post, user);
+
+            return "redirect:/posts/" + postId;
+        } catch (AuthorizationException e) {
+            return "redirect:/auth/login";
+        } catch (EntityNotFoundException e) {
+            return "ErrorView";
+        }
     }
     @PostMapping("/{postId}/comments")
     public String addComment(@PathVariable int postId, @ModelAttribute CommentInDto commentDto, HttpSession session) {
@@ -136,11 +149,9 @@ public class PostMvcController {
         } catch (AuthorizationException e) {
             return "redirect:/auth/login";
         }
-
         if (bindingResult.hasErrors()) {
             return "CreatePostView";
         }
-
         try {
             Set<Tag> tags = tagService.getTagsByIds(postDto.getTagIds());
             Post post = postMapper.fromDto(postDto, user, tags);

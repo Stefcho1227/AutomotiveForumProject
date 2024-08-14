@@ -45,7 +45,7 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private UserPhoneNumber phoneNumber;
 
-    @ManyToMany(mappedBy = "likes")
+    @ManyToMany(mappedBy = "likes", fetch = FetchType.EAGER)
     @JsonBackReference
     private Set<Post> postsLiked;
 

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/editor.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/font-awesome.min.css}" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div th:replace="~{forumforms.html :: navbar}"></div>
+<section class="header-descriptin329">
+    <div class="container">
+        <h3>Profile View</h3>
+    </div>
+</section>
+<section class="main-content920">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="about-user2039 mt-70">
+                    <div class="user-title3930">
+                        <h3>About <p th:text="${user.firstName} + ' ' + ${user.lastName}"></p></h3>
+                        <hr>
+                    </div>
+                    <div class="user-image293">
+                        <img th:src="@{${user.profilePictureUrl}}" alt="User Image">
+                    </div>
+                    <div class="user-list10039">
+                        <div class="ul-list-user-right29">
+                            <ul>
+                                <li><i class="fa fa-phone" aria-hidden="true"></i> <strong>Phone:</strong> <span th:text="${user.phoneNumber.value}"></span></li>
+                                <li><i class="fa fa-user" aria-hidden="true"></i> <strong>E-mail: </strong> <span th:text="${user.email}"></span></li>
+                                <li><i class="fa fa-user" aria-hidden="true"></i> <strong>Username: </strong> <span th:text="${user.username}"></span></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="user-description303"></div>
+
+                    <div class="user-posts">
+                        <h4>Posts by <p th:text="${user.firstName} + ' ' + ${user.lastName} + ':'" ></p></h4>
+                        <ul>
+                            <li th:each="post : ${posts}">
+                                <a th:href="@{/posts/{id}(id=${post.id})}" th:text="${post.title}"></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <aside class="col-md-3 sidebar97239">
+                <div class="status-part3821">
+                    <h4>your stats</h4>
+                    <a href="#"><i class="fa fa-question-circle"> Posts(<span th:text="${postCount}">0</span>)</i></a>
+                    <i class="fa fa-comment"> Total likes from all posts(<span th:text="${likesCount}">0</span>)</i>
+                </div>
+            </aside>
+        </div>
+    </div>
+</section>
+<div th:replace="~{forumforms.html :: footer1}"></div>
+<div th:replace="~{forumforms.html :: footer2}"></div>
+</body>
+</html>

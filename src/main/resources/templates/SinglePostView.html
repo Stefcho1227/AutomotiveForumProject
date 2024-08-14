@@ -9,6 +9,19 @@
     <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
     <link th:href="@{/css/font-awesome.min.css}" rel="stylesheet" type="text/css">
     <link th:href="@{/css/responsive.css}" rel="stylesheet" type="text/css">
+    <style>
+        .dropdown-menu-custom {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            z-index: 1000;
+        }
+        .dropdown-menu-custom.show {
+            display: block;
+        }
+    </style>
 </head>
 
 <body>
@@ -44,15 +57,34 @@
                         <hr>
                         <div class="post-footer29032">
                             <div class="l-side2023">
-                                <a href="#"><i class="fa fa-star star2" aria-hidden="true" th:text="' ' + ${post.likesCount} + ' likes'">5</i></a>
-                                <i class="fa fa-tags" aria-hidden="true">
+                                <form th:action="@{/posts/{postId}/like(postId=${post.id})}" method="get" style="display:inline;">
+                                    <button type="submit" style="border:none;background:none;padding:0;">
+                                        <img th:src="@{/image/like.png}" alt="Like" style="width: 16px; height: 16px;">
+                                    </button>
+                                </form>
+
+                                <a href="#" class="dropdown-toggle" id="likesDropdown" aria-expanded="false">
+                                    <i class="fa star2" aria-hidden="true" th:text="' ' + ${post.likesCount} + ' likes'">5</i>
+                                </a>
+
+                                <div id="likesDropdownMenu" class="dropdown-menu-custom">
+                                    <ul>
+                                        <li th:each="user : ${post.likes}">
+                                            <a th:href="@{/users/{id}(id=${user.id})}" th:text="${user.firstName} + ' ' + ${user.lastName}">User Name</a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <i class="fa " aria-hidden="true">
+                                    <span style="margin-right: 1px">Tags: </span>
                                     <span th:each="tag : ${tags}">
                                         <span th:text="${tag.tagName}"></span>
                                     </span>
                                 </i>
-                                <i class="fa fa-clock-o clock2" aria-hidden="true" th:text="${#dates.format(post.createdAt, 'dd MMM yyyy')}"></i>
+                                <i class="fa clock2" aria-hidden="true" th:text="${#dates.format(post.createdAt, 'dd MMM yyyy')}"></i>
                                 <a th:href="@{/posts/{postId}/comments(postId=${postId})}">
-                                    <i class="fa fa-commenting commenting2" aria-hidden="true" th:text="' ' + ${comments.size()} + ' comments'"></i>
+                                    <img th:src="@{/image/comment.png}" alt="Comment" style="width: 10px; height: 10px;">
+                                    <i class="fa commenting2" aria-hidden="true" th:text="' ' + ${comments.size()} + ' comments'"></i>
                                 </a>
                             </div>
                         </div>
@@ -82,6 +114,23 @@
 <!-- Include the footer -->
 <div th:replace="~{forumforms.html :: footer1}"></div>
 <div th:replace="~{forumforms.html :: footer2}"></div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const dropdownToggle = document.getElementById('likesDropdown');
+        const dropdownMenu = document.getElementById('likesDropdownMenu');
+
+        dropdownToggle.addEventListener('click', function(event) {
+            event.preventDefault();
+            dropdownMenu.classList.toggle('show');
+        });
+
+        document.addEventListener('click', function(event) {
+            if (!dropdownToggle.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                dropdownMenu.classList.remove('show');
+            }
+        });
+    });
+</script>
 
 </body>
 </html>
