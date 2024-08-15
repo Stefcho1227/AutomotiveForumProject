@@ -1,0 +1,108 @@
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/editor.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/font-awesome.min.css}" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<div th:replace="~{forumforms.html :: navbar}"></div>
+
+
+<<section class="header-descriptin329">
+    <div class="container">
+        <h3>User Details</h3>
+    </div>
+</section>
+
+    <form action="#" th:action="@{'/profile/edit'}" th:object="${userDto}" method="post">
+
+        <label>Username:</label>
+        <br/>
+        <input type="text" th:field="*{username}" th:value="${userDto.username}" readonly
+               style="background-color: #f0f0f0; color: #555"/>
+        <br/><br/>
+
+        <label>First Name:</label>
+        <br/>
+        <input type="text" th:field="*{firstName}" th:value="${userDto.firstName}"/>
+        <br/>
+        <label class="error" th:errors="*{firstName}">First Name error placeholder</label>
+        <br/><br/>
+
+        <label>Last Name:</label>
+        <br/>
+        <input type="text" th:field="*{lastName}" th:value="${userDto.lastName}"/>
+        <br/>
+        <label class="error" th:errors="*{lastName}">Last Name error placeholder</label>
+        <br/><br/>
+
+        <label>Email:</label>
+        <br/>
+        <input type="email" th:field="*{email}"/>
+        <br/><br/>
+
+        <label>New Password:</label>
+        <br/>
+        <input type="password" th:field="*{password}"/>
+        <br/><br/>
+
+        <label>New Password Confirm:</label>
+        <br/>
+        <input type="password" th:field="*{passwordConfirm}"/>
+        <br/><br/>
+
+        <input class="btn btn-primary btn-xl text-uppercase" type="submit" value="Save"/>
+    </form>
+</div>
+<form th:replace="~{forumforms.html :: footer1}"></form>
+<form th:replace="~{forumforms.html :: footer2}"></form>
+
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Core theme JS-->
+<script src="/js/scripts.js"></script>
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+<!-- * *                               SB Forms JS                               * *-->
+<!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
+<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+<script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', event => {
+        const profilePicture = document.getElementById('profilePicture');
+        const profilePictureContainer = document.getElementById('profilePictureContainer');
+
+        if (profilePictureContainer) {
+            profilePictureContainer.addEventListener('click', function () {
+                const fileInput = document.createElement('input');
+                fileInput.type = 'file';
+                fileInput.accept = 'image/*';
+                fileInput.style.display = 'none';
+
+                fileInput.addEventListener('change', function (event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+
+                        reader.onload = function (event) {
+                            profilePicture.src = event.target.result;
+                            // Update hidden input value to include the file as a base64 data URL
+                            const hiddenInput = document.getElementById('hiddenPhotoInput');
+                            hiddenInput.value = event.target.result;
+                        };
+
+                        reader.readAsDataURL(file);
+                    }
+                });
+
+                fileInput.click(); // Trigger file input when the container is clicked
+            });
+        }
+    });
+</script>
+
+</body>
+</html>

@@ -3,9 +3,11 @@ package com.example.forumproject.helpers.mapper;
 import com.example.forumproject.exceptions.EntityNotFoundException;
 import com.example.forumproject.models.User;
 import com.example.forumproject.models.dtos.in.UserBlockDto;
+import com.example.forumproject.models.dtos.in.UserDto;
 import com.example.forumproject.models.dtos.in.UserInDto;
 import com.example.forumproject.models.dtos.out.UserOutDto;
 import com.example.forumproject.services.contracts.RoleService;
+import com.example.forumproject.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,10 +15,12 @@ import org.springframework.stereotype.Component;
 public class UserMapper {
 
     private final RoleService roleService;
+    private final UserService service;
 
     @Autowired
-    public UserMapper(RoleService roleService) {
+    public UserMapper(RoleService roleService, UserService service) {
         this.roleService = roleService;
+        this.service = service;
     }
 
     public User fromDto(UserInDto inputData) {
@@ -42,6 +46,53 @@ public class UserMapper {
         }
         return user;
     }
+    /*public UserInDto toDto(User user) {
+        UserInDto dto = new UserInDto();
+        dto.setFirstName(user.getFirstName());
+        dto.setLastName(user.getLastName());
+        dto.setEmail(user.getEmail());
+        dto.setUsername(user.getUsername());
+        return dto;
+    }*/
+    public UserDto toDto(User user) {
+        UserDto userDto = new UserDto();
+        userDto.setUsername(user.getUsername());
+        userDto.setPassword("");
+        userDto.setPasswordConfirm("");
+        userDto.setFirstName(user.getFirstName());
+        userDto.setLastName(user.getLastName());
+        userDto.setEmail(user.getEmail());
+        return userDto;
+    }
+
+    public User fromDto(UserInDto dto, User existingUser) {
+        existingUser.setFirstName(dto.getFirstName());
+        existingUser.setLastName(dto.getLastName());
+        existingUser.setEmail(dto.getEmail());
+        existingUser.setUsername(dto.getUsername());
+        if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
+            existingUser.setPassword(dto.getPassword());
+        }
+        return existingUser;
+    }
+    public User fromDto(int id, UserDto dto) {
+        User user = fromDto(dto);
+        user.setId(id);
+        User repositoryUser = service.getUserById(id).orElseThrow();
+        user.setRole(repositoryUser.getRole());
+        return user;
+    }
+
+    public User fromDto(UserDto dto) {
+        User user = new User();
+        user.setUsername(dto.getUsername());
+        user.setPassword(dto.getPassword());
+        user.setFirstName(dto.getFirstName());
+        user.setLastName(dto.getLastName());
+        user.setEmail(dto.getEmail());
+        return user;
+    }
+
 
     public static UserOutDto toUserDto(User user) {
         return new UserOutDto(user.getFirstName(), user.getLastName(), user.getUsername());

@@ -125,6 +125,9 @@ public class UserServiceImpl implements UserService {
         if (inputUser.getLastName() != null) {
             userToUpdate.setLastName(inputUser.getLastName());
         }
+        if (inputUser.getEmail() != null) {
+            userToUpdate.setEmail(inputUser.getEmail());
+        }
 
 
         return userRepository.save(userToUpdate);
