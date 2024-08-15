@@ -3,6 +3,7 @@ package com.example.forumproject.helpers.mapper;
 import com.example.forumproject.exceptions.EntityNotFoundException;
 import com.example.forumproject.models.Comment;
 import com.example.forumproject.models.User;
+import com.example.forumproject.models.dtos.in.CommentDto;
 import com.example.forumproject.models.dtos.in.CommentInDto;
 import com.example.forumproject.models.dtos.out.CommentOutDto;
 import com.example.forumproject.repositories.contracts.PostRepository;
@@ -39,6 +40,20 @@ public class CommentMapper {
 
         return comment;
     }
+    public Comment fromDto(int id, CommentDto dto) {
+        Comment comment = fromDto(dto);
+        comment.setId(id);
+        Comment commentRepository = commentService.getById(id);
+        comment.setCreatedBy(commentRepository.getCreatedBy());
+        comment.setPost(commentRepository.getPost());
+        return comment;
+    }
+
+    public Comment fromDto(CommentDto dto) {
+        Comment comment = new Comment();
+        comment.setContent(dto.getContent());
+        return comment;
+    }
 
     public CommentOutDto toDto(Comment comment) {
         CommentOutDto commentOutDto = new CommentOutDto();
@@ -48,6 +63,11 @@ public class CommentMapper {
         //commentOutDto.setId(comment.getId());
         commentOutDto.setCreatedAt(comment.getCreatedAt());
         return commentOutDto;
+    }
+    public CommentDto toCommentDto(Comment comment) {
+        CommentDto commentDto = new CommentDto();
+        commentDto.setContent(comment.getContent());
+        return commentDto;
     }
 
     public List<CommentOutDto> toDtoList(List<Comment> comments) {

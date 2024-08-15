@@ -1,10 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/editor.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/font-awesome.min.css}" rel="stylesheet" type="text/css">
 </head>
+
 <body>
+<div th:replace="~{forumforms.html :: navbar}"></div>
+
+<div class="body-content">
+    <form action="#" th:action="@{'/posts/' + ${postId} +'/comments/'+ ${commentId} + '/edit'}"
+          th:object="${commentDto}" method="post">
+
+        <label>Content:</label>
+        <br/>
+        <textarea th:field="${commentDto.content}">Content</textarea>
+        <br/><br/>
+
+        <input class="btn btn-primary btn-xl text-uppercase" type="submit" value="Save"/>
+    </form>
+</div>
+
+<form th:replace="~{forumforms.html :: footer1}"></form>
+<form th:replace="~{forumforms.html :: footer2}"></form>
 
 </body>
 </html>

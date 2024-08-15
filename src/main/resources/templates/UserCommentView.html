@@ -39,6 +39,10 @@
                                     <li th:each="comment : ${comments}" th:if="${comment.createdBy.id == user.id}">
                                         <p th:text="${comment.content}">Comment content here</p>
                                         <p th:text="${#dates.format(comment.createdAt, 'dd MMM yyyy HH:mm')}">Comment Date</p>
+                                        <div class="comment-actions">
+                                            <a th:if="${comment.createdBy.id == currentUser.id}" th:href="@{/posts/{postId}/comments/{commentId}/edit(postId=${postId}, commentId=${comment.id})}" class="btn btn-sm btn-secondary">Edit</a>
+                                            <a th:if="${comment.createdBy.id == currentUser.id}" th:href="@{/posts/{postId}/comments/{commentId}/delete(postId=${postId}, commentId=${comment.id})}" class="btn btn-sm btn-danger">Delete</a>
+                                        </div>
                                     </li>
                                 </ul>
                             </div>
