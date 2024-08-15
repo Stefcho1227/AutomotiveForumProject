@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -45,7 +46,7 @@ public class PostMapper {
         post.setTitle(postDto.getTitle());
         post.setContent(postDto.getContent());
         post.setCreatedBy(user);
-        post.setTags(tags);  // Ensure tags are set
+        post.setTags(tags);
         LocalDateTime now = LocalDateTime.now();
         Timestamp timestamp = Timestamp.valueOf(now);
         post.setCreatedAt(timestamp);
@@ -77,6 +78,12 @@ public class PostMapper {
                 )).collect(Collectors.toSet()));
         dto.setTags(post.getTags()
                 .stream().map(tag -> new TagUserDto(tag.getTagName())).collect(Collectors.toSet()));
+        return dto;
+    }
+    public PostDto toDto(Post post) {
+        PostDto dto = new PostDto();
+        dto.setTitle(post.getTitle());
+        dto.setContent(post.getContent());
         return dto;
     }
 }

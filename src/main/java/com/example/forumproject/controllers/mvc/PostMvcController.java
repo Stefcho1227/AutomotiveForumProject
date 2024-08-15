@@ -1,5 +1,6 @@
 package com.example.forumproject.controllers.mvc;
 
+import com.example.forumproject.exceptions.AuthenticationFailureException;
 import com.example.forumproject.exceptions.AuthorizationException;
 import com.example.forumproject.exceptions.DuplicateEntityException;
 import com.example.forumproject.exceptions.EntityNotFoundException;
@@ -51,17 +52,18 @@ public class PostMvcController {
     }
     @GetMapping("/{id}")
     public String showSinglePost(@PathVariable int id, Model model, HttpSession session) {
-        /*User user;
+        User user;
         try {
             user = authenticationHelper.tryGetCurrentUser(session);
         } catch (AuthorizationException e) {
             return "redirect:/auth/login";
-        }*/
+        }
         try {
             Post post = postService.getPostById(id).orElseThrow(() -> new EntityNotFoundException("post", id));
             Set<Comment> comments = post.getComments();
             Set<Tag> tags = post.getTags();
             User author = post.getCreatedBy();
+            boolean isAuthor = author.getId() == user.getId();
 
             model.addAttribute("postId", id);
             model.addAttribute("post", post);
@@ -70,6 +72,8 @@ public class PostMvcController {
             model.addAttribute("createdAt", post.getCreatedAt());
             model.addAttribute("likesCount", post.getLikesCount());
             model.addAttribute("author", author);
+            model.addAttribute("isAuthor", isAuthor);
+
             return "SinglePostView";
         } catch (EntityNotFoundException e) {
             model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
@@ -166,6 +170,94 @@ public class PostMvcController {
             return "CreatePostView";
         }
     }
+    @GetMapping("/{postId}/edit")
+    public String showEditPostPage(@PathVariable int postId, Model model, HttpSession session) {
+        User user;
+        try {
+            user = authenticationHelper.tryGetCurrentUser(session);
+        } catch (AuthorizationException e) {
+            return "redirect:/auth/login";
+        }
+        List<Tag> tags = tagService.getAllTags(user);
+        Post post = postService.getPostById(postId).orElseThrow();
+        PostDto postDto = postMapper.toDto(post);
 
+        model.addAttribute("postDto", postDto);
+        model.addAttribute("tags", tags);
+        model.addAttribute("postId", postId);
+        return "EditPostView";
+    }
+    @PostMapping("/{postId}/edit")
+    public String editPost(@Valid @ModelAttribute("postDto") PostDto dto, HttpSession session, BindingResult bindingResult, Model model, @PathVariable int postId) {
 
+        User user;
+        try {
+            user = authenticationHelper.tryGetCurrentUser(session);
+        } catch (AuthenticationFailureException e) {
+            return "redirect:/auth/login";
+        }
+
+        Post post = postService.getPostById(postId).orElseThrow();
+
+        if (post.getCreatedBy().getId() != user.getId()) {
+            model.addAttribute("statusCode", HttpStatus.UNAUTHORIZED.getReasonPhrase());
+            model.addAttribute("unauthorized", "You are not authorized to edit this post.");
+            return "ErrorView";
+        }
+
+        try {
+            post = postMapper.fromDto(postId, dto);
+            postService.update(post, user);
+            return "redirect:/profile";
+        } catch (AuthorizationException e) {
+            model.addAttribute("statusCode", HttpStatus.UNAUTHORIZED.getReasonPhrase());
+            model.addAttribute("unauthorized", e.getMessage());
+            return "ErrorView";
+        }
+    }
+    @GetMapping("/{postId}/edit/comment")
+    public String showEditCommentPage(@PathVariable int postId, Model model, HttpSession session) {
+        User user;
+        try {
+            user = authenticationHelper.tryGetCurrentUser(session);
+        } catch (AuthorizationException e) {
+            return "redirect:/auth/login";
+        }
+        List<Tag> tags = tagService.getAllTags(user);
+        Post post = postService.getPostById(postId).orElseThrow();
+        PostDto postDto = postMapper.toDto(post);
+
+        model.addAttribute("postDto", postDto);
+        model.addAttribute("tags", tags);
+        model.addAttribute("postId", postId);
+        return "EditCommentView";
+    }
+    @PostMapping("/{postId}/edit/comment")
+    public String editComment(@Valid @ModelAttribute("postDto") PostDto dto, HttpSession session, BindingResult bindingResult, Model model, @PathVariable int postId) {
+
+        User user;
+        try {
+            user = authenticationHelper.tryGetCurrentUser(session);
+        } catch (AuthenticationFailureException e) {
+            return "redirect:/auth/login";
+        }
+
+        Post post = postService.getPostById(postId).orElseThrow();
+
+        if (post.getCreatedBy().getId() != user.getId()) {
+            model.addAttribute("statusCode", HttpStatus.UNAUTHORIZED.getReasonPhrase());
+            model.addAttribute("unauthorized", "You are not authorized to edit this post.");
+            return "ErrorView";
+        }
+
+        try {
+            post = postMapper.fromDto(postId, dto);
+            postService.update(post, user);
+            return "redirect:/profile";
+        } catch (AuthorizationException e) {
+            model.addAttribute("statusCode", HttpStatus.UNAUTHORIZED.getReasonPhrase());
+            model.addAttribute("unauthorized", e.getMessage());
+            return "ErrorView";
+        }
+    }
 }

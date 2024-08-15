@@ -1,0 +1,39 @@
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/editor.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/css/font-awesome.min.css}" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<div th:replace="~{forumforms.html :: navbar}"></div>
+
+
+<<section class="header-descriptin329">
+    <div class="container">
+        <h3>Edit Post</h3>
+    </div>
+</section>
+
+<form th:action="@{'/posts/' + ${postId} + '/edit'}" th:object="${postDto}" method="post">
+
+    <label>Title:</label>
+    <br/>
+    <input type="text" th:field="*{title}" />
+    <br/><br/>
+
+    <label>Content:</label>
+    <br/>
+    <input type="text" th:field="*{content}" />
+    <br/><br/>
+
+    <input class="btn btn-primary btn-xl text-uppercase" type="submit" value="Save"/>
+</form>
+</div>
+<form th:replace="~{forumforms.html :: footer1}"></form>
+<form th:replace="~{forumforms.html :: footer2}"></form>
+</body>
+</html>

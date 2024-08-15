@@ -78,14 +78,16 @@
                                 <i class="fa " aria-hidden="true">
                                     <span style="margin-right: 1px">Tags: </span>
                                     <span th:each="tag : ${tags}">
-                                        <span th:text="${tag.tagName}"></span>
-                                    </span>
+                                        <a  style="margin-right: 3px; text-decoration: none; color: inherit;" th:text="${tag.tagName}" th:href="|/tag/| + ${tag.id}"></a>                                    </span>
                                 </i>
                                 <i class="fa clock2" aria-hidden="true" th:text="${#dates.format(post.createdAt, 'dd MMM yyyy')}"></i>
                                 <a th:href="@{/posts/{postId}/comments(postId=${postId})}">
                                     <img th:src="@{/image/comment.png}" alt="Comment" style="width: 10px; height: 10px;">
                                     <i class="fa commenting2" aria-hidden="true" th:text="' ' + ${comments.size()} + ' comments'"></i>
                                 </a>
+                                <div th:if="${isAuthor}">
+                                    <a th:href="@{/posts/{postId}/edit(postId=${post.id})}">Edit Post</a>
+                                </div>
                             </div>
                         </div>
                     </div>
