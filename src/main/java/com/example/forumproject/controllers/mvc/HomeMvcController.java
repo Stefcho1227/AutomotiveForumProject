@@ -6,22 +6,33 @@ import com.example.forumproject.exceptions.DuplicateEntityException;
 import com.example.forumproject.exceptions.EntityNotFoundException;
 import com.example.forumproject.helpers.AuthenticationHelper;
 import com.example.forumproject.helpers.mapper.UserMapper;
+import com.example.forumproject.helpers.specifications.PostMvcSpecification;
+import com.example.forumproject.helpers.specifications.PostSpecification;
 import com.example.forumproject.models.Post;
 import com.example.forumproject.models.User;
 import com.example.forumproject.models.dtos.in.UserDto;
-import com.example.forumproject.models.dtos.in.UserInDto;
+import com.example.forumproject.models.options.FilterOptions;
+import com.example.forumproject.repositories.contracts.PostRepository;
 import com.example.forumproject.services.contracts.PostService;
 import com.example.forumproject.services.contracts.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.awt.*;
+import java.util.List;
+import java.util.Optional;
+
 
 @Controller
 @RequestMapping("/")
@@ -40,10 +51,20 @@ public class HomeMvcController {
     }
 
     @GetMapping
-    public String ShowHomeView(Model model) {
+    public String ShowHomeView(Model model, HttpSession session,
+                               @RequestParam(value = "title", defaultValue = "") String title,
+                               @RequestParam(value = "tag", defaultValue = "") String tag,
+                               @RequestParam(value = "page", defaultValue = "0") int page,
+                               @RequestParam(value = "size", defaultValue = "10") int size,
+                               @RequestParam(value = "sortBy", defaultValue = "createdAt") String sortBy,
+                               @RequestParam(value = "direction", defaultValue = "desc") String direction) {
         model.addAttribute("mostLikedPosts", postService.getTenMostLikedPosts());
         model.addAttribute("mostCommentedPosts", postService.getTenMostCommentedPosts());
         model.addAttribute("mostRecentPosts", postService.getTenMostRecentPosts());
+        if (session.getAttribute("currentUser") != null) {
+            Page<Post> posts = postService.getAllPosts(title, tag, page, size, sortBy, direction);
+            model.addAttribute("posts", posts);
+        }
         return "HomeView";
     }
 
@@ -51,17 +72,18 @@ public class HomeMvcController {
     public String showAboutPage() {
         return "AboutUs";
     }
+
     @GetMapping("/profile")
-    public String showProfileView(Model model, HttpSession session){
+    public String showProfileView(Model model, HttpSession session) {
         int userId = (Integer) session.getAttribute("userId");
         if (userId <= 0) {
             return "redirect:/auth/login";
         }
-        User user = userService.getUserById(userId).orElseThrow(()->new EntityNotFoundException("user", userId));
+        User user = userService.getUserById(userId).orElseThrow(() -> new EntityNotFoundException("user", userId));
         if (user == null) {
             return "ErrorView";
         }
-        int totalLikes =  postService.getUserPosts(userId)
+        int totalLikes = postService.getUserPosts(userId)
                 .stream()
                 .mapToInt(Post::getLikesCount)
                 .sum();
@@ -71,6 +93,7 @@ public class HomeMvcController {
         model.addAttribute("likesCount", totalLikes);
         return "ProfileView";
     }
+
     @GetMapping("/profile/edit")
     public String showEditProfilePage(Model model, HttpSession session) {
         try {

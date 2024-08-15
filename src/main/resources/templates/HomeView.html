@@ -89,6 +89,50 @@
                     </section>
 
                 </div>
+                <div id="main" th:if="${isAuthenticated}">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-md-8 text-center">
+                                <form action="#" th:action="@{/}" method="get" class="form-inline">
+                                    <div class="form-group mb-2">
+                                        <label for="title" class="sr-only">Filter by Title</label>
+                                        <input type="text" id="title" name="title" class="form-control" placeholder="Filter by Title" th:value="${param.title}">
+                                    </div>
+
+                                    <div class="form-group mb-2">
+                                        <label for="tag" class="sr-only">Filter by Tag</label>
+                                        <select type="text" id="tag" name="tag" class="form-control" placeholder="Filter by Tag" th:value="${param.tag}">
+                                            <option th:each="tag : ${tags}" th:text="${tag.tagName}"></option>
+                                            </select>
+                                    </div>
+
+                                    <div class="form-group mb-2">
+                                        <label for="sortBy" class="sr-only">Sort by</label>
+                                        <select id="sortBy" name="sortBy" class="form-control">
+                                            <option value="createdAt" th:selected="${param.sortBy == 'createdAt'}">Date</option>
+                                            <option value="title" th:selected="${param.sortBy == 'title'}">Title</option>
+                                            <!-- Add more sorting options as needed -->
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group mb-2">
+                                        <label for="direction" class="sr-only">Sort Direction</label>
+                                        <select id="direction" name="direction" class="form-control">
+                                            <option value="asc" th:selected="${param.direction == 'asc'}">Ascending</option>
+                                            <option value="desc" th:selected="${param.direction == 'desc'}">Descending</option>
+                                        </select>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary mb-2">Filter and Sort</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div th:each="post : ${posts}">
+                        <div th:replace="~{forumforms :: post-view}"></div>
+                    </div>
+                </div>
             </div>
             <!--end of col-md-9 -->
             <!--strart col-md-3 (side bar)-->

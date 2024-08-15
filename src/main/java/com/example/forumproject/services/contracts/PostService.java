@@ -16,6 +16,8 @@ public interface PostService {
 
     Page<?> getAllPosts(User user, FilterOptions filterOptions, Pageable pageable);
 
+    Page<Post> getAllPosts(String title, String tag, int page, int size, String sortBy, String direction);
+
     Post create(Post post, User user);
 
     Post update(Post post, User user);

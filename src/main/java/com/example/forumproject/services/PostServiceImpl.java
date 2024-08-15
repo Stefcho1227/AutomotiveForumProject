@@ -4,6 +4,7 @@ import com.example.forumproject.exceptions.AuthorizationException;
 import com.example.forumproject.exceptions.EntityNotFoundException;
 import com.example.forumproject.helpers.AuthenticationHelper;
 import com.example.forumproject.helpers.mapper.PostMapper;
+import com.example.forumproject.helpers.specifications.PostMvcSpecification;
 import com.example.forumproject.helpers.specifications.PostSpecification;
 import com.example.forumproject.models.Post;
 import com.example.forumproject.models.Tag;
@@ -58,6 +59,23 @@ public class PostServiceImpl implements PostService {
         } else {
             return posts.map(PostMapper::toUserDTO);
         }
+    }
+
+    @Override
+    public Page<Post> getAllPosts(String title, String tag, int page, int size, String sortBy, String direction) {
+        Specification<Post> spec = Specification.where(null);
+
+        if (title != null && !title.isEmpty()) {
+            spec = spec.and(PostMvcSpecification.hasTitle(title));
+        }
+        if (tag != null && !tag.isEmpty()) {
+            spec = spec.and(PostMvcSpecification.hasTag(tag));
+        }
+
+        Sort sort = Sort.by(direction.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        return postRepository.findAll(spec, pageable);
     }
 
     @Override

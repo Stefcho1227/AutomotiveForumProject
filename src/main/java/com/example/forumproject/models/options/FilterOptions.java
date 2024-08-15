@@ -17,6 +17,21 @@ public class FilterOptions {
     private Optional<Integer> page;
     private Optional<Integer> size;
 
+    public FilterOptions(String title, String tagName, String sortBy, String sortOrder, int page) {
+        this.title = Optional.ofNullable(title);
+        this.tagName = Optional.ofNullable(tagName);
+        this.sortBy = Optional.ofNullable(sortBy);
+        this.sortOrder = Optional.ofNullable(sortOrder);
+        this.page = Optional.ofNullable(page);
+        this.size = Optional.ofNullable(10);
+        this.minLikes = Optional.empty();
+        this.maxLikes = Optional.empty();
+        this.content = Optional.empty();
+        this.createdBefore = Optional.empty();
+        this.createdAfter = Optional.empty();
+        this.postedBy = Optional.empty();
+    }
+
     public FilterOptions(Integer minLikes,
                          Integer maxLikes,
                          String title,
