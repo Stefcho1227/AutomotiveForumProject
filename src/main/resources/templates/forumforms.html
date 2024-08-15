@@ -35,7 +35,8 @@
                         In</a></li>
                     <li th:if="${isAuthenticated}"><a th:href="@{/auth/logout}" th:text="#{navbar.label.sign.out}">Sign
                         Out</a></li>
-                    <li th:if="${isAuthenticated}"><a th:href="@{/profile}" th:text="#{navbar.label.view.profile}">Profile View</a></li>
+                    <li th:if="${isAuthenticated}"><a th:href="@{/profile}" th:text="#{navbar.label.view.profile}">Profile
+                        View</a></li>
                 </ul>
 
             </div>
@@ -112,18 +113,12 @@
                     <i class="fa star2" aria-hidden="true" th:text="' ' + ${post.likesCount} + ' likes'">5</i>
                 </a>
 
-                <div id="likesDropdownMenu" class="dropdown-menu-custom">
-                    <ul>
-                        <li th:each="user : ${post.likes}">
-                            <a th:href="@{/users/{id}(id=${user.id})}" th:text="${user.firstName} + ' ' + ${user.lastName}">User Name</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+
                 <i class="fa" aria-hidden="true">
                     <span style="margin-right: 1px">Tags: </span>
                     <span th:each="tag : ${post.tags}">
-                                        <a  style="margin-right: 3px; text-decoration: none; color: inherit;" th:text="${tag.tagName}" th:href="|/tag/| + ${tag.id}"></a>
+                                        <a style="margin-right: 3px; text-decoration: none; color: inherit;"
+                                           th:text="${tag.tagName}" th:href="|/tag/| + ${tag.id}"></a>
                     </span>
                 </i>
                 <i class="fa clock2" aria-hidden="true" style="cursor: default;"
