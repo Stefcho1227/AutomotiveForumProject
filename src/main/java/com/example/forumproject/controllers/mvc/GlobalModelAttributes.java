@@ -30,6 +30,15 @@ public class GlobalModelAttributes {
         return session.getAttribute("currentUser") != null;
     }
 
+    @ModelAttribute("isAdmin")
+    public boolean populateIsAdmin(HttpSession session) {
+        if (session.getAttribute("currentUser") != null) {
+            User user = (User) session.getAttribute("currentUser");
+            return user.getRole().getRoleName().equalsIgnoreCase("admin");
+        }
+        return false;
+    }
+
     @ModelAttribute("userCount")
     public long populateUserCount() {
         return userService.getAllUsers().size();
