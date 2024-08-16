@@ -5,6 +5,7 @@ import com.example.forumproject.models.User;
 import com.example.forumproject.services.contracts.PostService;
 import com.example.forumproject.services.contracts.TagService;
 import com.example.forumproject.services.contracts.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -29,6 +30,11 @@ public class GlobalModelAttributes {
     public boolean populateIsAuthenticated(HttpSession session) {
         return session.getAttribute("currentUser") != null;
     }
+    @ModelAttribute("requestURI")
+    public String requestURI(final HttpServletRequest request) {
+        return request.getRequestURI();
+    }
+
 
     @ModelAttribute("isAdmin")
     public boolean populateIsAdmin(HttpSession session) {

@@ -58,11 +58,11 @@
                         <div class="post-footer29032">
                             <div class="l-side2023">
                                 <form th:action="@{/posts/{postId}/like(postId=${post.id})}" method="get" style="display:inline;">
+                                    <input type="hidden" name="redirectUrl" th:value="${requestURI}" />
                                     <button type="submit" style="border:none;background:none;padding:0;">
                                         <img th:src="@{/image/like.png}" alt="Like" style="width: 16px; height: 16px;">
                                     </button>
                                 </form>
-
                                 <a href="#" class="dropdown-toggle" id="likesDropdown" aria-expanded="false">
                                     <i class="fa star2" aria-hidden="true" th:text="' ' + ${post.likesCount} + ' likes'">5</i>
                                 </a>

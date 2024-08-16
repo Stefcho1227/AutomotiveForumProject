@@ -96,7 +96,7 @@ public class PostMvcController {
         return "UserCommentView";
     }
     @GetMapping("/{postId}/like")
-    public String addLikeToPost(@PathVariable int postId, HttpSession session) {
+    public String addLikeToPost(@PathVariable int postId, @RequestParam(required = false) String redirectUrl, HttpSession session) {
         try {
             User user = authenticationHelper.tryGetCurrentUser(session);
 
@@ -105,7 +105,7 @@ public class PostMvcController {
 
             postService.likePost(post, user);
 
-            return "redirect:/posts/" + postId;
+            return "redirect:" + (redirectUrl != null ? redirectUrl : "/posts/" + postId);
         } catch (AuthorizationException e) {
             return "redirect:/auth/login";
         } catch (EntityNotFoundException e) {
