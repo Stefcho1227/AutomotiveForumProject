@@ -22,28 +22,7 @@
 
 
 <!--======= welcome section on top background=====-->
-<section class="welcome-part-one">
-    <div class="container">
-        <div class="welcome-demop102 text-center">
-            <h1>Welcome to our automotive Forum.</h1>
-            <h2> You are welcome to ask any question you want answered.</h2>
 
-            <div class="button0239-item">
-                <a href="SignUpView.html" th:href="@{http://localhost:8080/auth/register}">
-                    <button type="button" class="join92">Join Now</button>
-                </a>
-            </div>
-
-            <div class="form-style8292">
-                <div class="input-group"><span class="input-group-addon"><i class="fa fa-pencil-square"
-                                                                            aria-hidden="true"></i></span>
-                    <input type="text" class="form-control form-control8392"
-                           placeholder="Ask any question and you be sure find your answer ?"> <span
-                            class="input-group-addon"><a href="#">Ask Now</a></span></div>
-            </div>
-        </div>
-    </div>
-</section>
 
 
 <!-- ======content section/body=====-->
@@ -51,18 +30,17 @@
     <div class="container">
         <div class="row">
             <div class="col-md-9">
-                <div id="main" th:unless="${isAuthenticated}">
+                <div id="main" >
                     <input id="tab1" type="radio" name="tabs" checked>
-                    <label for="tab1">Most Commented Posts</label>
+                    <label for="tab1">Posts</label>
                     <input id="tab2" type="radio" name="tabs">
-                    <label for="tab2">Recent Posts</label>
-                    <input id="tab3" type="radio" name="tabs">
-                    <label for="tab3">Most Liked Posts</label>
+                    <label for="tab2">Users</label>
+
 
 
                     <section id="content1">
                         <!--Recent Question Content Section -->
-                        <div th:each="post : ${mostCommentedPosts}">
+                        <div th:each="post : ${posts}">
                             <div th:replace="~{forumforms :: post-view}">
                             </div>
                         </div>
@@ -71,8 +49,8 @@
 
                     <section id="content2">
                         <!--Most Response Content Section -->
-                        <div th:each="post : ${mostRecentPosts}">
-                            <div th:replace="~{forumforms :: post-view}"></div>
+                        <div th:each="user : ${users}">
+                            <div th:replace="~{forumforms :: user-view}"></div>
                         </div>
 
 
@@ -88,13 +66,6 @@
 
                     </section>
 
-                </div>
-                <div id="main" th:if="${isAuthenticated}">
-                    <div th:replace="~{forumforms :: filtering-sorting-form}"></div>
-
-                    <div th:each="post : ${posts}">
-                        <div th:replace="~{forumforms :: post-view}"></div>
-                    </div>
                 </div>
             </div>
             <!--end of col-md-9 -->

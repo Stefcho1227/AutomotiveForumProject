@@ -88,7 +88,7 @@
                                 <div th:if="${isAuthor}">
                                     <a th:href="@{/posts/{postId}/edit(postId=${post.id})}">Edit Post</a>
                                 </div>
-                                <div th:if="${isAuthor}">
+                                <div th:if="${isAuthor || isAdmin}">
                                     <a th:href="@{/posts/{postId}/delete(postId=${postId})}">Delete Post</a>
                                 </div>
                             </div>

@@ -45,6 +45,15 @@ public class GlobalModelAttributes {
         return false;
     }
 
+    @ModelAttribute("currentUserId")
+    public int populateCurrentUserId(HttpSession session) {
+        if (session.getAttribute("currentUser") != null) {
+            User user = (User) session.getAttribute("currentUser");
+            return user.getId();
+        }
+        return 0;
+    }
+
     @ModelAttribute("userCount")
     public long populateUserCount() {
         return userService.getAllUsers().size();

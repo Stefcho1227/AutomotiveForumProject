@@ -33,10 +33,12 @@
                     <li><a th:href="@{/about}" th:text="#{navbar.label.about.us}">About us</a></li>
                     <li th:unless="${isAuthenticated}"><a th:href="@{/auth/login}" th:text="#{navbar.label.sign.in}">Sign
                         In</a></li>
-                    <li th:if="${isAuthenticated}"><a th:href="@{/auth/logout}" th:text="#{navbar.label.sign.out}">Sign
-                        Out</a></li>
                     <li th:if="${isAuthenticated}"><a th:href="@{/profile}" th:text="#{navbar.label.view.profile}">Profile
                         View</a></li>
+                    <li th:if="${isAdmin}"><a th:href="@{/admin}" th:text="#{navbar.label.admin.panel}">Admin Panel</a>
+                    </li>
+                    <li th:if="${isAuthenticated}"><a th:href="@{/auth/logout}" th:text="#{navbar.label.sign.out}">Sign
+                        Out</a></li>
                 </ul>
 
             </div>
@@ -148,5 +150,93 @@
     <a href="#"><i class="fa fa-question-circle"> Posts(<span th:text="${postCount}">0</span>)</i></a>
     <i class="fa fa-comment"> Users(<span th:text="${userCount}">0</span>)</i>
 </div>
+<!--Sorting and Filtering par-->
+<div class="container" th:fragment="filtering-sorting-form">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <form action="#" th:action="@{/}" method="get" class="form-inline">
+                <div class="form-group mb-2">
+                    <label for="title" class="sr-only">Filter by Title</label>
+                    <input type="text" id="title" name="title" class="form-control" placeholder="Filter by Title"
+                           th:value="${param.title}">
+                </div>
+
+                <div class="form-group mb-2">
+                    <label for="tag" class="sr-only">Filter by Tag</label>
+                    <select type="text" id="tag" name="tag" class="form-control" placeholder="Filter by Tag"
+                            th:placeholder="#{tag.filter.label}" th:value="${param.tag}">
+                        <option></option>
+                        <option th:each="tag : ${tags}" th:text="${tag.tagName}"></option>
+                    </select>
+                </div>
+
+                <div class="form-group mb-2">
+                    <label for="sortBy" class="sr-only">Sort by</label>
+                    <select id="sortBy" name="sortBy" class="form-control">
+                        <option value="createdAt" th:selected="${param.sortBy == 'createdAt'}">Date</option>
+                        <option value="title" th:selected="${param.sortBy == 'title'}">Title</option>
+                        <!-- Add more sorting options as needed -->
+                    </select>
+                </div>
+
+                <div class="form-group mb-2">
+                    <label for="direction" class="sr-only">Sort Direction</label>
+                    <select id="direction" name="direction" class="form-control">
+                        <option value="asc" th:selected="${param.direction == 'asc'}">Ascending</option>
+                        <option value="desc" th:selected="${param.direction == 'desc'}">Descending</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary mb-2">Filter and Sort</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-9" th:fragment="user-view">
+    <div class="about-user2039 mt-70">
+        <div class="user-title3930">
+            <h3>About <p th:text="${user.firstName} + ' ' + ${user.lastName}"></p></h3>
+            <hr>
+
+        </div>
+        <div class="user-image293" th:if="${user.profilePictureUrl != null && user.profilePictureUrl.length() > 1}">
+            <img th:src="@{${user.profilePictureUrl}}" alt="User Image">
+        </div>
+        <div class="user-image293" th:unless="${user.profilePictureUrl != null && user.profilePictureUrl.length() > 1}">
+            <img th:src="@{/assets/profile/DefaultImg.webp}" alt="User Image">
+        </div>
+        <div class="user-list10039">
+            <div class="ul-list-user-right29">
+                <ul>
+                    <li th:if="${user.role.id == 1}"><i class="fa fa-phone" aria-hidden="true"></i> <strong>Phone:</strong> <span th:text="${user.phoneNumber.value}"></span></li>
+                    <li><i class="fa" aria-hidden="true"></i> <strong>E-mail: </strong> <span th:text="${user.email}"></span></li>
+                    <li><i class="fa" aria-hidden="true"></i> <strong>Username: </strong> <span th:text="${user.username}"></span></li>
+                </ul>
+            </div>
+        </div>
+
+
+        <div th:unless="${isAdmin}" class="user-description303-1"></div>
+        <div th:if="${isAdmin}" class="user-description303">
+            <a th:if="${user.id == currentUserId}" th:href="@{/profile/edit}">Edit Profile</a>
+            <a th:href="|/admin/block/| + ${user.id}">Block</a>
+
+        </div>
+
+        <div class="user-posts">
+            <h4>Posts by <p th:text="${user.firstName} + ' ' + ${user.lastName} + ':'" ></p></h4>
+            <ul>
+                <li th:each="post : ${posts}">
+                    <a th:href="@{/posts/{id}(id=${post.id})}" th:text="${post.title}"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+
+
 </body>
 </html>

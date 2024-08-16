@@ -20,38 +20,7 @@
 <section class="main-content920">
     <div class="container">
         <div class="row">
-            <div class="col-md-9">
-                <div class="about-user2039 mt-70">
-                    <div class="user-title3930">
-                        <h3>About <p th:text="${user.firstName} + ' ' + ${user.lastName}"></p></h3>
-                        <hr>
-                        <a th:href="@{/profile/edit}" class="btn btn-link">Edit Profile</a>
-                    </div>
-                    <div class="user-image293">
-                        <img th:src="@{${user.profilePictureUrl}}" alt="User Image">
-                    </div>
-                    <div class="user-list10039">
-                        <div class="ul-list-user-right29">
-                            <ul>
-                                <li th:if="${isAdmin}"><i class="fa fa-phone" aria-hidden="true"></i> <strong>Phone:</strong> <span th:text="${user.phoneNumber.value}"></span></li>
-                                <li><i class="fa fa-user" aria-hidden="true"></i> <strong>E-mail: </strong> <span th:text="${user.email}"></span></li>
-                                <li><i class="fa fa-user" aria-hidden="true"></i> <strong>Username: </strong> <span th:text="${user.username}"></span></li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="user-description303"></div>
-
-                    <div class="user-posts">
-                        <h4>Posts by <p th:text="${user.firstName} + ' ' + ${user.lastName} + ':'" ></p></h4>
-                        <ul>
-                            <li th:each="post : ${posts}">
-                                <a th:href="@{/posts/{id}(id=${post.id})}" th:text="${post.title}"></a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+            <div th:replace="~{forumforms :: user-view}"></div>
 
             <aside class="col-md-3 sidebar97239">
                 <div class="status-part3821">
@@ -63,6 +32,7 @@
         </div>
     </div>
 </section>
+<div style="height: 200px"></div>
 <div th:replace="~{forumforms.html :: footer1}"></div>
 <div th:replace="~{forumforms.html :: footer2}"></div>
 </body>
