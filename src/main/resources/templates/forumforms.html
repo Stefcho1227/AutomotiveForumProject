@@ -217,7 +217,9 @@
         </div>
 
 
-        <div th:unless="${isAdmin}" class="user-description303-1"></div>
+        <div th:unless="${isAdmin}" class="user-description303">
+            <a th:if="${user.id == currentUserId}" th:href="@{/profile/edit}">Edit Profile</a>
+        </div>
         <div th:if="${isAdmin}" class="user-description303">
             <a th:if="${user.id == currentUserId}" th:href="@{/profile/edit}">Edit Profile</a>
             <a th:href="|/admin/block/| + ${user.id}">Block</a>
