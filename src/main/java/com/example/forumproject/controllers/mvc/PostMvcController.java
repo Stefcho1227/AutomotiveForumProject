@@ -269,4 +269,41 @@ public class PostMvcController {
             return "ErrorView";
         }
     }
+    @GetMapping("/{postId}/delete")
+    public String deletePost(@PathVariable int postId, Model model, HttpSession session){
+        User user;
+        try {
+            user = authenticationHelper.tryGetCurrentUser(session);
+        } catch (AuthorizationException e){
+            return "redirect:/auth/login";
+        }
+        try {
+            postService.delete(postId, user);
+            return "redirect:/";
+        } catch (EntityNotFoundException e){
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "ErrorView";
+        }
+    }
+    @GetMapping("/{postId}/comments/{commentId}/delete")
+    public String deleteCommentOfPost(@PathVariable int postId, @PathVariable int commentId,
+                                      Model model, HttpSession session){
+        User user;
+        try {
+            user = authenticationHelper.tryGetCurrentUser(session);
+        } catch (AuthorizationException e){
+            return "redirect:/auth/login";
+        }
+        try {
+            Post post = postService.getPostById(postId).orElseThrow();
+            commentService.deleteCommentById(commentId, user);
+            model.addAttribute("post", post);
+            return "redirect:/posts/" + postId;
+        } catch (EntityNotFoundException e){
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "ErrorView";
+        }
+    }
 }
