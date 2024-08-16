@@ -35,7 +35,7 @@
                     <div class="user-list10039">
                         <div class="ul-list-user-right29">
                             <ul>
-                                <li><i class="fa fa-phone" aria-hidden="true"></i> <strong>Phone:</strong> <span th:text="${user.phoneNumber.value}"></span></li>
+                                <li th:if="${isAdmin}"><i class="fa fa-phone" aria-hidden="true"></i> <strong>Phone:</strong> <span th:text="${user.phoneNumber.value}"></span></li>
                                 <li><i class="fa fa-user" aria-hidden="true"></i> <strong>E-mail: </strong> <span th:text="${user.email}"></span></li>
                                 <li><i class="fa fa-user" aria-hidden="true"></i> <strong>Username: </strong> <span th:text="${user.username}"></span></li>
                             </ul>
