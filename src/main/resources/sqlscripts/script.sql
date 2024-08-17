@@ -18,15 +18,16 @@ create table tags
 
 create table users
 (
-    id         int auto_increment
+    id          int auto_increment
         primary key,
-    first_name varchar(32)          null,
-    last_name  varchar(32)          not null,
-    email      varchar(255)         not null,
-    username   varchar(50)          not null,
-    password   varchar(255)         not null,
-    role_id    int                  not null,
-    is_blocked tinyint(1) default 0 null,
+    first_name  varchar(32)          null,
+    last_name   varchar(32)          not null,
+    email       varchar(255)         not null,
+    username    varchar(50)          not null,
+    password    varchar(255)         not null,
+    role_id     int                  not null,
+    is_blocked  tinyint(1) default 0 null,
+    profile_url varchar(320)         null,
     constraint email
         unique (email),
     constraint username
