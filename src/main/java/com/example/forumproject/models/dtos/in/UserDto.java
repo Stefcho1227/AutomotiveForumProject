@@ -13,16 +13,16 @@ public class UserDto {
     private String username;
     @NotEmpty(message = "Password can't be empty!")
     @Size(min = 5, message = "Password must be more than 5 characters long!")
-    private String password;
+    private String password = "";
 
     @NotEmpty(message = "You must confirm your password!")
-    private String passwordConfirm;
+    private String passwordConfirm = "";
     @NotEmpty(message = "First name can't be empty!")
     @Size(min = 4, max = 32, message = "First name must be between 4 and 32 characters long!")
-    private String firstName;
+    private String firstName = "";
     @NotEmpty(message = "Last name can't be empty!")
     @Size(min = 4, max = 32, message = "Last name must be between 4 and 32 characters long!")
-    private String lastName;
+    private String lastName = "";
 
     @NotEmpty(message = "Email can't be empty!")
     private String email;

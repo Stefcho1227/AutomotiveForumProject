@@ -122,6 +122,7 @@ public class HomeMvcController {
             if (bindingResult.hasErrors()) {
                 return "EditProfileView";
             }
+
             if (!userDto.getPassword().equals(userDto.getPasswordConfirm())) {
                 bindingResult.rejectValue("passwordConfirm", "password_error", "Passwords must match!");
                 return "EditProfileView";

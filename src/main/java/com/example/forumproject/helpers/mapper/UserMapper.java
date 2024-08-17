@@ -86,10 +86,18 @@ public class UserMapper {
     public User fromDto(UserDto dto) {
         User user = new User();
         user.setUsername(dto.getUsername());
-        user.setPassword(dto.getPassword());
-        user.setFirstName(dto.getFirstName());
-        user.setLastName(dto.getLastName());
-        user.setEmail(dto.getEmail());
+        if (dto.getFirstName() != null && !dto.getFirstName().isEmpty()) {
+            user.setFirstName(dto.getFirstName());
+        }
+        if (dto.getLastName() != null && !dto.getLastName().isEmpty()) {
+            user.setLastName(dto.getLastName());
+        }
+        if (dto.getEmail() != null && !dto.getEmail().isEmpty()) {
+            user.setEmail(dto.getEmail());
+        }
+        if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
+            user.setPassword(dto.getPassword());
+        }
         return user;
     }
 
