@@ -98,6 +98,9 @@ public class UserMapper {
         if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
             user.setPassword(dto.getPassword());
         }
+        if (dto.getProfilePhoto() != null && !dto.getProfilePhoto().isEmpty()) {
+            user.setProfilePictureUrl(dto.getProfilePhoto().getOriginalFilename());
+        }
         return user;
     }
 

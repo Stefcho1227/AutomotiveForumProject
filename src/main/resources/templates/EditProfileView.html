@@ -18,7 +18,7 @@
     </div>
 </section>
 
-    <form action="#" th:action="@{'/profile/edit'}" th:object="${userDto}" method="post">
+    <form action="#" th:action="@{'/profile/edit'}" th:object="${userDto}" method="post" enctype="multipart/form-data">
 
         <label>Username:</label>
         <br/>
@@ -44,6 +44,11 @@
         <br/>
         <input type="email" th:field="*{email}"/>
         <br/><br/>
+        <label>Profile:</label>
+        <br/>
+        <input type="file" name="profilePhoto" th:field="*{profilePhoto}" th:value="${userDto.profilePhoto}"/>
+        <br/>
+        <br/><br/>
 
         <label>New Password:</label>
         <br/>
@@ -60,5 +65,3 @@
 </div>
 <form th:replace="~{forumforms.html :: footer1}"></form>
 <form th:replace="~{forumforms.html :: footer2}"></form>
-</body>
-</html>

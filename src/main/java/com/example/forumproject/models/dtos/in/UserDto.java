@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import org.springframework.web.multipart.MultipartFile;
 
 public class UserDto {
 
@@ -25,9 +26,18 @@ public class UserDto {
     private String lastName = "";
 
     @NotEmpty(message = "Email can't be empty!")
-    private String email;
+    private String email = "";
+    private MultipartFile profilePhoto;
 
     public UserDto() {
+    }
+
+    public MultipartFile getProfilePhoto() {
+        return profilePhoto;
+    }
+
+    public void setProfilePhoto(MultipartFile profilePhoto) {
+        this.profilePhoto = profilePhoto;
     }
 
     public String getUsername() {

@@ -17,6 +17,7 @@ import com.example.forumproject.services.contracts.PostService;
 import com.example.forumproject.services.contracts.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,8 +29,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.awt.*;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
@@ -112,7 +122,8 @@ public class HomeMvcController {
 
 
     @PostMapping("/profile/edit")
-    public String updateUserProfile(@Valid @ModelAttribute("userDto") UserDto userDto,
+    public String updateUserProfile(@ModelAttribute("userDto") UserDto userDto,
+                                    @RequestParam("profilePhoto") MultipartFile profilePhoto,
                                     BindingResult bindingResult,
                                     Model model,
                                     HttpSession session) {
@@ -129,9 +140,41 @@ public class HomeMvcController {
             }
 
             try {
+                String oldPhoto = userService.getByUsername(userDto.getUsername())
+                        .orElseThrow(() -> new EntityNotFoundException("User not found")).getProfilePictureUrl();
+                String fileName = "";
+                String directory = "";
+                if (profilePhoto != null && !profilePhoto.isEmpty()) {
+                    fileName = userDto.getUsername() + "_" + System.currentTimeMillis() + "_" + profilePhoto.getOriginalFilename();
+                    byte[] bytes = profilePhoto.getBytes();
+                    Path path = Paths.get("src","main","resources", "static", "assets", "profile");
+                    File dir = new File(path + File.separator);
+                    directory = dir.toString();
+                    if (!dir.exists())
+                        dir.mkdirs();
+
+                    File serverFile = new File(dir.getAbsolutePath()
+                            + File.separator + fileName);
+                    BufferedOutputStream stream = new BufferedOutputStream(
+                            new FileOutputStream(serverFile));
+                    stream.write(bytes);
+                    stream.close();
+
+/*                    if (oldPhoto != null) {
+                        Files.deleteIfExists(Paths.get("/assets/profile/" + oldPhoto));
+                    }*/
+                }
+
                 User userToUpdate = userMapper.fromDto(authenticatedUser.getId(), userDto);
+                directory = directory.replace("src\\main\\resources\\static", "").replace("\\", "/");
+                userToUpdate.setProfilePictureUrl(directory + "/" + fileName);
                 userService.updateUser(userToUpdate, authenticatedUser.getId());
                 return "redirect:/profile";
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                model.addAttribute("message", "Failed to upload '" + profilePhoto.getOriginalFilename() + "'");
+                return "EditProfileView";
             } catch (EntityNotFoundException e) {
                 model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
                 model.addAttribute("error", e.getMessage());
@@ -148,6 +191,7 @@ public class HomeMvcController {
                 model.addAttribute("error", e.getMessage());
                 return "ErrorView";
             }
+
         } catch (AuthenticationFailureException e) {
             return "redirect:/auth/login";
         }
