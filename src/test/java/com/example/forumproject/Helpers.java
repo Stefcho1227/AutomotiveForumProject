@@ -18,7 +18,7 @@ public class Helpers {
         mockUser.setFirstName("MockFirstName");
         mockUser.setLastName("MockLastName");
         mockUser.setEmail("mock@mockemail.com");
-        mockUser.setBlocked(false);
+        mockUser.setIsBlocked(false);
         mockUser.setRole(mockRole);
         mockUser.setPostsLiked(new HashSet<>());
         mockUser.setPhoneNumber(new UserPhoneNumber("0885029802", mockUser));

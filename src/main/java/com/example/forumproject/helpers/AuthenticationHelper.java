@@ -6,15 +6,11 @@ import com.example.forumproject.exceptions.BlockedException;
 import com.example.forumproject.exceptions.EntityNotFoundException;
 import com.example.forumproject.models.User;
 import com.example.forumproject.services.contracts.UserService;
-import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.web.server.ResponseStatusException;
 
-import javax.naming.AuthenticationException;
 import java.util.Base64;
 import java.util.Optional;
 
@@ -72,7 +68,7 @@ public class AuthenticationHelper {
     }
 
     public static void checkUserBlockStatus(User user) {
-        if (user.getBlocked()) {
+        if (user.getIsBlocked()) {
             throw new BlockedException("Username", user.getUsername());
         }
     }

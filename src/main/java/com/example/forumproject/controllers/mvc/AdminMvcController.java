@@ -1,17 +1,13 @@
 package com.example.forumproject.controllers.mvc;
 
-import com.example.forumproject.models.Post;
 import com.example.forumproject.models.User;
 import com.example.forumproject.services.contracts.PostService;
 import com.example.forumproject.services.contracts.UserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -33,19 +29,35 @@ public List<User> populateUsers() {
 }
     @GetMapping("/admin")
     public String getAdminPanelView(Model model,
-                                    @RequestParam(value = "title", defaultValue = "") String title,
-                                    @RequestParam(value = "tag", defaultValue = "") String tag,
-                                    @RequestParam(value = "page", defaultValue = "0") int page,
-                                    @RequestParam(value = "size", defaultValue = "10") int size,
-                                    @RequestParam(value = "sortBy", defaultValue = "createdAt") String sortBy,
-                                    @RequestParam(value = "direction", defaultValue = "desc") String direction) {
+                                    @RequestParam(value = "firstName", defaultValue = "") String name,
+                                    @RequestParam(value = "email", defaultValue = "") String email,
+                                    @RequestParam(value = "username", defaultValue = "") String username) {
         if (model.getAttribute("isAdmin") != null) {
             if ((boolean) model.getAttribute("isAdmin")) {
-                Page<Post> posts = postService.getAllPosts(title, tag, page, size, sortBy, direction);
-                model.addAttribute("posts", posts);
+                List<User> users = userService.getAllUsers(name, email, username);
+                model.addAttribute("users", users);
                 return "AdminPanelView";
             }
         }
         return "redirect:/";
+    }
+
+
+    @GetMapping("/admin/block/{id}")
+    public String handeUserBlock(@PathVariable int id, Model model, HttpSession session) {
+        User loggedInUser = (User) session.getAttribute("currentUser");
+        User userBlockInfo = new User();
+        userBlockInfo.setIsBlocked(true);
+        userService.updateUserBlockStatus(loggedInUser, userBlockInfo, id);
+        return "redirect:/admin";
+    }
+
+    @GetMapping("/admin/unblock/{id}")
+    public String handeUserUnblock(@PathVariable int id, Model model, HttpSession session) {
+        User loggedInUser = (User) session.getAttribute("currentUser");
+        User userBlockInfo = new User();
+        userBlockInfo.setIsBlocked(false);
+        userService.updateUserBlockStatus(loggedInUser, userBlockInfo, id);
+        return "redirect:/admin";
     }
 }

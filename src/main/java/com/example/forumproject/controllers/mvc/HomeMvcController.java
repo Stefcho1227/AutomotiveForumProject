@@ -15,6 +15,7 @@ import com.example.forumproject.models.options.FilterOptions;
 import com.example.forumproject.repositories.contracts.PostRepository;
 import com.example.forumproject.services.contracts.PostService;
 import com.example.forumproject.services.contracts.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.core.io.FileSystemResource;
@@ -61,7 +62,7 @@ public class HomeMvcController {
     }
 
     @GetMapping
-    public String ShowHomeView(Model model, HttpSession session,
+    public String ShowHomeView(Model model, HttpSession session, HttpServletRequest request,
                                @RequestParam(value = "title", defaultValue = "") String title,
                                @RequestParam(value = "tag", defaultValue = "") String tag,
                                @RequestParam(value = "page", defaultValue = "0") int page,
@@ -75,6 +76,7 @@ public class HomeMvcController {
             Page<Post> posts = postService.getAllPosts(title, tag, page, size, sortBy, direction);
             model.addAttribute("posts", posts);
         }
+        model.addAttribute("uri", request.getRequestURI());
         return "HomeView";
     }
 

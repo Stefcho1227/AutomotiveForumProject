@@ -31,7 +31,7 @@ public class UserMapper {
         user.setEmail(inputData.getEmail());
         user.setUsername(inputData.getUsername());
         user.setPassword(inputData.getPassword());
-        user.setBlocked(false);
+        user.setIsBlocked(false);
         user.setRole(roleService.getRoleById(inputData.getRoleId()).orElseThrow(() -> new EntityNotFoundException("Role", inputData.getRoleId())));
 
         return user;
@@ -40,9 +40,9 @@ public class UserMapper {
     public User fromBlockedDto(UserBlockDto inputData) {
         User user = new User();
         if (inputData.getData().equals("block")) {
-            user.setBlocked(true);
+            user.setIsBlocked(true);
         } else if (inputData.getData().equals("unblock")) {
-            user.setBlocked(false);
+            user.setIsBlocked(false);
         }
         return user;
     }

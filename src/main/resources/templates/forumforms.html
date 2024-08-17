@@ -154,7 +154,7 @@
 <div class="container" th:fragment="filtering-sorting-form">
     <div class="row justify-content-center">
         <div class="col-md-8 text-center">
-            <form action="#" th:action="@{/}" method="get" class="form-inline">
+            <form action="#" th:action="${uri}" method="get" class="form-inline">
                 <div class="form-group mb-2">
                     <label for="title" class="sr-only">Filter by Title</label>
                     <input type="text" id="title" name="title" class="form-control" placeholder="Filter by Title"
@@ -222,7 +222,8 @@
         </div>
         <div th:if="${isAdmin}" class="user-description303">
             <a th:if="${user.id == currentUserId}" th:href="@{/profile/edit}">Edit Profile</a>
-            <a th:href="|/admin/block/| + ${user.id}">Block</a>
+            <a th:unless="${user.isBlocked}" th:href="|/admin/block/| + ${user.id}">Block</a>
+            <a th:if="${user.isBlocked}" th:href="|/admin/unblock/| + ${user.id}">Unblock</a>
 
         </div>
 

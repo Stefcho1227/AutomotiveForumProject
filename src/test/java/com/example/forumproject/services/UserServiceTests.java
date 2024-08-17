@@ -6,11 +6,9 @@ import com.example.forumproject.exceptions.DuplicateEntityException;
 import com.example.forumproject.exceptions.EntityNotFoundException;
 import com.example.forumproject.models.Role;
 import com.example.forumproject.models.User;
-import com.example.forumproject.models.UserPhoneNumber;
 import com.example.forumproject.repositories.contracts.RoleRepository;
 import com.example.forumproject.repositories.contracts.UserPhoneNumberRepository;
 import com.example.forumproject.repositories.contracts.UserRepository;
-import com.example.forumproject.services.contracts.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +21,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -161,7 +158,7 @@ public class UserServiceTests {
 
         User userToUpdate = new User();
         User inputUser = new User();
-        inputUser.setBlocked(true);
+        inputUser.setIsBlocked(true);
 
         Mockito.when(mockUserRepository.findById(1)).thenReturn(Optional.of(userToUpdate));
         Mockito.when(mockUserRepository.save(userToUpdate)).thenReturn(userToUpdate);
@@ -169,7 +166,7 @@ public class UserServiceTests {
         User result = userService.updateUserBlockStatus(adminUser, inputUser, 1);
 
         Assertions.assertNotNull(result);
-        Assertions.assertTrue(userToUpdate.getBlocked());
+        Assertions.assertTrue(userToUpdate.getIsBlocked());
     }
 
     @Test

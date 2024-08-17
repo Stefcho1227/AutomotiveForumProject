@@ -3,6 +3,7 @@ package com.example.forumproject.services;
 import com.example.forumproject.exceptions.AuthorizationException;
 import com.example.forumproject.exceptions.DuplicateEntityException;
 import com.example.forumproject.exceptions.EntityNotFoundException;
+import com.example.forumproject.helpers.specifications.UserMvcSpecification;
 import com.example.forumproject.models.User;
 import com.example.forumproject.models.UserPhoneNumber;
 import com.example.forumproject.repositories.contracts.UserPhoneNumberRepository;
@@ -11,6 +12,7 @@ import com.example.forumproject.services.contracts.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,6 +36,24 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    @Override
+    public List<User> getAllUsers(String firstName, String email, String username) {
+        Specification<User> spec = Specification.where(null);
+
+        if (firstName != null && !firstName.isEmpty()) {
+            spec = spec.and(UserMvcSpecification.hasFirstName(firstName));
+        }
+        if (email != null && !email.isEmpty()) {
+            spec = spec.and(UserMvcSpecification.hasEmail(email));
+        }
+        if (username != null && !username.isEmpty()) {
+            spec = spec.and(UserMvcSpecification.hasUsername(username));
+        }
+
+
+        return userRepository.findAll(spec);
     }
 
     @Override
@@ -142,8 +162,8 @@ public class UserServiceImpl implements UserService {
 
         User userToUpdate = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User"));
 
-        if (inputUser.getBlocked() != null) {
-            userToUpdate.setBlocked(inputUser.getBlocked());
+        if (inputUser.getIsBlocked() != null) {
+            userToUpdate.setIsBlocked(inputUser.getIsBlocked());
         }
 
         return userRepository.save(userToUpdate);

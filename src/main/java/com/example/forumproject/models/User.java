@@ -116,11 +116,11 @@ public class User {
         this.role = role;
     }
 
-    public Boolean getBlocked() {
+    public Boolean getIsBlocked() {
         return isBlocked;
     }
 
-    public void setBlocked(Boolean blocked) {
+    public void setIsBlocked(Boolean blocked) {
         isBlocked = blocked;
     }
 

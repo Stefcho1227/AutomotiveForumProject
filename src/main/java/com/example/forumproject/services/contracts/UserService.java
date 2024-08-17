@@ -2,6 +2,7 @@ package com.example.forumproject.services.contracts;
 
 import com.example.forumproject.models.User;
 import com.example.forumproject.models.UserPhoneNumber;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,10 +11,12 @@ public interface UserService {
     List<User> getAllUsers();
 
     Optional<User> getUserById(int id);
+
     Optional<User> getByUsername(String username);
 
-
     User createUser(User user);
+
+    List<User> getAllUsers(String firstName, String email, String username);
 
     void deleteUserById(int id, User user);
 
