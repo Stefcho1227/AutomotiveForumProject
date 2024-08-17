@@ -148,9 +148,6 @@ public class UserServiceImpl implements UserService {
         if (inputUser.getEmail() != null) {
             userToUpdate.setEmail(inputUser.getEmail());
         }
-        if (inputUser.getProfilePictureUrl() != null) {
-            userToUpdate.setProfilePictureUrl(inputUser.getProfilePictureUrl());
-        }
 
 
         return userRepository.save(userToUpdate);
