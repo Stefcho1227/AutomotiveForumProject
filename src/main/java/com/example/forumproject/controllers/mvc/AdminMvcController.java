@@ -1,7 +1,6 @@
 package com.example.forumproject.controllers.mvc;
 
 import com.example.forumproject.models.User;
-import com.example.forumproject.services.contracts.PostService;
 import com.example.forumproject.services.contracts.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,18 +14,17 @@ import java.util.List;
 @RequestMapping("/")
 public class AdminMvcController {
     private final UserService userService;
-    private final PostService postService;
 
     @Autowired
-    public AdminMvcController(UserService userService, PostService postService) {
+    public AdminMvcController(UserService userService) {
         this.userService = userService;
-        this.postService = postService;
     }
 
-@ModelAttribute("users")
-public List<User> populateUsers() {
+    @ModelAttribute("users")
+    public List<User> populateUsers() {
         return userService.getAllUsers();
-}
+    }
+
     @GetMapping("/admin")
     public String getAdminPanelView(Model model,
                                     @RequestParam(value = "firstName", defaultValue = "") String name,
@@ -44,7 +42,7 @@ public List<User> populateUsers() {
 
 
     @GetMapping("/admin/block/{id}")
-    public String handeUserBlock(@PathVariable int id, Model model, HttpSession session) {
+    public String handeUserBlock(@PathVariable int id, HttpSession session) {
         User loggedInUser = (User) session.getAttribute("currentUser");
         User userBlockInfo = new User();
         userBlockInfo.setIsBlocked(true);
@@ -53,11 +51,27 @@ public List<User> populateUsers() {
     }
 
     @GetMapping("/admin/unblock/{id}")
-    public String handeUserUnblock(@PathVariable int id, Model model, HttpSession session) {
+    public String handeUserUnblock(@PathVariable int id, HttpSession session) {
         User loggedInUser = (User) session.getAttribute("currentUser");
         User userBlockInfo = new User();
         userBlockInfo.setIsBlocked(false);
         userService.updateUserBlockStatus(loggedInUser, userBlockInfo, id);
+        return "redirect:/admin";
+    }
+
+    @GetMapping("/admin/addprivileges/{id}")
+    public String handeUserGivePrivileges(@PathVariable int id, HttpSession session) {
+        User loggedInUser = (User) session.getAttribute("currentUser");
+        if (!loggedInUser.getRole().getRoleName().equals("admin")) {
+            return "redirect:/";
+        }
+        userService.userAddPrivileges(id);
+        return "redirect:/admin";
+    }
+
+    @GetMapping("/admin/removeprivileges/{id}")
+    public String handeUserRemovePrivileges(@PathVariable int id, HttpSession session) {
+        userService.userRemovePrivileges(id);
         return "redirect:/admin";
     }
 }

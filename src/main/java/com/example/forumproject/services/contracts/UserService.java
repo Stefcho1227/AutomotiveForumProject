@@ -2,7 +2,6 @@ package com.example.forumproject.services.contracts;
 
 import com.example.forumproject.models.User;
 import com.example.forumproject.models.UserPhoneNumber;
-import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +14,10 @@ public interface UserService {
     Optional<User> getByUsername(String username);
 
     User createUser(User user);
+
+    User userAddPrivileges(int id);
+
+    User userRemovePrivileges(int id);
 
     List<User> getAllUsers(String firstName, String email, String username);
 

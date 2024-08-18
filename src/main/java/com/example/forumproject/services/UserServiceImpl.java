@@ -8,6 +8,7 @@ import com.example.forumproject.models.User;
 import com.example.forumproject.models.UserPhoneNumber;
 import com.example.forumproject.repositories.contracts.UserPhoneNumberRepository;
 import com.example.forumproject.repositories.contracts.UserRepository;
+import com.example.forumproject.services.contracts.RoleService;
 import com.example.forumproject.services.contracts.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +27,13 @@ public class UserServiceImpl implements UserService {
     public static final String NO_PHONE_NUMBER_MODIFICATION_PERMISSION_MESSAGE = "You can only modify your own phone number";
     private final UserRepository userRepository;
     private final UserPhoneNumberRepository phoneNumberRepository;
+    private final RoleService roleService;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserPhoneNumberRepository phoneNumberRepository) {
+    public UserServiceImpl(UserRepository userRepository, UserPhoneNumberRepository phoneNumberRepository, RoleService roleService) {
         this.userRepository = userRepository;
         this.phoneNumberRepository = phoneNumberRepository;
+        this.roleService = roleService;
     }
 
     @Override
@@ -72,7 +75,7 @@ public class UserServiceImpl implements UserService {
         } catch (DataIntegrityViolationException e) {
             throw new DuplicateEntityException("User with email/username already exists.");
         }
-        //TODO da ima istinksi check za username-a
+        //TODO username cheack
     }
 
     @Transactional
@@ -117,7 +120,7 @@ public class UserServiceImpl implements UserService {
             user.setPhoneNumber(null);
             userRepository.save(user);
         }
-        //TODO kato gornoto
+        //TODO same as above
     }
 
     private void throwIfUserIsNotAdminOrModerator(User user) {
@@ -150,6 +153,20 @@ public class UserServiceImpl implements UserService {
         }
 
 
+        return userRepository.save(userToUpdate);
+    }
+
+    @Override
+    public User userAddPrivileges(int id) {
+        User userToUpdate = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User"));
+        userToUpdate.setRole(roleService.getRoleById(1).get());
+        return userRepository.save(userToUpdate);
+    }
+
+    @Override
+    public User userRemovePrivileges(int id) {
+        User userToUpdate = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User"));
+        userToUpdate.setRole(roleService.getRoleById(3).get());
         return userRepository.save(userToUpdate);
     }
 
