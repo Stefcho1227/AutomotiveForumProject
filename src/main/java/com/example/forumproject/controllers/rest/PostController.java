@@ -66,7 +66,7 @@ public class PostController {
             Pageable pageable = PageRequest.of(page, size);
             Page<?> posts = postService.getAllPosts(user, filterOptions, pageable);
             return ResponseEntity.of(Optional.ofNullable(posts));
-        } catch (AuthorizationException e){
+        } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
     }
@@ -76,15 +76,16 @@ public class PostController {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             Post post = postService.getPostById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-            if (user.getRole().getRoleName().equals("Admin")){
+            if (user.getRole().getRoleName().equals("Admin")) {
                 return post;
-            } else{
+            } else {
                 return PostMapper.toUserDTO(post);
             }
-        } catch (AuthorizationException e){
+        } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
+
     @GetMapping("/{id}/likes")
     public Set<?> getLikes(@RequestHeader HttpHeaders headers, @PathVariable int id) {
         User user = authenticationHelper.tryGetUser(headers);
@@ -101,6 +102,7 @@ public class PostController {
                     .collect(Collectors.toSet());
         }
     }
+
     @GetMapping("/{id}/tags")
     public Set<?> getTags(@RequestHeader HttpHeaders headers, @PathVariable int id) {
         User user = authenticationHelper.tryGetUser(headers);
@@ -117,8 +119,9 @@ public class PostController {
                     .collect(Collectors.toSet());
         }
     }
+
     @GetMapping("/{id}/comments")
-    public Set<?> getComments(@RequestHeader HttpHeaders headers, @PathVariable int id){
+    public Set<?> getComments(@RequestHeader HttpHeaders headers, @PathVariable int id) {
         User user = authenticationHelper.tryGetUser(headers);
         Post post = postService.getPostById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         if (post.getComments().isEmpty()) {
@@ -133,94 +136,100 @@ public class PostController {
                     .collect(Collectors.toSet());
         }
     }
+
     @GetMapping("/mostLikedPost")
-    public Post getMostLikedPost(@RequestHeader HttpHeaders headers){
+    public Post getMostLikedPost(@RequestHeader HttpHeaders headers) {
         try {
             authenticationHelper.tryGetUser(headers);
             return postService.getMostLikedPost();
-        } catch (AuthorizationException e){
+        } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
     }
 
     @PostMapping
-    public Post create(@RequestHeader HttpHeaders headers, @Valid @RequestBody PostDto postDto){
+    public Post create(@RequestHeader HttpHeaders headers, @Valid @RequestBody PostDto postDto) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             Post post = postMapper.fromDto(postDto, user);
             return postService.create(post, user);
         } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        } catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (DuplicateEntityException e){
+        } catch (DuplicateEntityException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        } catch (BlockedException e){
+        } catch (BlockedException e) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }
     }
+
     @PutMapping("/{id}")
-    public Post update(@RequestHeader HttpHeaders headers, @PathVariable int id, @Valid @RequestBody PostDto postDto){
+    public Post update(@RequestHeader HttpHeaders headers, @PathVariable int id, @Valid @RequestBody PostDto postDto) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             Post post = postMapper.fromDto(id, postDto);
             return postService.update(post, user);
-        } catch (AuthorizationException e){
+        } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        } catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
+
     @PutMapping("/{id}/likes")
-    public void likeAction(@RequestHeader HttpHeaders headers, @PathVariable int id){
+    public void likeAction(@RequestHeader HttpHeaders headers, @PathVariable int id) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
-            Post post = postService.getPostById(id).orElseThrow(()->new EntityNotFoundException("Post", id));
+            Post post = postService.getPostById(id).orElseThrow(() -> new EntityNotFoundException("Post", id));
             postService.likePost(post, user);
-        } catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (OperationAlreadyPerformedException e){
+        } catch (OperationAlreadyPerformedException e) {
             throw new ResponseStatusException(HttpStatus.ALREADY_REPORTED, e.getMessage());
         }
     }
+
     @PutMapping("/{postId}/tags/{tagId}/addition")
     public void addTagToPost(
             @RequestHeader HttpHeaders headers,
             @PathVariable int postId,
-            @PathVariable int tagId){
+            @PathVariable int tagId) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             tagService.addTagToPost(tagId, postId, user);
-        } catch (AuthorizationException e){
+        } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        } catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (OperationAlreadyPerformedException e){
+        } catch (OperationAlreadyPerformedException e) {
             throw new ResponseStatusException(HttpStatus.ALREADY_REPORTED, e.getMessage());
         }
     }
+
     @PutMapping("/{postId}/tags/{tagId}/removal")
     public void removeTagToPost(
             @RequestHeader HttpHeaders headers,
             @PathVariable int postId,
-            @PathVariable int tagId){
+            @PathVariable int tagId) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             tagService.removeTagToPost(tagId, postId, user);
-        } catch (AuthorizationException e){
+        } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        } catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
+
     @DeleteMapping("/{id}")
-    public void delete(@RequestHeader HttpHeaders headers, @PathVariable int id){
+    public void delete(@RequestHeader HttpHeaders headers, @PathVariable int id) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             postService.delete(id, user);
-        } catch (AuthorizationException e){
+        } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        } catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }

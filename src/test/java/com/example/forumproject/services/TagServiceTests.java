@@ -47,8 +47,8 @@ public class TagServiceTests {
         List<?> result = tagService.getAllTags(userAdmin);
         Assertions.assertEquals(2, result.size());
         TagAdminDto dto = (TagAdminDto) result.get(0);
-        Assertions.assertEquals(1, dto.getTagId());
-        Assertions.assertEquals("MockTag1", dto.getTagName());
+        Assertions.assertEquals(1, dto.getId());
+        Assertions.assertEquals("MockTag1", dto.getName());
     }
     @Test
     public void getAllTags_Should_ReturnTagForUser(){
@@ -59,7 +59,7 @@ public class TagServiceTests {
         List<?> result = tagService.getAllTags(userNotAdmin);
         Assertions.assertEquals(2, result.size());
         TagUserDto dto = (TagUserDto) result.get(0);
-        Assertions.assertEquals("MockTag1", dto.getTagName());
+        Assertions.assertEquals("MockTag1", dto.getName());
     }
     @Test
     public void getById_Should_ReturnTag_When_Authorized() {

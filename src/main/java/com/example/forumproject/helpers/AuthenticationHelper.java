@@ -50,7 +50,7 @@ public class AuthenticationHelper {
             if (!user.getPassword().equals(password)) {
                 throw new AuthorizationException(INVALID_AUTHENTICATION_ERROR);
             }
-            checkUserBlockStatus(user);
+            throwIfUserIsBlocked(user);
             return user;
         } catch (EntityNotFoundException e) {
             throw new AuthorizationException(INVALID_AUTHENTICATION_ERROR);
@@ -67,13 +67,13 @@ public class AuthenticationHelper {
         return currentUser;
     }
 
-    public static void checkUserBlockStatus(User user) {
+    public static void throwIfUserIsBlocked(User user) {
         if (user.getIsBlocked()) {
             throw new BlockedException("Username", user.getUsername());
         }
     }
 
-    public User verifyAuthentication(String username, String password) {
+    public User throwIfWrongAuthentication(String username, String password) {
         Optional<User> user = userService.getByUsername(username);
         if (user.isEmpty() || !user.get().getPassword().equals(password)) {
             throw new AuthenticationFailureException("Wrong username or password.");

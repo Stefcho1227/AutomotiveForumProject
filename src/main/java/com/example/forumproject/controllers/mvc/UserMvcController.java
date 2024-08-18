@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.Optional;
 import java.util.Set;
 
 
@@ -30,14 +29,8 @@ public class UserMvcController {
 
     @GetMapping("/{id}")
     public String showSingleUser(@PathVariable int id, Model model, HttpSession session) {
-        /*User user;
         try {
-            user = authenticationHelper.tryGetCurrentUser(session);
-        } catch (AuthorizationException e) {
-            return "redirect:/auth/login";
-        }*/
-        try {
-            User checkUser = userService.getUserById(id).orElseThrow(()->new EntityNotFoundException("user", id));
+            User checkUser = userService.getUserById(id).orElseThrow(() -> new EntityNotFoundException("user", id));
             Set<Post> posts = postService.getUserPosts(id);
             model.addAttribute("user", checkUser);
             model.addAttribute("posts", posts);

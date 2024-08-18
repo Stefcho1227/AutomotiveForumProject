@@ -4,12 +4,9 @@ import com.example.forumproject.exceptions.AuthorizationException;
 import com.example.forumproject.exceptions.DuplicateEntityException;
 import com.example.forumproject.exceptions.EntityNotFoundException;
 import com.example.forumproject.exceptions.OperationAlreadyPerformedException;
-import com.example.forumproject.helpers.AuthenticationHelper;
 import com.example.forumproject.models.Post;
 import com.example.forumproject.models.Tag;
 import com.example.forumproject.models.User;
-import com.example.forumproject.models.dtos.out.TagAdminDto;
-import com.example.forumproject.models.dtos.out.TagUserDto;
 import com.example.forumproject.repositories.contracts.PostRepository;
 import com.example.forumproject.repositories.contracts.TagRepository;
 import com.example.forumproject.services.contracts.TagService;
@@ -21,7 +18,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class TagServiceImpl implements TagService {
@@ -29,11 +25,13 @@ public class TagServiceImpl implements TagService {
     public static final String ERROR_MESSAGE = "You are not authorized to browse user information.";
     private final TagRepository tagRepository;
     private final PostRepository postRepository;
+
     @Autowired
-    public TagServiceImpl(TagRepository tagRepository, PostRepository postRepository){
+    public TagServiceImpl(TagRepository tagRepository, PostRepository postRepository) {
         this.tagRepository = tagRepository;
         this.postRepository = postRepository;
     }
+
     @Override
     public List<Tag> getAllTags(User user) {
         List<Tag> tags = tagRepository.findAll();
@@ -55,21 +53,22 @@ public class TagServiceImpl implements TagService {
     @Override
     @Transactional
     public void addTagToPost(int id, int postId, User user) {
-        Post post = postRepository.findById(postId).orElseThrow(()->new EntityNotFoundException("Post", postId));
+        Post post = postRepository.findById(postId).orElseThrow(() -> new EntityNotFoundException("Post", postId));
         checkAccessPermissions(post, user);
-        Tag tag = tagRepository.findById(id).orElseThrow(()->new EntityNotFoundException("Tag", id));
+        Tag tag = tagRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Tag", id));
         checkForAlreadyDoneOperation(post, tag, true);
         post.getTags().add(tag);
         tag.getPosts().add(post);
         tagRepository.save(tag);
         postRepository.save(post);
     }
+
     @Override
     @Transactional
     public void removeTagToPost(int id, int postId, User user) {
-        Post post = postRepository.findById(postId).orElseThrow(()->new EntityNotFoundException("Post", postId));
+        Post post = postRepository.findById(postId).orElseThrow(() -> new EntityNotFoundException("Post", postId));
         checkAccessPermissions(post, user);
-        Tag tag = tagRepository.findById(id).orElseThrow(()->new EntityNotFoundException("Tag", id));
+        Tag tag = tagRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Tag", id));
         checkForAlreadyDoneOperation(post, tag, false);
         post.getTags().remove(tag);
         tag.getPosts().remove(post);
@@ -88,7 +87,7 @@ public class TagServiceImpl implements TagService {
         try {
             checkPermissions(user);
             return tagRepository.save(tag);
-        }catch (DataIntegrityViolationException e) {
+        } catch (DataIntegrityViolationException e) {
             throw new DuplicateEntityException("Tag with this name already exists.");
         }
     }
@@ -96,26 +95,29 @@ public class TagServiceImpl implements TagService {
     @Override
     public void delete(int id, User user) {
         checkPermissions(user);
-        Tag tagToDelete = tagRepository.findById(id).orElseThrow(()->new EntityNotFoundException("Tag", id));
+        Tag tagToDelete = tagRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Tag", id));
         tagRepository.delete(tagToDelete);
     }
+
     @Override
     public Set<Tag> getTagsByIds(Set<Integer> tagIds) {
-        return tagRepository.findByIdIn(tagIds).stream().collect(Collectors.toSet());
+        return tagRepository.findByIdIn(tagIds);
     }
 
     private void checkPermissions(User user) {
         String roleName = user.getRole().getRoleName();
-        if (roleName.equals("Admin")){
+        if (roleName.equals("Admin")) {
             return;
         }
         throw new AuthorizationException(TAG_ERROR_MESSAGE);
     }
+
     public static void checkAccessPermissions(Post post, User executingUser) {
         if (!post.getCreatedBy().equals(executingUser)) {
             throw new AuthorizationException(ERROR_MESSAGE);
         }
     }
+
     public static void checkForAlreadyDoneOperation(Post post, Tag tag, boolean isAddOperation) {
         boolean alreadyDone = isAddOperation ? post.getTags().contains(tag) : !post.getTags().contains(tag);
         if (alreadyDone) {

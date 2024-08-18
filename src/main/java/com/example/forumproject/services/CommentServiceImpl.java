@@ -18,6 +18,7 @@ import java.util.List;
 public class CommentServiceImpl implements CommentService {
     public static final String ADMIN_ROLE_NAME = "Admin";
     private CommentRepository repository;
+
     @Autowired
     public CommentServiceImpl(CommentRepository commentRepository) {
         this.repository = commentRepository;
@@ -25,7 +26,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment getById(int id) {
-       return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Comment"));
+        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Comment"));
     }
 
     @Override
@@ -46,7 +47,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void deleteCommentById(int id, User loggedInUser) {
-        checkCommentDeletePermission(id, loggedInUser);
+        throwIfNoPermissionToDelete(id, loggedInUser);
         repository.deleteById(id);
     }
 
@@ -56,7 +57,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     public Comment updateComment(Comment inputData, User loggedInUser, int commentId) {
-        checkCommentUpdatePermission(commentId, loggedInUser);
+        throwIfNoPermissionToUpdate(commentId, loggedInUser);
         Comment commentToUpdate = getById(commentId);
         if (inputData.getContent() != null) {
             commentToUpdate.setContent(inputData.getContent());
@@ -65,20 +66,16 @@ public class CommentServiceImpl implements CommentService {
         return save(commentToUpdate);
     }
 
-    private void checkCommentUpdatePermission(int commentId, User loggedInUser) {
+    private void throwIfNoPermissionToUpdate(int commentId, User loggedInUser) {
         Comment commentToCheck = getById(commentId);
-        if (commentToCheck.getCreatedBy().equals(loggedInUser)) {
-            return;
-        } else {
+        if (!commentToCheck.getCreatedBy().equals(loggedInUser)) {
             throw new AuthorizationException("You do not have permission to update this comment");
         }
     }
 
-    private void checkCommentDeletePermission(int commentId, User loggedInUser) {
+    private void throwIfNoPermissionToDelete(int commentId, User loggedInUser) {
         Comment commentToCheck = getById(commentId);
-        if (commentToCheck.getCreatedBy().equals(loggedInUser) || loggedInUser.getRole().getRoleName().equals(ADMIN_ROLE_NAME)) {
-            return;
-        } else {
+        if (!commentToCheck.getCreatedBy().equals(loggedInUser) || loggedInUser.getRole().getRoleName().equals(ADMIN_ROLE_NAME)) {
             throw new AuthorizationException("You do not have permission to delete this comment");
         }
     }

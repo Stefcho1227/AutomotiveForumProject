@@ -1,6 +1,5 @@
 package com.example.forumproject.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
@@ -25,6 +24,7 @@ public class Comment {
     private String content;
     @Column(name = "created_at")
     private Timestamp createdAt;
+
     public Comment() {
     }
 

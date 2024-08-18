@@ -136,6 +136,7 @@ public class User {
     public String toString() {
         return username + " " + firstName + " " + lastName + " " + email + " " + username + " " + password + " " + role + " " + phoneNumber;
     }
+
     public Set<Post> getPostsLiked() {
         return postsLiked;
     }

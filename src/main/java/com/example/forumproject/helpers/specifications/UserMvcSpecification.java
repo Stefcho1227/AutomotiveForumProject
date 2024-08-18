@@ -1,6 +1,5 @@
 package com.example.forumproject.helpers.specifications;
 
-import com.example.forumproject.models.Post;
 import com.example.forumproject.models.User;
 import org.springframework.data.jpa.domain.Specification;
 

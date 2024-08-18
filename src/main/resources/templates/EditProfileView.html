@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,54 +13,52 @@
 <body>
 <div th:replace="~{forumforms.html :: navbar}"></div>
 
-
-<<section class="header-descriptin329">
+<section class="header-description329">
     <div class="container">
         <h3>Edit Profile</h3>
     </div>
 </section>
 
-    <form action="#" th:action="@{'/profile/edit'}" th:object="${userDto}" method="post">
+<form action="#" th:action="@{'/profile/edit'}" th:object="${userDto}" method="post">
+    <label>Username:</label>
+    <br/>
+    <input type="text" th:field="*{username}" readonly
+           style="background-color: #f0f0f0; color: #555"/>
+    <br/><br/>
 
-        <label>Username:</label>
-        <br/>
-        <input type="text" th:field="*{username}" th:value="${userDto.username}" readonly
-               style="background-color: #f0f0f0; color: #555"/>
-        <br/><br/>
+    <label>First Name:</label>
+    <br/>
+    <input type="text" th:field="*{firstName}"/>
+    <br/>
+    <label class="error" th:errors="*{firstName}">First Name error placeholder</label>
+    <br/><br/>
 
-        <label>First Name:</label>
-        <br/>
-        <input type="text" th:field="*{firstName}" th:value="${userDto.firstName}"/>
-        <br/>
-        <label class="error" th:errors="*{firstName}">First Name error placeholder</label>
-        <br/><br/>
+    <label>Last Name:</label>
+    <br/>
+    <input type="text" th:field="*{lastName}"/>
+    <br/>
+    <label class="error" th:errors="*{lastName}">Last Name error placeholder</label>
+    <br/><br/>
 
-        <label>Last Name:</label>
-        <br/>
-        <input type="text" th:field="*{lastName}" th:value="${userDto.lastName}"/>
-        <br/>
-        <label class="error" th:errors="*{lastName}">Last Name error placeholder</label>
-        <br/><br/>
+    <label>Email:</label>
+    <br/>
+    <input type="email" th:field="*{email}"/>
+    <br/><br/>
 
-        <label>Email:</label>
-        <br/>
-        <input type="email" th:field="*{email}"/>
-        <br/><br/>
+    <label>New Password:</label>
+    <br/>
+    <input type="password" th:field="*{password}"/>
+    <br/><br/>
 
-        <label>New Password:</label>
-        <br/>
-        <input type="password" th:field="*{password}"/>
-        <br/><br/>
+    <label>New Password Confirm:</label>
+    <br/>
+    <input type="password" th:field="*{passwordConfirm}"/>
+    <br/><br/>
 
-        <label>New Password Confirm:</label>
-        <br/>
-        <input type="password" th:field="*{passwordConfirm}"/>
-        <br/><br/>
+    <input class="btn btn-primary btn-xl text-uppercase" type="submit" value="Save"/>
+</form>
 
-        <input class="btn btn-primary btn-xl text-uppercase" type="submit" value="Save"/>
-    </form>
-</div>
-<form th:replace="~{forumforms.html :: footer1}"></form>
-<form th:replace="~{forumforms.html :: footer2}"></form>
+<div th:replace="~{forumforms.html :: footer1}"></div>
+<div th:replace="~{forumforms.html :: footer2}"></div>
 </body>
 </html>

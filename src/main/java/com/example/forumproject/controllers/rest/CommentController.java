@@ -67,9 +67,10 @@ public class CommentController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
+
     @PostMapping
     public CommentOutDto addComment(@RequestHeader HttpHeaders headers, @RequestBody CommentInDto commentInDto) {
-        User loggedInUser = null;
+        User loggedInUser;
         try {
             loggedInUser = authenticationHelper.tryGetUser(headers);
         } catch (AuthorizationException e) {
@@ -90,7 +91,7 @@ public class CommentController {
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (AuthorizationException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,e.getMessage());
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
 

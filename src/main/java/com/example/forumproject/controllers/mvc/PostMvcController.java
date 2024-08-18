@@ -41,8 +41,9 @@ public class PostMvcController {
     private final CommentService commentService;
     private final CommentMapper commentMapper;
     private final TagService tagService;
+
     @Autowired
-    public PostMvcController(PostService postService, AuthenticationHelper authenticationHelper, PostMapper postMapper, CommentService commentService, CommentMapper commentMapper, TagService tagService){
+    public PostMvcController(PostService postService, AuthenticationHelper authenticationHelper, PostMapper postMapper, CommentService commentService, CommentMapper commentMapper, TagService tagService) {
 
         this.postService = postService;
         this.authenticationHelper = authenticationHelper;
@@ -51,6 +52,7 @@ public class PostMvcController {
         this.commentMapper = commentMapper;
         this.tagService = tagService;
     }
+
     @GetMapping("/{id}")
     public String showSinglePost(@PathVariable int id, Model model, HttpSession session) {
         User user;
@@ -82,6 +84,7 @@ public class PostMvcController {
             return "ErrorView";
         }
     }
+
     @GetMapping("/{postId}/comments")
     public String showPostComments(@PathVariable int postId, Model model, HttpSession session) {
         Post post = postService.getPostById(postId).orElseThrow(() -> new EntityNotFoundException("post", postId));
@@ -95,6 +98,7 @@ public class PostMvcController {
         model.addAttribute("currentUser", currentUser);
         return "UserCommentView";
     }
+
     @GetMapping("/{postId}/like")
     public String addLikeToPost(@PathVariable int postId, @RequestParam(required = false) String redirectUrl, HttpSession session) {
         try {
@@ -112,6 +116,7 @@ public class PostMvcController {
             return "ErrorView";
         }
     }
+
     @PostMapping("/{postId}/comments")
     public String addComment(@PathVariable int postId, @ModelAttribute CommentInDto commentDto, HttpSession session) {
         try {
@@ -132,6 +137,7 @@ public class PostMvcController {
             return "ErrorView";
         }
     }
+
     @GetMapping("/new")
     public String showNewPostPage(Model model, HttpSession session) {
         User user;
@@ -145,6 +151,7 @@ public class PostMvcController {
         model.addAttribute("tags", tags);
         return "CreatePostView";
     }
+
     @PostMapping("/new")
     public String createPost(@Valid @ModelAttribute("postDto") PostDto postDto,
                              BindingResult bindingResult,
@@ -173,6 +180,7 @@ public class PostMvcController {
             return "CreatePostView";
         }
     }
+
     @GetMapping("/{postId}/edit")
     public String showEditPostPage(@PathVariable int postId, Model model, HttpSession session) {
         User user;
@@ -190,6 +198,7 @@ public class PostMvcController {
         model.addAttribute("postId", postId);
         return "EditPostView";
     }
+
     @PostMapping("/{postId}/edit")
     public String editPost(@Valid @ModelAttribute("postDto") PostDto dto, HttpSession session, BindingResult bindingResult, Model model, @PathVariable int postId) {
 
@@ -218,8 +227,9 @@ public class PostMvcController {
             return "ErrorView";
         }
     }
+
     @GetMapping("/{postId}/comments/{commentId}/edit")
-    public String showEditCommentPage(@PathVariable int postId,@PathVariable int commentId, Model model, HttpSession session) {
+    public String showEditCommentPage(@PathVariable int postId, @PathVariable int commentId, Model model, HttpSession session) {
         User user;
         try {
             user = authenticationHelper.tryGetCurrentUser(session);
@@ -233,12 +243,13 @@ public class PostMvcController {
             model.addAttribute("commentDto", commentDto);
             model.addAttribute("commentId", commentId);
             return "EditCommentView";
-        } catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
             model.addAttribute("error", e.getMessage());
             return "ErrorView";
         }
     }
+
     @PostMapping("/{postId}/comments/{commentId}/edit")
     public String editComment(@Valid @ModelAttribute("commentDto") CommentDto dto, HttpSession session,
                               BindingResult bindingResult, Model model,
@@ -269,30 +280,32 @@ public class PostMvcController {
             return "ErrorView";
         }
     }
+
     @GetMapping("/{postId}/delete")
-    public String deletePost(@PathVariable int postId, Model model, HttpSession session){
+    public String deletePost(@PathVariable int postId, Model model, HttpSession session) {
         User user;
         try {
             user = authenticationHelper.tryGetCurrentUser(session);
-        } catch (AuthorizationException e){
+        } catch (AuthorizationException e) {
             return "redirect:/auth/login";
         }
         try {
             postService.delete(postId, user);
             return "redirect:/";
-        } catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
             model.addAttribute("error", e.getMessage());
             return "ErrorView";
         }
     }
+
     @GetMapping("/{postId}/comments/{commentId}/delete")
     public String deleteCommentOfPost(@PathVariable int postId, @PathVariable int commentId,
-                                      Model model, HttpSession session){
+                                      Model model, HttpSession session) {
         User user;
         try {
             user = authenticationHelper.tryGetCurrentUser(session);
-        } catch (AuthorizationException e){
+        } catch (AuthorizationException e) {
             return "redirect:/auth/login";
         }
         try {
@@ -300,7 +313,7 @@ public class PostMvcController {
             commentService.deleteCommentById(commentId, user);
             model.addAttribute("post", post);
             return "redirect:/posts/" + postId;
-        } catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
             model.addAttribute("error", e.getMessage());
             return "ErrorView";

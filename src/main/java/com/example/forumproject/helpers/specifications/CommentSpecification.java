@@ -16,8 +16,6 @@ public class CommentSpecification {
             List<Predicate> predicates = new ArrayList<>();
 
 
-
-
             filterOptions.getContent().ifPresent(content ->
                     predicates.add(
                             criteriaBuilder.like(root.get("content"), "%" + content + "%"))

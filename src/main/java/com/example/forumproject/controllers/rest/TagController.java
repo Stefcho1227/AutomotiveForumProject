@@ -33,62 +33,68 @@ public class TagController {
         this.tagMapper = tagMapper;
         this.authenticationHelper = authenticationHelper;
     }
+
     @GetMapping
     public List<Tag> getAllTags(@RequestHeader HttpHeaders headers) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             return tagService.getAllTags(user);
-        } catch (AuthorizationException e){
+        } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
+
     @GetMapping("{id}")
-    public Tag getById(@RequestHeader HttpHeaders headers, @PathVariable int id){
+    public Tag getById(@RequestHeader HttpHeaders headers, @PathVariable int id) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             return tagService.getById(user, id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        } catch (AuthorizationException e){
+        } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
+
     @GetMapping("/{id}/posts")
     public Set<Post> getPosts(@RequestHeader HttpHeaders headers, @PathVariable int id) {
         User user = authenticationHelper.tryGetUser(headers);
         Tag tag = tagService.getById(user, id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         return tag.getPosts();
     }
+
     @PostMapping
-    public Tag create(@RequestHeader HttpHeaders headers, @Valid @RequestBody TagDto tagDto){
+    public Tag create(@RequestHeader HttpHeaders headers, @Valid @RequestBody TagDto tagDto) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             Tag tag = tagMapper.fromDto(tagDto);
             return tagService.create(tag, user);
-        } catch (AuthorizationException e){
+        } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        } catch (DuplicateEntityException e){
+        } catch (DuplicateEntityException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
+
     @PutMapping("/{id}")
-    public Tag update(@RequestHeader HttpHeaders headers, @PathVariable int id, @Valid @RequestBody TagDto tagDto){
+    public Tag update(@RequestHeader HttpHeaders headers, @PathVariable int id, @Valid @RequestBody TagDto tagDto) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             Tag tag = tagMapper.fromDto(id, tagDto, user);
             return tagService.update(tag, user);
-        } catch (AuthorizationException e){
+        } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        } catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
+
     @DeleteMapping("/{id}")
-    public void delete(@RequestHeader HttpHeaders headers, @PathVariable int id){
+    public void delete(@RequestHeader HttpHeaders headers, @PathVariable int id) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             tagService.delete(id, user);
-        } catch (AuthorizationException e){
+        } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        } catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }

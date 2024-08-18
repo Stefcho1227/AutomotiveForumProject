@@ -14,8 +14,8 @@ import com.example.forumproject.repositories.contracts.PostRepository;
 import com.example.forumproject.repositories.contracts.UserRepository;
 import com.example.forumproject.services.contracts.PostService;
 import com.example.forumproject.services.contracts.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -38,8 +38,9 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final UserService userService;
+
     @Autowired
-    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository, UserService userService){
+    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository, UserService userService) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.userService = userService;
@@ -80,30 +81,29 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post create(Post post, User user) {
-        AuthenticationHelper.checkUserBlockStatus(user);
+        AuthenticationHelper.throwIfUserIsBlocked(user);
         return postRepository.save(post);
     }
 
     @Override
     public Post update(Post post, User user) {
-
-        AuthenticationHelper.checkUserBlockStatus(user);
+        AuthenticationHelper.throwIfUserIsBlocked(user);
         checkModifyPermissions(post.getId(), user);
         return postRepository.save(post);
     }
 
     @Override
     public void delete(int id, User user) {
-        AuthenticationHelper.checkUserBlockStatus(user);
+        AuthenticationHelper.throwIfUserIsBlocked(user);
         checkModifyPermissionsToDelete(id, user);
-        Post postToDelete = postRepository.findById(id).orElseThrow(()->new EntityNotFoundException("Post", id));
+        Post postToDelete = postRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Post", id));
         postRepository.delete(postToDelete);
     }
 
     @Override
     @Transactional
     public void likePost(Post post, User user) {
-        AuthenticationHelper.checkUserBlockStatus(user);
+        AuthenticationHelper.throwIfUserIsBlocked(user);
         Set<User> usersLikedPost = post.getLikes();
         Set<Post> postLikedByUser = user.getPostsLiked();
         if (usersLikedPost.contains(user)) {
@@ -121,17 +121,18 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Set<Post> getUserPosts(int id) {
-        User user = userService.getUserById(id).orElseThrow(()->new EntityNotFoundException("User", id));
+        User user = userService.getUserById(id).orElseThrow(() -> new EntityNotFoundException("User", id));
         return postRepository.findByCreatedBy(user);
     }
+
     @Override
     public Set<?> getUserLikedPosts(User loggedInUser, int id) {
         validateAccess(loggedInUser, id);
-        User user = userRepository.findById(id).orElseThrow(()->new EntityNotFoundException("User", id));
+        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User", id));
         Set<Post> likedPosts = user.getPostsLiked();
-        if (loggedInUser.getRole().getRoleName().equals("Admin")){
+        if (loggedInUser.getRole().getRoleName().equals("Admin")) {
             return likedPosts;
-        }else {
+        } else {
             return likedPosts.stream()
                     .map(PostMapper::toUserDTO).collect(Collectors.toSet());
         }
@@ -146,23 +147,25 @@ public class PostServiceImpl implements PostService {
 
 
     private void checkModifyPermissions(int postId, User user) {
-        Post repositoryPost = postRepository.findById(postId).orElseThrow(()->new EntityNotFoundException("Post", postId));
+        Post repositoryPost = postRepository.findById(postId).orElseThrow(() -> new EntityNotFoundException("Post", postId));
         if (!repositoryPost.getCreatedBy().equals(user)) {
             throw new AuthorizationException(POST_ERROR_MESSAGE);
         }
     }
+
     private void checkModifyPermissionsToDelete(int postId, User user) {
-        Post repositoryPost = postRepository.findById(postId).orElseThrow(()->new EntityNotFoundException("Post", postId));
+        Post repositoryPost = postRepository.findById(postId).orElseThrow(() -> new EntityNotFoundException("Post", postId));
         if (repositoryPost.getCreatedBy().equals(user)) {
             return;
         }
         String roleName = user.getRole().getRoleName();
-        if (roleName.equals("Admin") || roleName.equals("Moderator")){
+        if (roleName.equals("Admin") || roleName.equals("Moderator")) {
             return;
         }
         throw new AuthorizationException(DELETE_POST_ERROR_MESSAGE);
     }
-    private void validateAccess(User loggedUser, int id){
+
+    private void validateAccess(User loggedUser, int id) {
         if (!loggedUser.getRole().getRoleName().equals("Admin") && loggedUser.getId() != id) {
             throw new AuthorizationException(ADMIN_OR_LOGGER_ERROR);
         }

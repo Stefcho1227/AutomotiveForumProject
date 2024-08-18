@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class PostSpecification {
     public static Specification<Post> filterByOption(FilterOptions filterOptions) {
@@ -22,17 +21,17 @@ public class PostSpecification {
                             criteriaBuilder.greaterThanOrEqualTo(root.get("likesCount"), minLikes))
             );
             filterOptions.getMaxLikes().ifPresent(maxLikes ->
-                predicates.add(
-                        criteriaBuilder.lessThanOrEqualTo(root.get("likesCount"), maxLikes))
+                    predicates.add(
+                            criteriaBuilder.lessThanOrEqualTo(root.get("likesCount"), maxLikes))
             );
             filterOptions.getTitle().ifPresent(title ->
-                predicates.add(
-                        criteriaBuilder.like(root.get("title"), "%" + title + "%"))
+                    predicates.add(
+                            criteriaBuilder.like(root.get("title"), "%" + title + "%"))
             );
 
             filterOptions.getContent().ifPresent(content ->
-                predicates.add(
-                        criteriaBuilder.like(root.get("content"), "%" + content + "%"))
+                    predicates.add(
+                            criteriaBuilder.like(root.get("content"), "%" + content + "%"))
             );
 
             filterOptions.getCreatedBefore().ifPresent(createdBefore -> {
@@ -46,15 +45,15 @@ public class PostSpecification {
                 predicates.add(
                         criteriaBuilder.greaterThanOrEqualTo(root.get("createdAt"), dateAfter));
             });
-            filterOptions.getTagName().ifPresent(tagName->{
-                Join< Object, Object> tags = root.join("tags");
+            filterOptions.getTagName().ifPresent(tagName -> {
+                Join<Object, Object> tags = root.join("tags");
                 predicates.add(
                         criteriaBuilder.equal(tags.get("tagName"), tagName));
-                    });
+            });
 
             filterOptions.getPostedBy().ifPresent(postedBy ->
-                predicates.add(
-                        criteriaBuilder.equal(root.get("createdBy").get("username"), postedBy))
+                    predicates.add(
+                            criteriaBuilder.equal(root.get("createdBy").get("username"), postedBy))
             );
             query.where(predicates.toArray(new Predicate[0]));
 

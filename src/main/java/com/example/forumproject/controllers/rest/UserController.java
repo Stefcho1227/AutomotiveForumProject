@@ -75,6 +75,7 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
+
     @GetMapping("/{id}/likedPosts")
     public Set<?> getLikedPosts(@RequestHeader HttpHeaders headers, @PathVariable int id) {
         try {

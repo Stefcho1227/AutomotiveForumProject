@@ -73,7 +73,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-6">
-                <p>Copyright 2017 Ask me | <strong>Stefcho&Toshko</strong></p>
+                <p>Copyright 2024 | <strong>Stefan & Todor</strong></p>
             </div>
         </div>
     </div>
@@ -146,7 +146,7 @@
 </div>
 <!--          End tags part-->
 <div class="status-part3821" th:fragment="stat-section">
-    <h4>stats</h4>
+    <h4>Stats</h4>
     <a href="#"><i class="fa fa-question-circle"> Posts(<span th:text="${postCount}">0</span>)</i></a>
     <i class="fa fa-comment"> Users(<span th:text="${userCount}">0</span>)</i>
 </div>
@@ -209,7 +209,7 @@
         <div class="user-list10039">
             <div class="ul-list-user-right29">
                 <ul>
-                    <li th:if="${user.role.id == 1}"><i class="fa fa-phone" aria-hidden="true"></i> <strong>Phone:</strong> <span th:text="${user.phoneNumber.value}"></span></li>
+                    <li th:if="${user.role.id == 1 && user.phoneNumber != null}"><i class="fa fa-phone" aria-hidden="true"></i> <strong>Phone:</strong> <span th:text="${user.phoneNumber.value}"></span></li>
                     <li><i class="fa" aria-hidden="true"></i> <strong>E-mail: </strong> <span th:text="${user.email}"></span></li>
                     <li><i class="fa" aria-hidden="true"></i> <strong>Username: </strong> <span th:text="${user.username}"></span></li>
                 </ul>
@@ -224,6 +224,8 @@
             <a th:if="${user.id == currentUserId}" th:href="@{/profile/edit}">Edit Profile</a>
             <a th:unless="${user.isBlocked}" th:href="|/admin/block/| + ${user.id}">Block</a>
             <a th:if="${user.isBlocked}" th:href="|/admin/unblock/| + ${user.id}">Unblock</a>
+            <a th:unless="${user.role.id == 1}" th:href="|/admin/addprivileges/| + ${user.id}">Add Privileges</a>
+            <a th:if="${user.role.id == 1}" th:href="|/admin/removeprivileges/| + ${user.id}">Remove Privileges</a>
 
         </div>
 

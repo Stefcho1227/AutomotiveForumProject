@@ -1,11 +1,9 @@
 package com.example.forumproject.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -99,6 +97,7 @@ public class Post {
     public void setContent(String content) {
         this.content = content;
     }
+
     public Timestamp getCreatedAt() {
         return createdAt;
     }
