@@ -220,13 +220,15 @@
         <div th:unless="${isAdmin}" class="user-description303">
             <a th:if="${user.id == currentUserId}" th:href="@{/profile/edit}">Edit Profile</a>
         </div>
-        <div th:if="${isAdmin}" class="user-description303">
+        <div th:if="${isAdmin}" th:unless="${currentUserId == user.id}" class="user-description303">
             <a th:if="${user.id == currentUserId}" th:href="@{/profile/edit}">Edit Profile</a>
             <a th:unless="${user.isBlocked}" th:href="|/admin/block/| + ${user.id}">Block</a>
             <a th:if="${user.isBlocked}" th:href="|/admin/unblock/| + ${user.id}">Unblock</a>
             <a th:unless="${user.role.id == 1}" th:href="|/admin/addprivileges/| + ${user.id}">Add Privileges</a>
             <a th:if="${user.role.id == 1}" th:href="|/admin/removeprivileges/| + ${user.id}">Remove Privileges</a>
-
+        </div>
+        <div th:if="${isAdmin && currentUserId == user.id}" class="user-description303">
+            <a th:if="${user.id == currentUserId}" th:href="@{/profile/edit}">Edit Profile</a>
         </div>
 
         <div class="user-posts">
