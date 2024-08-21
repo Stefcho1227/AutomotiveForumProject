@@ -29,7 +29,8 @@
                         <!-- Iterate over users -->
                         <li th:each="user : ${users}">
                             <div class="user-details">
-                                <img th:src="@{${user.profilePictureUrl}}" alt="User Image">
+                                <img th:if="${user.profilePictureUrl != null && user.profilePictureUrl.length() > 1}" style="height: 60px; width: 60px; border-radius: 40px" th:src="@{${user.profilePictureUrl}}" alt="User Image">
+                                <img th:unless="${user.profilePictureUrl != null && user.profilePictureUrl.length() > 1}" style="height: 60px; width: 60px; border-radius: 40px" th:src="@{/assets/profile/DefaultImg.webp}" alt="User Image">
                                 <div class="user-info">
                                     <a th:href="@{/users/{id}(id=${user.id})}" th:text="${user.firstName} + ' ' + ${user.lastName}">Author Name</a>
                                 </div>
@@ -63,6 +64,10 @@
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
 
+                </div>
+
+                <div th:height="300px" style="height: 300px">
+                    <span></span>
                 </div>
             </div>
         </div>

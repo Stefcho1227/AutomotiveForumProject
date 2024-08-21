@@ -37,16 +37,16 @@ INSERT INTO user_phone_numbers (user_id, phone_number) VALUES
 
 -- Insert posts
 INSERT INTO posts (user_id, title, content, likes, created_at) VALUES
-                                                                   (5, 'How to Improve Engine Performance', 'Here are some tips and tricks to get the most out of your engine...', 12, '2024-08-17 10:00:00'),
-                                                                   (6, 'Best Tires for Winter Driving', 'Winter driving requires special tires. Check out these recommendations...', 8, '2024-08-17 11:00:00'),
-                                                                   (7, 'Upgrading Your Suspension', 'If you’re looking to upgrade your suspension, here’s what you need to know...', 15, '2024-08-17 12:00:00'),
-                                                                   (8, 'Maintaining Your Brakes', 'Regular brake maintenance is crucial for safety. Here are some tips...', 7, '2024-08-17 13:00:00'),
-                                                                   (9, 'Understanding Transmission Issues', 'Transmission problems can be costly. Learn how to identify and fix them...', 5, '2024-08-17 14:00:00'),
-                                                                   (10, 'Exhaust Systems Explained', 'A good exhaust system can enhance your car’s performance. Here’s a guide...', 9, '2024-08-17 15:00:00'),
-                                                                   (5, 'Interior Mods for Better Comfort', 'Improve your car’s interior with these modifications...', 11, '2024-08-17 16:00:00'),
-                                                                   (6, 'The Latest in Automotive Electronics', 'Keep up with the latest tech for your car...', 10, '2024-08-17 17:00:00'),
-                                                                   (7, 'Performance Upgrades on a Budget', 'Want to upgrade performance without breaking the bank? Here’s how...', 6, '2024-08-17 18:00:00'),
-                                                                   (8, 'Routine Maintenance Tips', 'Regular maintenance can keep your car running smoothly. Check out these tips...', 13, '2024-08-17 19:00:00');
+                                                                   (5, 'How to Improve Engine Performance', 'Here are some tips and tricks to get the most out of your engine...', 1, '2024-08-17 10:00:00'),
+                                                                   (6, 'Best Tires for Winter Driving', 'Winter driving requires special tires. Check out these recommendations...', 1, '2024-08-17 11:00:00'),
+                                                                   (7, 'Upgrading Your Suspension', 'If you’re looking to upgrade your suspension, here’s what you need to know...', 1, '2024-08-17 12:00:00'),
+                                                                   (8, 'Maintaining Your Brakes', 'Regular brake maintenance is crucial for safety. Here are some tips...', 1, '2024-08-17 13:00:00'),
+                                                                   (9, 'Understanding Transmission Issues', 'Transmission problems can be costly. Learn how to identify and fix them...', 1, '2024-08-17 14:00:00'),
+                                                                   (10, 'Exhaust Systems Explained', 'A good exhaust system can enhance your car’s performance. Here’s a guide...', 1, '2024-08-17 15:00:00'),
+                                                                   (5, 'Interior Mods for Better Comfort', 'Improve your car’s interior with these modifications...', 1, '2024-08-17 16:00:00'),
+                                                                   (6, 'The Latest in Automotive Electronics', 'Keep up with the latest tech for your car...', 1, '2024-08-17 17:00:00'),
+                                                                   (7, 'Performance Upgrades on a Budget', 'Want to upgrade performance without breaking the bank? Here’s how...', 1, '2024-08-17 18:00:00'),
+                                                                   (8, 'Routine Maintenance Tips', 'Regular maintenance can keep your car running smoothly. Check out these tips...', 1, '2024-08-17 19:00:00');
 
 -- Insert comments
 INSERT INTO comments (post_id, user_id, content, created_at) VALUES
