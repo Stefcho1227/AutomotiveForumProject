@@ -101,7 +101,7 @@ database.password=stefaneqk
 ```
  
 ## Link to Swagger Documentation
-(we still don't have)
+(http://localhost:8080/swagger-ui/index.html#/)
  
 ## Database Relations
 ![databaseDiagram](https://github.com/user-attachments/assets/7612f1d0-05a4-44fe-9b2a-71016d53d8a0)
