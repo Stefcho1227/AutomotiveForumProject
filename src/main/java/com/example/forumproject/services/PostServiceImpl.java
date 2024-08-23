@@ -14,6 +14,7 @@ import com.example.forumproject.repositories.contracts.PostRepository;
 import com.example.forumproject.repositories.contracts.UserRepository;
 import com.example.forumproject.services.contracts.PostService;
 import com.example.forumproject.services.contracts.UserService;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -38,12 +39,14 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final UserService userService;
+    private final EntityManager entityManager;
 
     @Autowired
-    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository, UserService userService) {
+    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository, UserService userService, EntityManager entityManager) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.userService = userService;
+        this.entityManager = entityManager;
     }
 
     @Override
@@ -93,10 +96,15 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional
     public void delete(int id, User user) {
         AuthenticationHelper.throwIfUserIsBlocked(user);
         checkModifyPermissionsToDelete(id, user);
         Post postToDelete = postRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Post", id));
+        user.getPostsLiked().removeIf(post -> post.getId() == postToDelete.getId());
+        postToDelete.getLikes().removeIf(likedUser -> likedUser.getId() == user.getId());
+        userRepository.save(user);
+        postRepository.save(postToDelete);
         postRepository.delete(postToDelete);
     }
 
@@ -117,6 +125,8 @@ public class PostServiceImpl implements PostService {
         }
         postRepository.save(post);
         userRepository.save(user);
+        entityManager.flush();
+        entityManager.clear();
     }
 
     @Override

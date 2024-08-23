@@ -26,10 +26,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Comparator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -104,12 +101,15 @@ public class PostMvcController {
         try {
             User user = authenticationHelper.tryGetCurrentUser(session);
 
-            Post post = postService.getPostById(postId)
-                    .orElseThrow(() -> new EntityNotFoundException("Post", postId));
+            Optional<Post> optionalPost = postService.getPostById(postId);
+            if (optionalPost.isEmpty()) {
+                return "ErrorView";
+            }
 
+            Post post = optionalPost.get();
             postService.likePost(post, user);
 
-            return "redirect:" + (redirectUrl != null ? redirectUrl : "/posts/" + postId);
+            return "redirect:/";
         } catch (AuthorizationException e) {
             return "redirect:/auth/login";
         } catch (EntityNotFoundException e) {
