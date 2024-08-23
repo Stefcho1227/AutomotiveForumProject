@@ -16,7 +16,7 @@ import java.util.List;
 
 @Service
 public class CommentServiceImpl implements CommentService {
-    public static final String ADMIN_ROLE_NAME = "Admin";
+    private static final String DELETE_COMMENT_ERROR_MESSAGE = "Only comment creator or admin or moderator can delete a comment.";
     private CommentRepository repository;
 
     @Autowired
@@ -75,8 +75,13 @@ public class CommentServiceImpl implements CommentService {
 
     private void throwIfNoPermissionToDelete(int commentId, User loggedInUser) {
         Comment commentToCheck = getById(commentId);
-        if (!commentToCheck.getCreatedBy().equals(loggedInUser) || loggedInUser.getRole().getRoleName().equals(ADMIN_ROLE_NAME)) {
-            throw new AuthorizationException("You do not have permission to delete this comment");
+        if (commentToCheck.getCreatedBy().equals(loggedInUser)) {
+            return;
         }
+        String roleName = loggedInUser.getRole().getRoleName();
+        if (roleName.equals("Admin") || roleName.equals("Moderator")) {
+            return;
+        }
+        throw new AuthorizationException(DELETE_COMMENT_ERROR_MESSAGE);
     }
 }
